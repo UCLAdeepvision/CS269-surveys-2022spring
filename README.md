@@ -22,7 +22,7 @@ bundle exec jekyll serve
 You should see an address pop on the terminal (http://127.0.0.1:4000/CS269-surveys-2022spring
 / by default), go to this address with your browser.
 
-## Working on the project
+## Working on the surveys
 
 1. Create a folder with your team id under ```./assets/images/your-module-id```, for example, ```./assets/images/module01```. You will use this folder to store all the images in your project.
 
