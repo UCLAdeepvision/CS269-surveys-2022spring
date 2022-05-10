@@ -26,7 +26,7 @@ You should see an address pop on the terminal (http://127.0.0.1:4000/CS269-surve
 
 1. Create a folder with your team id under ```./assets/images/your-module-id```, for example, ```./assets/images/module01```. You will use this folder to store all the images in your project.
 
-2. We have already created the .md file for you and you can work on them directly. Change the authors at the top to your team members. You may notice the year is 2021 in date attribute, that's intentionally and please do not correct it. We will fix it at the end of the semester.
+2. We have already created the .md file for you and you can work on them directly. If there are too many students in the same module (like 4 or 5 students), it is suggested to split into 2 groups. If so, each group can create a new md file using name like moduleXX-topicYY.md. Change the authors at the top to your team members. You may notice the year is 2021 in date attribute, that's intentionally and please do not correct it. We will fix it at the end of the semester.
 
 3. Look at the .md file we provided and it contains basic elements that you might use in Markdown. We also provide a sample post and you can check the source code under ```./_posts```.
 
