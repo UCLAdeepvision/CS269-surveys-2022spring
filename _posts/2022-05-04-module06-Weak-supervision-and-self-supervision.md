@@ -53,7 +53,6 @@ Please use latex to generate formulas, such as:
 $$
 \tilde{\mathbf{z}}^{(t)}_i = \frac{\alpha \tilde{\mathbf{z}}^{(t-1)}_i + (1-\alpha) \mathbf{z}_i}{1-\alpha^t}
 $$
-
 or you can write in-text formula $$y = wx + b$$.
 
 ### More Markdown Syntax
