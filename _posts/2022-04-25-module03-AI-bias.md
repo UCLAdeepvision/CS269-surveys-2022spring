@@ -23,6 +23,29 @@ But still, algorithm-wise, regardless of all these concerns, ever after connecti
 
 Long story short, as part of the results of our compromise between effective practice and well-estabilished theory, AI Bias is a real, inevitable problem in most data-driven models that we can think of. It is not something we can easily locate within how we design the methodology and eliminate from the root trivially. A better pracitice would definitely be to admit them and to resolve the emerging ones in response.
 
+## Existing Efforts in Dataset De-biasing
+Expanding upon our discussion in the previous section, there has been a lot of work to address and mitigate dataset bias by constructing balanced datasets and incorporating more number of attributes/features which were historically underrepresented. Two examples of such work are discussed below:
+
+### Gender Shades: Intersectional Accuracy Disparities in Commercial Gender Classification
+This work was the first of its kind comprehensive study of the performance of commercially available computer vision models on various intersectional categories in existing datasets and the extent to which a Computer Vision model amplifies bias in an unbalanced dataset. The authors highlight the point that since more and more decisions in various areas like hiring, granting loans, and recidivism scores are handled by AI, its of paramount importance to accept and expand upon the progress in bias identification and mitigation. This is in alignment with the concerns that we are trying to address in this module survey.
+
+The authors mention that commercially available gender classification models have been provided by various top companies without proper documentation and peer review. Hence there is limited information as to the exact technologies they are using for such models. These models will be used by lots of people as they are commercially available, and trust in these large companies is high. So their study is of great significance. In this regard, they propose a new face dataset which they claim to be balanced based on skin and gender types. They also conduct a thorough analysis of the performance of such models on intersectional categories like light males, light females, dark males and dark females. They use 3 commercially available models for this purpose, which we will discuss in the upcoming sections.
+
+A key component of the paper deals with proposing a new dataset called **PPB (Pilot Parliaments Benchmark)** and discussing its collection, annotation and processing of balancing. The dataset consists of two gender classification labels (Male/Female) and a 6 point Fitzpatrick labelling system to show skin type. The type of 6 point Fitzpatrick label is determined according to the reaction of a person's skin to Ultraviolet Radiation (UVR). Dermatologists use this as a standard for skin classification and determining skin cancer risk. They also classify the labels (I - III) as White and (IV-VI) as Black. Coming to statistics of **PPB**, it consists of 1270 parliamentarians from 6 countries -- 3 African countries (Rwanda, Senegal and South Africa) and 3 European countries (Iceland, Finland and Sweden). It is a highly constrained dataset, i.e. the pose is relatively fixed, illumination is constant, and expressions are neutral or smiling. Coming to labelling, 3 annotators and the authors provided gender and Fitzpatrick skin type labels for PPB Dataset. They also took help from an ABS board-certified surgical dermatologist who provided the definitive labels for the Fitzpatrick skin type. The overall intersectional statistics of the dataset are below (the dataset is balanced across different categories) :
+
+| Demography | n | F | M | Darker | Lighter | DF | DM | LF | LM |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | 
+| All Subjects | 1270 | 44.6% | 55.4% | 46.4% | 53.6% | 21.3% | 25.0% | 23.3% | 30.3% |
+| Africa | 661 | 43.9% | 56.1% | 86.2% | 13.8% | 39.8% | 46.4% | 4.1% | 9.7% |
+| Europe | 609 | 45.5% | 54.5% | 3.1% | 96.9% | 1.3% | 1.8% | 44.2% | 52.7% |
+ 
+Now coming to commercial gender classification models, the authors pick 3 commercial gender classification models: 
+1. Microsoft’s Cognitive Services Face API
+2. IBM’s Watson Visual Recognition API
+3. Face ++
+
+All models lacked technical details and what training data was used, but all of them used some sort of deep learning. The results of the models on the PPB dataset revealed that their overall accuracies were very good, ranging from 88% - 94%. However, all classifiers had a performance gap of 8.1% − 20.6%  on male faces over females and a gap of 11.8% − 19.2% on lighter faces over darker faces. Also, all of them performed worst on darker female faces (20.8% - 34.7%). This shows that even though the PPB dataset is balanced, the models had some bias over male and lighter faces and failed significantly on darker females. As a limitation of the work, we would like to highlight that even though the authors claim that the PPB dataset is balanced, it is not balanced over different skin type labels from I - VI. However, the impact of the work was very significant, leading to a lot of different future studies.
+
 ## Existing Efforts in AI De-biasing
 Based on our previous discussion, a natural thought would be to blame all the things on the problematic data. Some would argue that data could be nothing but a sincere reflection of the world, and that the AI bias, at the end of day, is essentially _**OUR**_ bias.
 
@@ -86,5 +109,7 @@ Unfortunately, up to now, addressing the AI Bias problem is still beyond the bes
 [9] Johnson, Justin, et al. "Clevr: A diagnostic dataset for compositional language and elementary visual reasoning." Proceedings of the IEEE conference on computer vision and pattern recognition. 2017.
 
 [10] Lu, Sidi, et al. "Neurally-guided structure inference." International Conference on Machine Learning. PMLR, 2019.
+
+[11] Buolamwini, Joy, and Timnit Gebru. "Gender shades: Intersectional accuracy disparities in commercial gender classification." Conference on fairness, accountability and transparency. PMLR, 2018.
 
 ---
