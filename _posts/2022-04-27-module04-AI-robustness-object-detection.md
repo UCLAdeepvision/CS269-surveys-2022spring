@@ -25,6 +25,57 @@ This survey aims at selecting and summarizing object detection research from two
 
 ## Adversarial Training for Object Detection
 
+### Improve Robustness by adversarial training
+
+#### The role of task losses in adversarial training
+
+Although robustness can be improved by adversarial training [2,7], it’s much tricker in object detection. Different from adversarial training on classification tasks which usually has only one loss, object detection tasks consist of two losses (Fig.4). One is the classification loss and the other is localization loss. It’s natural to ask, should we perform the adversarial attack on the sum of them or each of them? Both [3] and [4] experiment with this problem. 
+
+![loss1]({{ '/assets/images/Module04OD/loss.png' | relative_url }})
+{: style="width: 400px; max-width: 100%; margin-left: auto; margin-right: auto"}
+<center><i>Fig.4 Loss function of object detector training</i></center>
+<br>
+
+[3] attacks the classification loss and the localization loss respectively. The result indicates that two attacks have mutual impacts and the adversarial attacks trailered for one task can reduce the performance of the model on the other task. For example, the attack on the classification not only hurts classification accuracy but also drops localization IoU significantly (Fig.5a). This observation has two indications. First, attacking an object detector is easy. Even attacks on one individual task loss can effectively impede the performance as a whole. Second, we have to study the interaction of these two losses. When generating adversarial examples by attacking both losses, whether the gradients of two losses counteract or enhance will significantly impact the quality of adversarial examples.
+
+![lossdrop]({{ '/assets/images/Module04OD/lossdrop.png' | relative_url }})
+{: style="width: 500px; max-width: 100%; margin-left: auto; margin-right: auto"}
+<center><i>Fig.5 Marginal performance drop in attacking two tasks loss individually</i></center>
+<br>
+
+[3] conducts the second experiment to answer this question. In Fig.5b, we can draw two conclusions. (1) the magnitudes of the task gradients are not the same. They spread onto different value ranges, indicating the potential existence of imbalance between two losses; (2) the directions of two gradients are inconsistent (non-diagonal), implying the potential conflicts between them. [4] also does a similar experiment. In Fig.6, LOC, CLS, and DET denote attacks on localization, classification, and both respectively. We can see that the highest mAP is not achieved by the row DET, indicating two losses cancel out each other.
+
+![tab1]({{ '/assets/images/Module04OD/tab1.png' | relative_url }})
+{: style="width: 400px; max-width: 100%; margin-left: auto; margin-right: auto"}
+<center><i>Fig.6 mAP score for attacking LOC, CLS, DET</i></center>
+<br>
+
+The solution to this is simple. Both [3] and [4] proposed a similar algorithm regarding this issue. Here we present the algorithm in [3]. Intuitively, it attacks localization and classification loss respectively, and only keeps the one that maximizes the total loss. The adversarial output then replaces the original sample in a normal training process. 
+
+![Algo1]({{ '/assets/images/Module04OD/Algo1.png' | relative_url }})
+{: style="width: 400px; max-width: 100%; margin-left: auto; margin-right: auto"}
+<center><i>Fig.7 Algorithm of adversarial training for robust object detectors [3] </i></center>
+<br>
+
+#### To improve the algorithm
+
+Based on the algorithm proposed in [3], [4] has two improvements. First, it puts robust object detector training in the context of the pretrain-finetune paradigm. Second, it argues that the adversarial samples have different distributions from the original images. The batch norm layers have to take this discrepancy into account.
+
+Using adversarial examples to augment data can be taken place in two periods. One is during the pretraining, and the other is during finetuning. [4] argues that although adversarial examples boost up robustness on pretraining, such performance gains cannot transfer after finetuning. Fig.8 shows that pretraining on AdvProp[5] and Noisy Student[11] have similar or even worse performance after finetuning (D2 and D5 are two object detection models where D2 is more light-weighted). Therefore, [4] purposed to move the adversarial data augmentation step from pretraining to finetuning. Fig.9 shows that finetuning 6 models with Det-AdvProp surpasses the vanilla baseline.
+
+![bar]({{ '/assets/images/Module04OD/bar.png' | relative_url }})
+{: style="width: 400px; max-width: 100%; margin-left: auto; margin-right: auto"}
+<center><i>Fig.8  mAP comparsion for vanilla model and finetuned pretrained models. The data augmentation is at pretraining step</i></center>
+
+![tab2]({{ '/assets/images/Module04OD/tab2.png' | relative_url }})
+{: style="width: 500px; max-width: 100%; margin-left: auto; margin-right: auto"}
+<center><i>Fig.9  mAP comparsion for vanilla model and Det-AdvProp finetuned models. The data augmentation is at finetuning step</i></center>
+<br>
+
+Another improvement to [3] is that [4] draws adversarial examples from another distribution. [4] computes the distribution of adversarial examples in an online manner. Note that adversarial examples for classification loss and classification loss are drawn from the same distribution. Therefore, [4] manages two distributions. One is for the original images and the other is for adversarial examples. One last tiny difference is that [4] does not replace the original image with an adversarial example. Instead, it puts both samples into the normal training process.
+
+In conclusion, both papers demonstrate that traditional adversarial training of classification tasks can be transferred to train a robust object detector. When generating adversarial examples, it’s suggested to attack classification or localization separately and pick the one that maximizes the total loss. In the context of pretraining and finetuning, [4] indicates that augmenting data during finetune step can better preserve the performance gain during pretraining.
+
 
 ## Basic Syntax
 ### Image
