@@ -66,7 +66,7 @@ Finally, the authors of the paper disregarded horizontal and vertical flips. The
 
 ### Benchmarking Neural Network Robustness to Common Corruptions and Perturbations
 
-#### Breif Summary
+#### Brief Summary
 
 This paper establishes rigorous benchmarks for image classifier robustness[1]. 
 They introduced 2 new datasets, the IMAGETNET-C dataset for input corruption robustness and the IMAGENET-P dataset for input perturbation robustness. This benchmark evaluates performance on common corruptions and perturbations instead of worst-case adversarial perturbations. Corruption robustness measures the classifier’s average-case performance on corruption. Perturbation robustness is defined as the average-case performance on tiny, generic, classifier-independent perturbations; i.e. assessing perturbation resilience and tracking the classifier's prediction stability, dependability, or consistency in the face of modest input changes.
@@ -100,7 +100,7 @@ The main results of the paper can be seen in the figure above. The findings in t
 
 ### Intriguing Properties of Adversarial Training at Scale
 
-#### Breif Summary
+#### Brief Summary
 
 The goal of this paper is to investigate some properties of adversarial training on a large scale like on ImageNet. Certain architectures and ideas have become commonplace in deep learning like batch normalization and deeper networks with the aim to improve generalization. The study finds two properties related to BN and deep networks in the context of robustness. First, batch normalization may not be effective in improving robustness at the ImageNet scale. Second, deep networks are still “shallow” in the sense that adversarial learning incurs strong demand to achieve higher robustness but it may be worth it.
 
@@ -151,7 +151,7 @@ The last paper is concerned purely with adversarial training, its properties, an
 
 ### Benchmarking Adversarial Robustness on Image Classification 
 
-#### Breif Summary
+#### Brief Summary
 
 The goal of this work is to develop a benchmark to comprehensively evaluate the adversarial robustness of the existing methods and serve as a useful standard for future work. 
 
@@ -167,7 +167,7 @@ Experiments on the cross-evaluation of the attacks and defenses are performed fo
 
 ### RobustBench: a standardized adversarial robustness benchmark 
 
-#### Breif Summary
+#### Brief Summary
 
 RobustBench, which is introduced in this study, is a benchmark for adversarial robustness. The benchmark focuses solely on the challenge of adversarial robustness in image classification models under threat models of l-infinity and l2 perturbations, as represented by the attacks implemented in the auto-attack package, allowing for a specific set of defenses in the benchmarked robust models. The benchmark gives an upper bound on robustness using AutoAttack, which eliminates the requirement for third parties to do time-consuming adaptive evaluations per defense. AutoAttack provides appropriate bounds for defenses that adhere to a set of rules. RobustBench presently does not support defenses that break these rules. RobustBench allows third parties to submit findings from adaptive attacks if AutoAttack does not give a tight bound on a given defense. In addition, it also analyzes the impact of robustness on the performance of distribution shifts, calibration, out-of-distribution detection, etc.
 
