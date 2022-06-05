@@ -82,11 +82,13 @@ They introduced 2 new datasets, the IMAGETNET-C dataset for input corruption rob
 
 To evaluate the performance of these models on these datasets, two evaluation metrics were introduced. The first one is mCE which stands for mean corruption error and the second one is relative mCE. The definition of these two metrics is given below. Both of them are measured  measured against AlexNet as a baseline. Check paper for description about the variables in the equation[1]. In short, they are designed to measure the effectiveness of the model to deal with the corrupted datasets introduced above.
 
+
 $$
-CE_c^f = \frac{\sum_{s=1}^5E_{s,c}^f}{\sum_{s=1}^5E_{s,c}^{AlexNet}}
+CE_c^f = \frac{\sum_{s} E_{s,c}^f}{\sum_{s} E_{s,c}^{AlexNet}}
 $$
+
 $$
-CE_c^f = \frac{\sum_{s=1}^5E_{s,c}^f - E_{clean}^f}{\sum_{s=1}^5E_{s,c}^{AlexNet} - E_{clean}^{AlexNet}}
+CE_c^f = \frac{\sum{s} E_{s,c}^f - E_{clean}^f}{\sum_{s} E_{s,c}^{AlexNet} - E_{clean}^{AlexNet}}
 $$
 
 
