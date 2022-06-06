@@ -63,7 +63,12 @@ This work was the first of its kind comprehensive study of the performance of co
 
 The authors mention that commercially available gender classification models have been provided by various top companies without proper documentation and peer review. Hence there is limited information as to the exact technologies they are using for such models. These models will be used by lots of people as they are commercially available, and trust in these large companies is high. So their study is of great significance. In this regard, they propose a new face dataset which they claim to be balanced based on skin and gender types. They also conduct a thorough analysis of the performance of such models on intersectional categories like light males, light females, dark males and dark females. They use 3 commercially available models for this purpose, which we will discuss in the upcoming sections.
 
-A key component of the paper deals with proposing a new dataset called **PPB (Pilot Parliaments Benchmark)** and discussing its collection, annotation and processing of balancing. The dataset consists of two gender classification labels (Male/Female) and a 6 point Fitzpatrick labelling system to show skin type. The type of 6 point Fitzpatrick label is determined according to the reaction of a person's skin to Ultraviolet Radiation (UVR). Dermatologists use this as a standard for skin classification and determining skin cancer risk. They also classify the labels (I - III) as White and (IV-VI) as Black. Coming to statistics of **PPB**, it consists of 1270 parliamentarians from 6 countries -- 3 African countries (Rwanda, Senegal and South Africa) and 3 European countries (Iceland, Finland and Sweden). It is a highly constrained dataset, i.e. the pose is relatively fixed, illumination is constant, and expressions are neutral or smiling. Coming to labelling, 3 annotators and the authors provided gender and Fitzpatrick skin type labels for PPB Dataset. They also took help from an ABS board-certified surgical dermatologist who provided the definitive labels for the Fitzpatrick skin type. The overall intersectional statistics of the dataset are below (the dataset is balanced across different categories) :
+A key component of the paper deals with proposing a new dataset called **PPB (Pilot Parliaments Benchmark)** and discussing its collection, annotation and processing of balancing. The dataset consists of two gender classification labels (Male/Female) and a 6 point Fitzpatrick labelling system to show skin type. The type of 6 point Fitzpatrick label is determined according to the reaction of a person's skin to Ultraviolet Radiation (UVR). Dermatologists use this as a standard for skin classification and determining skin cancer risk. They also classify the labels (I - III) as White and (IV-VI) as Black. 
+
+![PPB bias]({{ '/assets/images/team03/PPBbias.png' | relative_url }})
+*Figure 4. The images in PPB are constrained with relatively little variation in pose.*
+
+Coming to statistics of **PPB** (see Figure 4), it consists of 1270 parliamentarians from 6 countries -- 3 African countries (Rwanda, Senegal and South Africa) and 3 European countries (Iceland, Finland and Sweden). It is a highly constrained dataset, i.e. the pose is relatively fixed, illumination is constant, and expressions are neutral or smiling. Coming to labelling, 3 annotators and the authors provided gender and Fitzpatrick skin type labels for PPB Dataset. They also took help from an ABS board-certified surgical dermatologist who provided the definitive labels for the Fitzpatrick skin type. The overall intersectional statistics of the dataset are below (the dataset is balanced across different categories) :
 
 | Demography | n | F | M | Darker | Lighter | DF | DM | LF | LM |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | 
@@ -95,17 +100,20 @@ Even if we could, it will still raise more problems than it resolves. Forbidden 
 
 In practice, we just can't guarantee zero-bias data. Considering the fact that _"The overall harm in a system is a product of the interactions between the data and our model design choices."_, de-biasing in the model-level seems a more essential solution.
 
-For our audience who are curious about how the author strengthens his point, the author actually present it by analyzing a concrete case on the Celeb-A human face dataset (see Figure 4). 
+For our audience who are curious about how the author strengthens his point, the author actually present it by analyzing a concrete case on the Celeb-A human face dataset (see Figure 5). 
 
 ![CelebA bias]({{ '/assets/images/team03/celebabias.png' | relative_url }})
-*Figure 4. Datasets like CelebA can be very unbalanced for different subgroups of people. This is essentially causing a large proportion of the AI bias problems.*
+*Figure 5. Datasets like CelebA can be very unbalanced for different subgroups of people. This is essentially causing a large proportion of the AI bias problems.*
 
 Detailed explanation can diverge a little bit from this survey paper of ours, thus we won't be further extend the description here. If you feel very eager about how the author tackles the analysis, we encourage you to refer to the original blog post (which is also a survey paper).
 
 #### The Equalizer Model: Reduce Bias Amplification in Captioning Models
 Some well-founded approaches have been achieved following this way of thinking in the past few years. For example, one work [6] discussed in detail how such de-biasing can be achieved (at least by a large margin) in caption generation models. In this work, the authors proposed a novel Equalizer model that could reduce gender bias of caption generation model, by forcing the model to look at the proper evidence of the target image. The authors believe that the generality of their work allows the model to be expanded to other common protected attributes, such as race and ethnicity, making it a universal approach to overcome bias in captioning models. 
 
-The key point of the Equalizer model is to introduce two complementary loss terms additional to the base loss, which are the Appearance Confusion Loss and the Confident Loss, so that they could restrict the model to only focus on the appropriate gender evidence on the target image. Appearance Confusion Loss allows the description model to be confused when the gender evidence of the description target does not appear on the image. Formally, the Appearance Confusion Loss is defined as,<br/>
+![Illustration of Equalizer]({{ '/assets/images/team03/equalizer.png' | relative_url }})
+*Figure 6. Illustration of the Equalizer model.*
+
+The key point of the Equalizer model (see Figure 6) is to introduce two complementary loss terms additional to the base loss, which are the Appearance Confusion Loss and the Confident Loss, so that they could restrict the model to only focus on the appropriate gender evidence on the target image. Appearance Confusion Loss allows the description model to be confused when the gender evidence of the description target does not appear on the image. Formally, the Appearance Confusion Loss is defined as,<br/>
 
 $$ 
 \mathcal{L}^{AC} = \frac{1}{N} \sum^N_{n=0} \sum^{T}_{t=0} \mathbb{1}(w_t \in \mathcal{G}_w \cup \mathcal{G}_m) \mathcal{C}(\tilde{w}_t, I')  
@@ -133,7 +141,12 @@ The final Equalizer is a linear combination of the the Appearance Confusion Loss
 
 AFter training and testing on MS-COCO dataset, the experiment result illustrated the ability of the Equalizer model to reduce outcome divergence between the majority and the minority groups, mitigating the bias ampilification issue. Moreover, applying explanation methods to the caption results, it is proved that the equalizer model is able to focus on the gender clue of the individuals from the target image other than the unrelated context when describing their gender. However, this method also comes with drawbacks. Firstly, the authors also mentioned that there was a small drop in performance on standard description metrics, possibly because the regularized model is more conservative, so that it uses gender neutral terms to describe appearance with little gender evidence. Also, proper genger evidence needs to be provided for training images, making it harder to apply this method to abstract features.
 
+
+### Commercial (Data-level) AI De-biasing
+
 Some of those attempts for commercial purposes[7], however, still rely on data pre/post-processing to mitigate the data-related bias in their business models that could have negative impacts on their profit statistics. <span style="color:red">[Sidi: Please help expand the description]</span>
+
+
 
 In general, mitigating the AI bias in multiple levels has been granted more and more attention. As the solutions stabilize and fushion, it's definitely more than just a hope to solve the problem.
 
