@@ -1,13 +1,13 @@
 ---
 layout: post
 comments: true
-title: "Module 9: Explainable ML"
-author: Authors
-date: 2021-05-16
+title: "Module 9: Explainable ML - Topic: Class Activation Mapping and its Variants"
+authors: Zi-Yi Dou, Sicheng Jiang
+date: 2022-06-08
 ---
 
 
-> Explainable ML (or XAI) attempts to bridge the gap between the black-box nature of machine learning models and human understanding. The goal is to explain the behavior of models in a human-understandable manner. It is a crucial for applying the ML models with superior performance into critical applications such as medical or financial domains. It functions as a sanity check for whether the models behave as we humans expect them to and helps gain trust from human users, as well as debug the models for underlying biases.
+> While neural networks demonstrate impressive performance across tasks, they make predictions in a black-box way that is hard for humans to understand. To alleviate the issue, researchers have proposed several ways of interpreting the behaviors of neural networks. In this survey, we focus on class activation mapping and its variants, which are popular model interpretation techniques and allow us to visualize the decision process of neural networks and ease up debugging.  
 
 <!--more-->
 {: class="table-of-content"}
@@ -15,43 +15,99 @@ date: 2021-05-16
 * TOC
 {:toc}
 
-## Explainable ML
-Explainable ML is the subfield of machine learning research where the goal is to interpret a (black-box) model in a human-understandable sense. Due to the complexity of recent state-of-the-art performing deep learning models with significantly more parameters than available data, good performance on the training data or even a holdout testing data may not imply good performance in general. Models may suffer from the curse of dimensionality. Therefore, in order to apply these excellent performing models in critical domains where unexpected behavior from the model may be costly, it is important to attempt to understand how the models make the decisions and determine if the decision process is aligned with human intuition.
+## An Overview
+Class activation mapping (CAM) and its variants (e.g. [1-8]) are techniques originally designed to obtain the discriminative image regions of a convolutional neural network (CNN) when the model is predicting a specific class during image classification, highlighting the importance of image regions that are relevant to a given class. The visualization enables us to gain insights into why neural networks are generating their outputs, whether their decision process is intuitive and if they are using spurious input-output correlations. 
 
-There are many approaches for interpreting a machine learning model since there does not exist an uniquely "correct" explanation. Any method that yields insight regarding the model is considered a valid method. Different methods should be applied for gaining different types of insight. In the following sections, we will introduce different approaches for interpretation and briefly go over what types of information they reveal as well as the limitations of the methods.
+Since the first CAM paper [1] was introduced, there are a lot of follw-up works in this direction [2-8] and have been widely applied in models of various fields, including both CNN and vision transformer-based [9] image classification, visual question answering, and image captioning models. In this survey, we will first introduce the original CAM paper, then briefly cover four representative CAM variants categorized into two groups (i.e. gradient-based and gradient-free methods) and compare the similarities and differences between them. 
 
-### Concept-based approach
-Concept-based interpretation is an extension of typical input feature importance attribution methods. It is useful in the case where input features are difficult to humanly interpretable, which makes importance attribution with respect to features rather useless. Instead of attribution importance to input features, concept-based interpretation attribute to.. well concepts. What are concepts? In general concepts can be defined as a function of the input features that represent higher-level semantics easier for humans to understand. For instance, consider a machine learning model that predicts gene expression given microscopy images as input. Attributing importance to high-level concepts such as morphological features of cells provides more insight regarding predictions better than to raw pixel values.
+## Class Activation Mapping
+The CAM paper [1] is specifically designed for convolutional networks with an global average pooling layer before outputs. In this section, we will first introduce GAP and then illustrate the details of CAM. 
 
-Here we classify concept-based interpretation methods into two categories: self-interpretable models versus post-hoc interpretations. Self-interpretable models are models designed to provide interpretation by construction. Post-hoc interpretations, on the other hand, takes a model that is initially not expected to be interpretable and attempts to provide an interpretation. The prior usually provides a better interpretation but restricts the model class and potentially harms the performance of the model on the main intended task. This is less feasible since people generally does not wish to comprimise  performance to achieve better interpretability. The latter usually requires making assumptions about the model of analysis to perform interpretation, since it is intractable to explain a inherently black-box, unpredictable model. The strength of the assumption affects how usable a method is.
+### Background: Global Average Pooling 
+Convolutional neural networks usually consists of a sequence of convolutional layers at the beginning and one or a few fully-connected layers at the end. The fully-connected layers can take most of the parameters of the whole network and make the model prone to over-fitting. In order to solve the issue, Lin et al. [10] propose a novel architecture called Network in Network, one of the main contributions of which is to use a global average pooling (GAP) layer before outputs instead of the fully-connected layers. The GAP layer can significantly reduce the total number of the model parameters and make the model more efficienct and less prone to over-fitting. 
 
-#### Self-interpretable models
+The idea of GAP is quite simple: for a given image, if we denote the activation of channel $k$ in the last convolutional layer at spatial location $(x, y)$ as $f_k(x, y)$, then the output of the GAP layer for channel $k$ is simply $F^k = \sum_{x, y} f_k(x, y)$. Essentially, we average all the activations in channel $k$ and convert them into a single value. After we obtain the $k$-dimensional vector output from GAP, we perform a weighted sum of each element in the vector for a given class $c$, denoted as $S_c = \sum_k w_k^c F_k$, where $w_k^c$ is a parameter that is learned during training. The resulting scores are then fed into a softmax layer to generate the final output probability $Y_c=\frac{\exp(S_c)}{\sum_{c_i} \exp(S_{c_i}}$.
 
-**Concept bottleneck model (CBM)** [1] tackles the interpretation from a causal perspective. The underlying assumption is that the concepts $c$ solely contains sufficient information to predict the target labels $y$. The model is decoupled into two components: the first component takes in features $x$ from the input space and predicts concepts $\hat{c}$ and the second component takes in predicted concepts $\hat{c}$ from the concept space and predicts target labels $y$. As the names indicates, the concepts serves as a information bottleneck for predicting the target, which models $c$ and $y$ in a causal manner. Causal models allow test time intervention to correct a potential error. For instance, reusing the previous example of gene expression prediction, suppose the model makes a incorrect prediction because one of the concepts, the cell size, is predicted incorrectly. A human expert can predict intervene with the decision real time to correct the concept prediction, and thereby correcting the expression prediction. This also allows model designers to understand how to improve the model, since errors in the prediction can potentially be attributed to errors in the predictions.
+### From GAP to CAM
+CAM treats the weight terms in GAP as the importance score of $F_k$ for a given class $c$. Therefore, if we plug the expression of $F_k=\sum_{x,y} f_k(x, y)$ into the class score $S_c$, we can obtain the following equation:
+$$
+S_c = \sum_kw_k^c \sum_{x, y} f_k(x, y) = \sum_{x, y}\sum_k w_k^cf_k(x, y).
+$$
 
-**Concept-whitening (CW)** [2] is a technique for adding interpretation to general neural network models, proposed as a drop-in replacement for typical normalization in neural networks (e.g. layer norm, batch norm). It consists of two processes: matrix whitening and aligning the whitened matrix with concepts (orthogonally). Matrix whitening is a well-established matrix transformation where a given matrix is transformed by mupltiplying with a unitary matrix such that the product is whitened, i.e., the covariance matrix is identity. Intuitively, the axis of the matrix is decorrelated and the variance of each axis is standardized. There are infinitely many matrix that satisfy the whitening effect, since orthogonalization can be defined with arbitrary bases. This is where the second step comes in, to rotate the matrix and align individual axes with some predifined concepts. Each axis will be associated with one concept. Input instances that posses the concept trait is expected to be highly activated in the corresponding concept axis.
+From the above equation, we can see that each spatial location (x, y) contributes independently to the class score. Therefore, the authors of CAM [1] define $M_c$ as their class activation map for class $c$, where the value of the spatial element $(x, y)$ is computed by:
+$$
+M_c(x, y) = \sum_k w_k^cf_k(x, y),
+$$
+where $M_c(x, y)$ directly measure the importance of spatial location $(x, y)$ for the output score of class $c$.
 
-CBM is suitable for the case where support for concept intervention is needed. However, the underlying assumption is the concepts need to contain sufficient information for predicting the targets. CW is more general and can be applied to most neural network models. The downside is degradation of prediction performance and longer training time since the whitening involves a two-step alternating optimization. Both methods require knowing the concepts we want to use to interpret the models during training time.
+After we obtain the class activation map, we can perform unsampling to the size of the input image, so that we can visualize which image regions contribute the most to the prediction of class $c$.
 
-#### Post-hoc interpretation
+The authors demonstrate the effectiveness of CAM, enalbing us to visualize the convolutional neural networks as well as directly adapting image classification models for object localization. While promising, one notable drawback of CAM is that they can only be applied to GAP-based convolutional networks, while a lot of the existing models have fully-connected layers at the end. In the paper, the authors show that replacing the fully-connect layers with GAP will not hurt the model performance significantly, but there indeed exists an accurary-interpretability trade-off. 
 
-**Causal concept effect (CaCE)** [3] is a post-hoc method that relies on concept intervention. The method is simple: given pairs of input and their corresponding concepts, we can train a variational autoencoder (VAE) on the input space where the bottleneck layer corresponds to the concepts. This models the concept and input with a causal relation (decoder pat of the VAE). Enforcing disentangling in the bottleneck of VAEs is a rather well studied topic in representation learning. In this case, the additional step is to align the disentangled bottleneck with the corresponding concepts. The result is a generative model where a copy of the input instance with the concepts intervened in whatever way we want. Any downstream models that shares the same input space can be interpreted by this method. One way of measuring concept importance is to compared the predicted value difference given the original input sample and the intervened input sample. The assumption is here is the concepts can be modeled and disentangled well, which turns out is quite difficult to achieve in general (e.g. if concepts are fundementally entangled). 
+Inspired by CAM, there are a number of follow-ups in this direction and we will then describe how they inherent the general idea and improve the algorithm. We will introduce four representative works and we categorize them into two groups, including gradient-based and gradient-free methods.
 
-**Testing with Concept Activation Vector (TCAV)** [4] first represents a concept with a concept activation vector (CAV) and evaluate the alignment between the input gradients of target model and the vector. Then a concept saliency score is calculated based on the alignment over a dataset. This is a global interpretation method, in that the interpretaion is for a concept with respect to the entire model, as opposed to individual data samples. In order for the concept to be represented well by a vector, the concept labels must be linearly separable in the space where the vector is lies. The authors implicitly assumed that there exists a layer in the target model where concept labels can be linearly separated. Such assumption may hold in some trivially constructed synthetic datasets where the ground-truth of the concept labels can be easily defined. However, in the general case linear separability of concepts does not hold. Nevertheless, the method has found great success due to its simplicity. The idea of representing a concept with a vector in some latent space of the target model is rather easy to be accepted by new adopters.
 
-**Interpretable Basis Decomposition (IBD)** [5] relies on decomposing the final classication layer weight vector into linear combination of concept basis vectors. Attribution to individual concepts can be done by projecting the final layer activation onto the corresponding concept basis. This is similar to TCAV where the concept is represented by a vector. However, IBD relies on retrieving concepts from a predifined dictionary of concepts to serve as the decomposed basis. The benefit is concepts can be somewhat semi-automatically retrieved as long as the concept dictionary is predifined. The downside is we have no control over which concepts are selected. If a concept is not selected as the basis, we have no idea to perform attribution with respect to that concept. Of course we could modify the algorithm slightly to include the desired concepts in the bases in the first place. However, there should be a limit to how many concepts can be pre-selected before the method becomes useless. The other downside is the selection of concept basis is based on a greedy residual error minimization scheme where each individual concept is iteratively retrieved. It is possible that combinations of concepts may interpret better than a single one, which will be neglected by the greedy algorithm. This method relies on the same assumption as TCAV that concepts can be represented by concept activation vectors in the target space of the model.
+## Gradient-based CAM Variants
+In this section, we will cover two variants of CAM that uses the gradient information to obtain the class activation maps, including Grad-CAM [2] and Grad-CAM++ [3].
 
-CaCE is the most difficult to use method in that one has to train a generative model before performing interpretation and generative models, especially ones with constraints, are notorious to train. Even if the generative is well trained, it is not guaranteed that the intervened input sample would look like how it's supposed to in the data distribution. TCAV and IBD both relies on lienarized representation of concepts. TCAV is suitable for explaining with respect to one single concept since the formulation is the alignment of individual concepts with input gradients. IBD is suitable for explaining with respect to a set of concepts, where comparison between concept importance is easier.
+### Grad-CAM
+Grad-CAM is one of the most popular network interpretation methods in the field. Grad-CAM is a generalization of CAM and can be applied to off-the-shelf neural networks of many kinds without the need to re-train them, which is much more flexible than the original CAM algorithm.
 
-## Reference
-[1] Koh, Pang Wei, Thao Nguyen, Yew Siang Tang, Stephen Mussmann, Emma Pierson, Been Kim, and Percy Liang. “Concept Bottleneck Models.” *ArXiv:2007.04612 [Cs, Stat]*, December 28, 2020. http://arxiv.org/abs/2007.04612.
+Recall that for CAM, each element in the final class discriminative saliency map is obtained by $M_c(x, y) = \sum_k w_k^cf_k(x, y)$. Grad-CAM takes the exact formulation while changing the way of computing the weights for all the channels. Different from CAM, Grad-CAM first performs a back-propagation on the input image given a specific class $c$. Once we obtain the gradients of all the elements in the $k$-th channel, we can accumulate these gradients and treat the result as the importance score of the $k$-th channel for class $c$:
+$$
+w_k^c = \frac{1}{Z} \sum_{i, j} \frac{\partial}{\partial f_k(x, y)} Y_c,
+$$
+where $Z$ is a normalization term.
 
-[2] Chen, Zhi, Yijie Bei, and Cynthia Rudin. “Concept Whitening for Interpretable Image Recognition.” *Nature Machine Intelligence* 2, no. 12 (December 2020): 772–82. https://doi.org/10.1038/s42256-020-00265-z.
+After we obtain these channel weights, we can perform a weighted sum of the channel output activations and obtain the class activation maps as in CAM:
+$$
+M_c(x, y) = \sum_k w_k^cf_k(x, y).
+$$
 
-[3] Goyal, Yash, Amir Feder, Uri Shalit, and Been Kim. “Explaining Classifiers with Causal Concept Effect (CaCE),” n.d., 10.
+We can see that the main difference between CAM and Grad-CAM is that the weights are learned during training for CAM, whereas they are computed during inference for Grad-CAM.In fact, the authors prove that when applying Grad-CAM to GAP-based convolutional neural networks, the channel weights for CAM and Grad-CAM are the same. In other words, Grad-CAM is a strict generalization of CAM.
 
-[4] Kim, Been, Martin Wattenberg, Justin Gilmer, Carrie Cai, James Wexler, Fernanda Viegas, and Rory Sayres. “Interpretability Beyond Feature Attribution: Quantitative Testing with Concept Activation Vectors (TCAV).” *ArXiv:1711.11279 [Stat]*, June 7, 2018. http://arxiv.org/abs/1711.11279.
+The authors also demonstrate that Grad-CAM can be applied to a wide range of models, including image classification, visual question answering, and image captioning models. In addition, it has been recently shown that Grad-CAM can also be applied to vision transformer-based models [9]. These results demonstrate that Grad-CAM is generally applicable and much more flexible than CAM. 
 
-[5] Zhou, Bolei, Yiyou Sun, David Bau, and Antonio Torralba. “Interpretable Basis Decomposition for Visual Explanation.” In *Computer Vision – ECCV 2018*, edited by Vittorio Ferrari, Martial Hebert, Cristian Sminchisescu, and Yair Weiss, 11212:122–38. Lecture Notes in Computer Science. Cham: Springer International Publishing, 2018. https://doi.org/10.1007/978-3-030-01237-3_8.
+### Grad-CAM++ 
 
----
+## Gradient-free CAM Variants
+While utilizing the gradients to obtain channel weights can be helpful, researchers have shown that gradients can sometimes saturate, in which cases the above gradient-based methods can fail to generate reliable saliency maps. Thus, researchers have also proposed several gradient-free methods and we will cover Ablation-CAM [4] and Score-CAM [5] in this section.
+
+### Ablation-CAM
+The authors of Ablation-CAM first present qualitative examples that when the model is very confident about its predictions, the gradients will saturate and because Grad-CAM uses the gradient information, it can generate unreliable class activation maps in these cases. To solve this issue, they propose to do ablations on each of the channels and obtain their channel weights accordingly.
+
+Specifically, we first perform a forward pass on the neural network given an image input and get the output score $S_c$ for a given class $c$. Afterwards, we can ablate each of the channels, meaning that we manually set all the output activation values in the $k$-th channels to $0$, and the output score will be changed from $S_c$ to $S_c^k$. Intuitively, the difference between the original output score and the ablated score quantifies the importance of the $k$-th channel for class $c$, and thus we can treat this value as the channel weights in CAM:
+$$
+w_k^c = \frac{S_c-S_c^k}{S_c},
+$$
+where $S_c$ in the denominator serves as a normalization term.
+
+Then, similar to CAM and its other variants, we can obtain the final saliency map with the computed channel weights according to the equation $M_c(x, y) = \sum_k w_k^cf_k(x, y).$
+
+The authors demonstrate that their algorithm can outperform Grad-CAM and Grad-CAM++ both quantitatively and qualitatively. However, it should be noted that they have to perform $N+1$ times of forward passes for a single input, where $N$ is the number of channels, which requires significantly more computations than previous methods and makes them hard to use in practice.
+
+### Score-CAM
+
+## Conclusions
+In summary, we introduce five ways of generating class activation maps, including both gradient-based and gradient-free methods. They all share the same idea of obtaining the saliency maps by first computing the importance scores of channels and then performing a weighted sum of channel outputs. The original CAM paper is inspiring and demonstrates promising performance, but it can only be applied to a limited class of neural networks. Grad-CAM fixes this drawback via utilizing the gradient information and has demonstrated applications in various fields. Follow-up works further refines the idea by using high-order gradients or channel-wise ablations, which may further improve the model performance in certain cases while being more computational.
+
+## References
+[1] Zhou, Bolei, Aditya Khosla, Agata Lapedriza, Aude Oliva, and Antonio Torralba. "Learning deep features for discriminative localization." In Proceedings of the IEEE conference on computer vision and pattern recognition, 2016.
+
+[2] Selvaraju, Ramprasaath R., Michael Cogswell, Abhishek Das, Ramakrishna Vedantam, Devi Parikh, and Dhruv Batra. "Grad-CAM: Visual explanations from deep networks via gradient-based localization." In Proceedings of the IEEE international conference on computer vision, 2017.
+
+[3] Chattopadhay, Aditya, Anirban Sarkar, Prantik Howlader, and Vineeth N. Balasubramanian. "Grad-CAM++: Generalized gradient-based visual explanations for deep convolutional networks." In Proceedings of the IEEE winter conference on applications of computer vision, 2018.
+
+[4] Ramaswamy, Harish Guruprasad. "Ablation-CAM: Visual explanations for deep convolutional network via gradient-free localization." In Proceedings of the IEEE winter conference on applications of computer vision, 2020.
+
+[5] Wang, Haofan, Zifan Wang, Mengnan Du, Fan Yang, Zijian Zhang, Sirui Ding, Piotr Mardziel, and Xia Hu. "Score-CAM: Score-weighted visual explanations for convolutional neural networks." In Proceedings of the IEEE conference on computer vision and pattern recognition workshops, 2020.
+
+[6] Muhammad, Mohammed Bany, and Mohammed Yeasin. "Eigen-CAM: Class activation map using principal components." In Proceedings of the international joint conference on neural networks, 2020. 
+
+[7] Belharbi, Soufiane, Aydin Sarraf, Marco Pedersoli, Ismail Ben Ayed, Luke McCaffrey, and Eric Granger. "F-CAM: Full resolution class activation maps via guided parametric upscaling." In Proceedings of the IEEE winter conference on applications of computer vision, 2022.
+
+[8] Hsia, Hsuan-An, Che-Hsien Lin, Bo-Han Kung, Jhao-Ting Chen, Daniel Stanley Tan, Jun-Cheng Chen, and Kai-Lung Hua. "CLIPCAM: A Simple Baseline For Zero-Shot Text-Guided Object And Action Localization." In Proceedings of the IEEE international conference on acoustics, speech and signal processing, 2022.
+
+[9] Dosovitskiy, Alexey, Lucas Beyer, Alexander Kolesnikov, Dirk Weissenborn, Xiaohua Zhai, Thomas Unterthiner, Mostafa Dehghani et al. "An image is worth 16x16 words: Transformers for image recognition at ccale." In Proceedings of the international conference on learning representations. 2020.
+
+[10] Lin, Min, Qiang Chen, and Shuicheng Yan. "Network in network." In Proceedings of the international conference on learning representations, 2014.
