@@ -30,14 +30,10 @@ The idea of GAP is quite simple: for a given image, if we denote the activation 
 
 ### From GAP to CAM
 CAM treats the weight terms in GAP as the importance score of $F_k$ for a given class $c$. Therefore, if we plug the expression of $F_k=\sum_{x,y} f_k(x, y)$ into the class score $S_c$, we can obtain the following equation:
-$$
-S_c = \sum_kw_k^c \sum_{x, y} f_k(x, y) = \sum_{x, y}\sum_k w_k^cf_k(x, y).
-$$
+$$S_c = \sum_kw_k^c \sum_{x, y} f_k(x, y) = \sum_{x, y}\sum_k w_k^cf_k(x, y).$$
 
 From the above equation, we can see that each spatial location (x, y) contributes independently to the class score. Therefore, the authors of CAM [1] define $M_c$ as their class activation map for class $c$, where the value of the spatial element $(x, y)$ is computed by:
-$$
-M_c(x, y) = \sum_k w_k^cf_k(x, y),
-$$
+$$M_c(x, y) = \sum_k w_k^cf_k(x, y),$$
 where $M_c(x, y)$ directly measure the importance of spatial location $(x, y)$ for the output score of class $c$.
 
 After we obtain the class activation map, we can perform unsampling to the size of the input image, so that we can visualize which image regions contribute the most to the prediction of class $c$.
@@ -54,15 +50,11 @@ In this section, we will cover two variants of CAM that uses the gradient inform
 Grad-CAM is one of the most popular network interpretation methods in the field. Grad-CAM is a generalization of CAM and can be applied to off-the-shelf neural networks of many kinds without the need to re-train them, which is much more flexible than the original CAM algorithm.
 
 Recall that for CAM, each element in the final class discriminative saliency map is obtained by $M_c(x, y) = \sum_k w_k^cf_k(x, y)$. Grad-CAM takes the exact formulation while changing the way of computing the weights for all the channels. Different from CAM, Grad-CAM first performs a back-propagation on the input image given a specific class $c$. Once we obtain the gradients of all the elements in the $k$-th channel, we can accumulate these gradients and treat the result as the importance score of the $k$-th channel for class $c$:
-$$
-w_k^c = \frac{1}{Z} \sum_{i, j} \frac{\partial}{\partial f_k(x, y)} Y_c,
-$$
+$$w_k^c = \frac{1}{Z} \sum_{i, j} \frac{\partial}{\partial f_k(x, y)} Y_c,$$
 where $Z$ is a normalization term.
 
 After we obtain these channel weights, we can perform a weighted sum of the channel output activations and obtain the class activation maps as in CAM:
-$$
-M_c(x, y) = \sum_k w_k^cf_k(x, y).
-$$
+$$M_c(x, y) = \sum_k w_k^cf_k(x, y).$$
 
 We can see that the main difference between CAM and Grad-CAM is that the weights are learned during training for CAM, whereas they are computed during inference for Grad-CAM.In fact, the authors prove that when applying Grad-CAM to GAP-based convolutional neural networks, the channel weights for CAM and Grad-CAM are the same. In other words, Grad-CAM is a strict generalization of CAM.
 
@@ -77,9 +69,7 @@ While utilizing the gradients to obtain channel weights can be helpful, research
 The authors of Ablation-CAM first present qualitative examples that when the model is very confident about its predictions, the gradients will saturate and because Grad-CAM uses the gradient information, it can generate unreliable class activation maps in these cases. To solve this issue, they propose to do ablations on each of the channels and obtain their channel weights accordingly.
 
 Specifically, we first perform a forward pass on the neural network given an image input and get the output score $S_c$ for a given class $c$. Afterwards, we can ablate each of the channels, meaning that we manually set all the output activation values in the $k$-th channels to $0$, and the output score will be changed from $S_c$ to $S_c^k$. Intuitively, the difference between the original output score and the ablated score quantifies the importance of the $k$-th channel for class $c$, and thus we can treat this value as the channel weights in CAM:
-$$
-w_k^c = \frac{S_c-S_c^k}{S_c},
-$$
+$$w_k^c = \frac{S_c-S_c^k}{S_c},$$
 where $S_c$ in the denominator serves as a normalization term.
 
 Then, similar to CAM and its other variants, we can obtain the final saliency map with the computed channel weights according to the equation $M_c(x, y) = \sum_k w_k^cf_k(x, y).$
