@@ -3,7 +3,7 @@ layout: post
 comments: true
 title: "Module 9: Explainable ML - Topic: Class Activation Mapping and its Variants"
 authors: Zi-Yi Dou, Sicheng Jiang
-date: 2022-06-08
+date: 2021-06-08
 ---
 
 
@@ -61,6 +61,25 @@ We can see that the main difference between CAM and Grad-CAM is that the weights
 The authors also demonstrate that Grad-CAM can be applied to a wide range of models, including image classification, visual question answering, and image captioning models. In addition, it has been recently shown that Grad-CAM can also be applied to vision transformer-based models [9]. These results demonstrate that Grad-CAM is generally applicable and much more flexible than CAM. 
 
 ### Grad-CAM++ 
+In the recent years, CAM [1] has been proposed to understand what a CNN learn in an object classification task by using a global average pooling (GAP) layer, and measuring the importance of each pixel regions towards the overall decision of the CNN. By visualizing the weighted combination of the resulting feature maps at the pre-softmax layer, heat maps can be obtained to explain where the CNN is looking at when assigning a label. However, CAM requires retraining multiple linear classifiers (one for each class) to estimate the weights w_k^c for feature maps. Therefore, Selvaraju et al. then proposed Gad-CAM [2] which made CNN-based models more transparent by visualizing input regions with high resolution details that are important for predictions. Grad-CAM take advantage of gradient information to calculate the weights for a particular feature map and class c as:
+
+![pipeline]({{ '/assets/images/module09/1.png' | relative_url }})
+{: style="width: 200px; max-width: 100%;"}
+
+This approach however has two main limitations: firstly, Grad-CAM fails to localize objects in an image if the image contains multiple occurrences of the same class. In addition, Grad-CAM heatmaps often fail to capture the entire object in completeness which is important to recognition task for single object images. Therefore, Grad-CAM++ [3] was proposed to address these shortcomings.
+
+In particular, different feature maps may be activated with differing spatial footprints, and the feature maps with lesser footprints fade away in the final saliency map. To solve this problem, GradCAM++ works by taking a weighted average of the pixel-wise gradients to calculate weights:
+
+![pipeline]({{ '/assets/images/module09/2.png' | relative_url }})
+{: style="width: 220px; max-width: 100%;"}
+
+The α_ij^kc’s are weighting co-efficients for the pixel-wise gradients for class c and convolutional feature map A^k. By taking 
+
+![pipeline]({{ '/assets/images/module09/3.png' | relative_url }})
+{: style="width: 250px; max-width: 100%;"}
+
+All the spatially relevant regions of the input images are equally highlighted. As a result, Grad-CAM++ provides more general visualization for multiple occurrences of a class in an image and poor object localizations. In addition, the author further shows that Grad-CAM++ can be extended to tasks such as image caption generation and video understanding.
+
 
 ## Gradient-free CAM Variants
 While utilizing the gradients to obtain channel weights can be helpful, researchers have shown that gradients can sometimes saturate, in which cases the above gradient-based methods can fail to generate reliable saliency maps. Thus, researchers have also proposed several gradient-free methods and we will cover Ablation-CAM [4] and Score-CAM [5] in this section.
@@ -77,6 +96,23 @@ Then, similar to CAM and its other variants, we can obtain the final saliency ma
 The authors demonstrate that their algorithm can outperform Grad-CAM and Grad-CAM++ both quantitatively and qualitatively. However, it should be noted that they have to perform $N+1$ times of forward passes for a single input, where $N$ is the number of channels, which requires significantly more computations than previous methods and makes them hard to use in practice.
 
 ### Score-CAM
+The author proposed that the gradients may not be an optimal solution to generalize CAM [1], hence presenting a new visual explanation method named Score-CAM [5]. This method uses global contribution of the corresponding input features instead of gradient information to encode the importance of activation maps. The first limitation of the gradient-based method is that the gradient for a DNN may be noisy and tend to vanish due to saturation problem. Besides, there exists false confidence in gradient-based method. For example, when compared to a zero baseline, activation maps with larger weights demonstrate a lesser contribution to the network's output in Grad-CAM. Instead of using the gradient information coming into the final convolutional layer to describe the value of each activation map, we use the Increase of Confidence to express the relevance of each activation map. Specifically, for a known baseline input X_b, the contribution of the activation A_l^k towards the model output Y is defined as:
+
+![pipeline]({{ '/assets/images/module09/4.png' | relative_url }})
+{: style="width: 200px; max-width: 100%;"}
+
+where
+
+![pipeline]({{ '/assets/images/module09/5.png' | relative_url }})
+{: style="width: 150px; max-width: 100%;"}
+
+H_l^k is calculated by firstly upsampling A_l^k then maps each element in the input matrix into [0, 1]. As shown in the following figure, the pipeline is as follows: the CNN firstly extracts the activation maps and upsamples each activation maps into input size in phase 1. Each activation map is then added to the input image and then the forward-passing score on the target class is obtained by the CNN. In phase 2, this process is repeated for N times where N is the number of activation maps. Finally, the resulting output could be produced by linearly combining the score-based weights and activation maps.
+
+![pipeline]({{ '/assets/images/module09/6.png' | relative_url }})
+{: style="width: 800px; max-width: 100%;"}
+*Fig 1. Pipeline of the proposed Score-CAM.
+
+The author quantitively evaluates the fairness of generated saliency maps of Score-CAM on recognition tasks and the visualization and localization performance. Furthermore, the author shows that Score-CAM can be extended to applications as debugging tools.
 
 ## Conclusions
 In summary, we introduce five ways of generating class activation maps, including both gradient-based and gradient-free methods. They all share the same idea of obtaining the saliency maps by first computing the importance scores of channels and then performing a weighted sum of channel outputs. The original CAM paper is inspiring and demonstrates promising performance, but it can only be applied to a limited class of neural networks. Grad-CAM fixes this drawback via utilizing the gradient information and has demonstrated applications in various fields. Follow-up works further refines the idea by using high-order gradients or channel-wise ablations, which may further improve the model performance in certain cases while being more computational.
