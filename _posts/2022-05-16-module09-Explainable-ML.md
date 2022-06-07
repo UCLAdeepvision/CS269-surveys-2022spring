@@ -7,61 +7,51 @@ date: 2021-05-16
 ---
 
 
-> This block is a brief introduction of your project. You can put your abstract here or any headers you want the readers to know.
+> Explainable ML (or XAI) attempts to bridge the gap between the black-box nature of machine learning models and human understanding. The goal is to explain the behavior of models in a human-understandable manner. It is a crucial for applying the ML models with superior performance into critical applications such as medical or financial domains. It functions as a sanity check for whether the models behave as we humans expect them to and helps gain trust from human users, as well as debug the models for underlying biases.
 
 <!--more-->
 {: class="table-of-content"}
+
 * TOC
 {:toc}
 
-## Main Content
-Your article starts here. You can refer to the [source code](https://github.com/lilianweng/lil-log/tree/master/_posts) of [lil's blogs](https://lilianweng.github.io/lil-log/) for article structure ideas or Markdown syntax. We've provided a [sample post](https://ucladeepvision.github.io/CS188-Projects-2022Winter/2017/06/21/an-overview-of-deep-learning.html) from Lilian Weng and you can find the source code [here](https://raw.githubusercontent.com/UCLAdeepvision/CS188-Projects-2022Winter/main/_posts/2017-06-21-an-overview-of-deep-learning.md)
+## Explainable ML
+Explainable ML is the subfield of machine learning research where the goal is to interpret a (black-box) model in a human-understandable sense. Due to the complexity of recent state-of-the-art performing deep learning models with significantly more parameters than available data, good performance on the training data or even a holdout testing data may not imply good performance in general. Models may suffer from the curse of dimensionality. Therefore, in order to apply these excellent performing models in critical domains where unexpected behavior from the model may be costly, it is important to attempt to understand how the models make the decisions and determine if the decision process is aligned with human intuition.
 
-## Basic Syntax
-### Image
-Please create a folder with the name of your team id under /assets/images/, put all your images into the folder and reference the images in your main content.
+There are many approaches for interpreting a machine learning model since there does not exist an uniquely "correct" explanation. Any method that yields insight regarding the model is considered a valid method. Different methods should be applied for gaining different types of insight. In the following sections, we will introduce different approaches for interpretation and briefly go over what types of information they reveal as well as the limitations of the methods.
 
-You can add an image to your survey like this:
-![YOLO]({{ '/assets/images/UCLAdeepvision/object_detection.png' | relative_url }})
-{: style="width: 400px; max-width: 100%;"}
-*Fig 1. YOLO: An object detection method in computer vision* [1].
+### Concept-based approach
+Concept-based interpretation is an extension of typical input feature importance attribution methods. It is useful in the case where input features are difficult to humanly interpretable, which makes importance attribution with respect to features rather useless. Instead of attribution importance to input features, concept-based interpretation attribute to.. well concepts. What are concepts? In general concepts can be defined as a function of the input features that represent higher-level semantics easier for humans to understand. For instance, consider a machine learning model that predicts gene expression given microscopy images as input. Attributing importance to high-level concepts such as morphological features of cells provides more insight regarding predictions better than to raw pixel values.
 
-Please cite the image if it is taken from other people's work.
+Here we classify concept-based interpretation methods into two categories: self-interpretable models versus post-hoc interpretations. Self-interpretable models are models designed to provide interpretation by construction. Post-hoc interpretations, on the other hand, takes a model that is initially not expected to be interpretable and attempts to provide an interpretation. The prior usually provides a better interpretation but restricts the model class and potentially harms the performance of the model on the main intended task. This is less feasible since people generally does not wish to comprimise  performance to achieve better interpretability. The latter usually requires making assumptions about the model of analysis to perform interpretation, since it is intractable to explain a inherently black-box, unpredictable model. The strength of the assumption affects how usable a method is.
 
+#### Self-interpretable models
 
-### Table
-Here is an example for creating tables, including alignment syntax.
+**Concept bottleneck model (CBM)** [1] tackles the interpretation from a causal perspective. The underlying assumption is that the concepts $c$ solely contains sufficient information to predict the target labels $y$. The model is decoupled into two components: the first component takes in features $x$ from the input space and predicts concepts $\hat{c}$ and the second component takes in predicted concepts $\hat{c}$ from the concept space and predicts target labels $y$. As the names indicates, the concepts serves as a information bottleneck for predicting the target, which models $c$ and $y$ in a causal manner. Causal models allow test time intervention to correct a potential error. For instance, reusing the previous example of gene expression prediction, suppose the model makes a incorrect prediction because one of the concepts, the cell size, is predicted incorrectly. A human expert can predict intervene with the decision real time to correct the concept prediction, and thereby correcting the expression prediction. This also allows model designers to understand how to improve the model, since errors in the prediction can potentially be attributed to errors in the predictions.
 
-|             | column 1    |  column 2     |
-| :---        |    :----:   |          ---: |
-| row1        | Text        | Text          |
-| row2        | Text        | Text          |
+**Concept-whitening (CW)** [2] is a technique for adding interpretation to general neural network models, proposed as a drop-in replacement for typical normalization in neural networks (e.g. layer norm, batch norm). It consists of two processes: matrix whitening and aligning the whitened matrix with concepts (orthogonally). Matrix whitening is a well-established matrix transformation where a given matrix is transformed by mupltiplying with a unitary matrix such that the product is whitened, i.e., the covariance matrix is identity. Intuitively, the axis of the matrix is decorrelated and the variance of each axis is standardized. There are infinitely many matrix that satisfy the whitening effect, since orthogonalization can be defined with arbitrary bases. This is where the second step comes in, to rotate the matrix and align individual axes with some predifined concepts. Each axis will be associated with one concept. Input instances that posses the concept trait is expected to be highly activated in the corresponding concept axis.
 
+CBM is suitable for the case where support for concept intervention is needed. However, the underlying assumption is the concepts need to contain sufficient information for predicting the targets. CW is more general and can be applied to most neural network models. The downside is degradation of prediction performance and longer training time since the whitening involves a two-step alternating optimization. Both methods require knowing the concepts we want to use to interpret the models during training time.
 
+#### Post-hoc interpretation
 
-### Code Block
-```
-# This is a sample code block
-import torch
-print (torch.__version__)
-```
+**Causal concept effect (CaCE)** [3] is a post-hoc method that relies on concept intervention. The method is simple: given pairs of input and their corresponding concepts, we can train a variational autoencoder (VAE) on the input space where the bottleneck layer corresponds to the concepts. This models the concept and input with a causal relation (decoder pat of the VAE). Enforcing disentangling in the bottleneck of VAEs is a rather well studied topic in representation learning. In this case, the additional step is to align the disentangled bottleneck with the corresponding concepts. The result is a generative model where a copy of the input instance with the concepts intervened in whatever way we want. Any downstream models that shares the same input space can be interpreted by this method. One way of measuring concept importance is to compared the predicted value difference given the original input sample and the intervened input sample. The assumption is here is the concepts can be modeled and disentangled well, which turns out is quite difficult to achieve in general (e.g. if concepts are fundementally entangled). 
 
+**Testing with Concept Activation Vector (TCAV)** [4] first represents a concept with a concept activation vector (CAV) and evaluate the alignment between the input gradients of target model and the vector. Then a concept saliency score is calculated based on the alignment over a dataset. This is a global interpretation method, in that the interpretaion is for a concept with respect to the entire model, as opposed to individual data samples. In order for the concept to be represented well by a vector, the concept labels must be linearly separable in the space where the vector is lies. The authors implicitly assumed that there exists a layer in the target model where concept labels can be linearly separated. Such assumption may hold in some trivially constructed synthetic datasets where the ground-truth of the concept labels can be easily defined. However, in the general case linear separability of concepts does not hold. Nevertheless, the method has found great success due to its simplicity. The idea of representing a concept with a vector in some latent space of the target model is rather easy to be accepted by new adopters.
 
-### Formula
-Please use latex to generate formulas, such as:
+**Interpretable Basis Decomposition (IBD)** [5] relies on decomposing the final classication layer weight vector into linear combination of concept basis vectors. Attribution to individual concepts can be done by projecting the final layer activation onto the corresponding concept basis. This is similar to TCAV where the concept is represented by a vector. However, IBD relies on retrieving concepts from a predifined dictionary of concepts to serve as the decomposed basis. The benefit is concepts can be somewhat semi-automatically retrieved as long as the concept dictionary is predifined. The downside is we have no control over which concepts are selected. If a concept is not selected as the basis, we have no idea to perform attribution with respect to that concept. Of course we could modify the algorithm slightly to include the desired concepts in the bases in the first place. However, there should be a limit to how many concepts can be pre-selected before the method becomes useless. The other downside is the selection of concept basis is based on a greedy residual error minimization scheme where each individual concept is iteratively retrieved. It is possible that combinations of concepts may interpret better than a single one, which will be neglected by the greedy algorithm. This method relies on the same assumption as TCAV that concepts can be represented by concept activation vectors in the target space of the model.
 
-$$
-\tilde{\mathbf{z}}^{(t)}_i = \frac{\alpha \tilde{\mathbf{z}}^{(t-1)}_i + (1-\alpha) \mathbf{z}_i}{1-\alpha^t}
-$$
-
-or you can write in-text formula $$y = wx + b$$.
-
-### More Markdown Syntax
-You can find more Markdown syntax at [this page](https://www.markdownguide.org/basic-syntax/).
+CaCE is the most difficult to use method in that one has to train a generative model before performing interpretation and generative models, especially ones with constraints, are notorious to train. Even if the generative is well trained, it is not guaranteed that the intervened input sample would look like how it's supposed to in the data distribution. TCAV and IBD both relies on lienarized representation of concepts. TCAV is suitable for explaining with respect to one single concept since the formulation is the alignment of individual concepts with input gradients. IBD is suitable for explaining with respect to a set of concepts, where comparison between concept importance is easier.
 
 ## Reference
-Please make sure to cite properly in your work, for example:
+[1] Koh, Pang Wei, Thao Nguyen, Yew Siang Tang, Stephen Mussmann, Emma Pierson, Been Kim, and Percy Liang. “Concept Bottleneck Models.” *ArXiv:2007.04612 [Cs, Stat]*, December 28, 2020. http://arxiv.org/abs/2007.04612.
 
-[1] Redmon, Joseph, et al. "You only look once: Unified, real-time object detection." *Proceedings of the IEEE conference on computer vision and pattern recognition*. 2016.
+[2] Chen, Zhi, Yijie Bei, and Cynthia Rudin. “Concept Whitening for Interpretable Image Recognition.” *Nature Machine Intelligence* 2, no. 12 (December 2020): 772–82. https://doi.org/10.1038/s42256-020-00265-z.
+
+[3] Goyal, Yash, Amir Feder, Uri Shalit, and Been Kim. “Explaining Classifiers with Causal Concept Effect (CaCE),” n.d., 10.
+
+[4] Kim, Been, Martin Wattenberg, Justin Gilmer, Carrie Cai, James Wexler, Fernanda Viegas, and Rory Sayres. “Interpretability Beyond Feature Attribution: Quantitative Testing with Concept Activation Vectors (TCAV).” *ArXiv:1711.11279 [Stat]*, June 7, 2018. http://arxiv.org/abs/1711.11279.
+
+[5] Zhou, Bolei, Yiyou Sun, David Bau, and Antonio Torralba. “Interpretable Basis Decomposition for Visual Explanation.” In *Computer Vision – ECCV 2018*, edited by Vittorio Ferrari, Martial Hebert, Cristian Sminchisescu, and Yair Weiss, 11212:122–38. Lecture Notes in Computer Science. Cham: Springer International Publishing, 2018. https://doi.org/10.1007/978-3-030-01237-3_8.
 
 ---
