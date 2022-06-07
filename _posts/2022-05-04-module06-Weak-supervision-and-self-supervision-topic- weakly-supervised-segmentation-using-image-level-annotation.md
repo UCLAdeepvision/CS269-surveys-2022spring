@@ -2,12 +2,12 @@
 layout: post
 comments: true
 title: "Module 6: Weak supervision and self supervision - Topic weakly supervised segmentation"
-author:
+author: Jiarui Wang, Jiaying Li
 date: 2021-05-04
 ---
 
 
-> We perform research on weakly supervised semantic segmentation with image level annotation. Five papers are introduced and compared to explore the common pipeline of weakly supervised semantic segmentation.   
+> We perform research on weakly supervised semantic segmentation with image level annotation. Six papers are introduced and compared to explore the common pipeline of weakly supervised semantic segmentation.   
 
 
 <!--more-->
