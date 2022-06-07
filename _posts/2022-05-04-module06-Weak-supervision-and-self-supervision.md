@@ -1,67 +1,52 @@
 ---
 layout: post
 comments: true
-title: "Module 6: Weak supervision and self supervision"
-author: Authors
-date: 2021-05-04
+title: "Module 6: Weak Supervision and Self Supervision: Representation Learning"
+author: Ankur Kumar
+date: 2022-06-07
 ---
 
 
-> This block is a brief introduction of your project. You can put your abstract here or any headers you want the readers to know.
+> Weak supervision and self-supervision algorithms have seen tremendous successes recently. We briefly discuss key papers for both these topics to give an overview of recent progress in the field.
 
 <!--more-->
 {: class="table-of-content"}
 * TOC
 {:toc}
 
-## Main Content
-Your article starts here. You can refer to the [source code](https://github.com/lilianweng/lil-log/tree/master/_posts) of [lil's blogs](https://lilianweng.github.io/lil-log/) for article structure ideas or Markdown syntax. We've provided a [sample post](https://ucladeepvision.github.io/CS188-Projects-2022Winter/2017/06/21/an-overview-of-deep-learning.html) from Lilian Weng and you can find the source code [here](https://raw.githubusercontent.com/UCLAdeepvision/CS188-Projects-2022Winter/main/_posts/2017-06-21-an-overview-of-deep-learning.md)
+## Introduction
+We discuss techniques to learn high quality features for computer vision models without large supervised datasets. The motivation is to reduce huge amount of manual efforts that goes in creating large supervised dataset. This manual approach is also not scalable. Existing works on reducing supervision can be divided into two broad categories: weak supervision and self-supervision. Weak supervision uses lower quality labels which are easier to obtain, generally from non-experts [1]. On the other hand, self-supervison algorithms completely discard the label information and create supervisiory signal from input itself, often leveraging the underlying structure in the data [2]. Recent works using weak supervision or self-supervision have shown strong performance on downstream tasks. We next discuss some important works for both the categories in detail.
+ 
+## Weak Supervision
+The success of deep learning is attributed to large, high quality datasets such as ImageNet, and improvement in computing resources which helps in training much deeper models. There is a belief that improving the model architecture (depth, novel components etc) and training on larger datasets will help to learn better representations (evaluated by performance on downstream tasks). Many works following the success of AlexNet focused on desigining novel architectures whereas few works explored the other direction, i.e. how to increase the dataset size for representation learning. Since it is not feasible to employ human labor to create a massive, carefully annotated dataset, the idea is to use potentially noisy labels, for example, hashtags, image captions etc. which can be easily collected from the internet. Such labels provide weak signals compared to high quality labels provided by domain experts. Therefore, it is imperative to train with large weakly supervised dataset, which has its own challenges. We discuss below four works providing insights into different aspects of weakly supervised pre-training. The first work [3] shows that such pre-training indeed improves performance on downstream tasks. The second work [4] uses an even larger dataset with different type of weak supervision and provides some analysis. The third [5] and fourth [6] works are sort of followup works of the first and second respectively. We only do a qualitative discussion of results from these works because of varying experimental setup.
 
-## Basic Syntax
-### Image
-Please create a folder with the name of your team id under /assets/images/, put all your images into the folder and reference the images in your main content.
+### Revisiting the unreasonable effectiveness of data in deep learning era
+The authors use JFT-300M dataset to pre-train a ResNet101 model and evaluate it on multiple downstream tasks such as object detection, semantic segmentation etc. JFT-300M dataset contains 300 million images derived from data which powers image search. There are 375 million labels from 18291 different categories, indicating that an image can belong to multiple categories. The label categories form a heirarchical relationship. For example, an image containing apple also belongs to fruit category. Unfortunately, we don't know any other details about creation of this dataset except that the process was automated and used complex mixture of raw web signals, connections between web pages, and user feedback. It is mentioned that approximately 20% of the labels are noisy. Noisy labels can manifest in form of label confusion or random images labeled as one of the 18291 classes. Another challenge with collecting data in this manner is the skewness in resulting data distribution. JFT-300M has a heavy long-tailed distrubtion. Around 5K categories have less than 100 images per category whereas there are more than 2M images for flowers. Both the factors can lead to unstable pre-training, bias model towards frequent class and perform poorly on classes in the tail of data distribution. The experimental results show that pre-training improves performance on ImageNet classification, COCO object detection, Pascal VOC semantic segmentation and CMU pose estimation. This indicates that weakly supervised pre-training works despite significant label noise and long tailed data distribution. Interested readers can go through the published work for more details.
 
-You can add an image to your survey like this:
-![YOLO]({{ '/assets/images/UCLAdeepvision/object_detection.png' | relative_url }})
-{: style="width: 400px; max-width: 100%;"}
-*Fig 1. YOLO: An object detection method in computer vision* [1].
+### Exploring the limits of weakly supervised pretraining
+This work scales the pre-training dataset to upto 3.5 billion images from Instagram. Also, different from previous work, it uses hashtags for the collected images as labels to learn the features. The authors mention that their dataset construction process is simpler and more transparent compared to JFT-300M dataset discussed above. The hashtags associated with images are very noisy in the sense that it may not explicitly describe the visual content of corresponding image. Similarly, relevant hashtags may have been left out. WordNet is utilized to merge similar hashtags which also reduces some noise. To characterize the effect of such label noise, they artificially inject label noise by replacing a fraction of the hashtags with random hashtags and find that weakly supervised pre-training is resilient to significant amount of label noise. We discussed earlier that large datasets have a long tailed distribution. So how does this impact performance? This work compares three types of sampling from the dataset: random sampling from original distribution, random sampling from re-normalized distribution obtained after taking square root of hashtags in head of original distribution, and randomly sample hashtag followed by randomly sampling image for that hashtag. Experiments show that square root sampling performs the best with much better accuracy than sampling at random (first one). Additional insights and some results (in contrast with previous work) are as follows: 1. The authors minimize cross entropy loss where target vector has k non-zero entries each set to 1/k corresponding to the k ≥ 1 hashtags for the image. Per-hashtag sigmoid output and binary logistic loss, used in previous work, gives significantly worse results for this dataset. 2. Selection of label space to match that of downstream task is as important as increasing the size of pre-training dataset 3. The pre-training may help classification tasks but may actually hurt localization task. Finally, in agreement with the previous work, the authors conclude that model architectures need to be improved otherwise they underfit on such large dataset.
 
-Please cite the image if it is taken from other people's work.
+### Scaling vision transformers
+Both the above works find that model capacity is bottleneck for weakly supervised pre-training, and not the dataset size. So one can ask the following questions: 1. how crucial are the modeling choices in this process 2. what is the model behaviour when model capacity and dataset size are increased? This work investigates these questions by training a vision transformer (ViT) model with 2B parameters on JFT-3B dataset. JFT-3B is an extension of previously discussed JFT-300M dataset and contains 3 billion images. There are 30K labels obtained via semi-automatic pipeline indicating manual labour involved in the process. Interestingly, this work ignores the heirarchical nature of the labels which was crucial for pre-training with JFT-300M dataset [4]. The use of different model architecture is also notable. Ideally, we want the model to learn inductive bias from the dataset itself rather than manually baking it ourselves into the architecture as done in CNN. In this regard, ViT may be more preferable than CNNs for large scale datasets as the former has comparable or better performance with much less inductive bias. Further, the model architecture should be easy to scale over large datasets. It is not entirely clear how to scale CNN models. There have been recent works in this regard (EfficientNet, BiT, ResNet-RS) whereas scaling is relatively well studied for transformers. ViT results presented in this paper are state of the art and outperforms all other model architectures. Also, simply switching from JFT-300M to JFT-3B for pre-training without scaling the model brings consisitent significant improvement for both small and large model capacity. The authors discuss various small improvements which are important for training models at scale. But we leave them out due to their less relevance for this survey.
 
+### Revisiting weakly supervised pretraining of visual perception models
+This paper revisits pre-training using Instagram images and hashtags. Similar to previous work, one of the focus of this work is to increase model capacity. Here also one of the best performing model is ViT. The dataset size is similar but resampling is modified from square root sampling to resampling according to inverse square root of hashtag frequency. Additionally, images containing at least one infrequent hashtag is upsampled by 100x. The authors provide a system-level comparison between supervised pre-training, self-supervised pre-training and weakly supervised pre-training. Interestingly, they consider JFT-300M and JFT-3B dataset as supervised dataset and not weakly supervised dataset since it was mentioned in the previous work using JFT-3B that dataset construction is semi-automatic. The results show that weakly supervised ViT performs competitively or even surpasses other models on some tasks in terms of classification accuracy. The comparitive results are only presented for different classificaiton tasks. We also find that pre-training is done on smaller resolution (224x224) but finetuning is done on higher resolution (e.g. 224x518). This may be done to reduce pre-training time. However, this impacts model performance where pre-training resolution is used (as in next two comparisons). In those cases, the best performing model is based on RegNetY and not ViT. The comparison with self-supervised models show that weak supervision outperforms self-supervision by significant margin. However, it is difficult to draw a conclusion since the experimental settings vary. For example, self-supervised models considered in this work are trained on smaller datasets and use different model architecture. The final comparison is done in zero shot settings with weakly supervised models using text modality for pre-training such as CLIP [7] and ALIGN [8]. Image-text pre-training has become extremely popular recently but we do not cover these types of weakly supervised models in this survey. CLIP and ALIGN models outperform RegNetY models but, as mentioned earlier, it is difficult to find the reason due to difference in experimental settings. Nonetheless, weak supervision, including CLIP type of pre-training, shows very strong results. In all the four works, it is shown that performance does not saturate and may increase further with proper scaling of dataset and model size.
 
-### Table
-Here is an example for creating tables, including alignment syntax.
+## References
+[1] http://ai.stanford.edu/blog/weak-supervision
 
-|             | column 1    |  column 2     |
-| :---        |    :----:   |          ---: |
-| row1        | Text        | Text          |
-| row2        | Text        | Text          |
+[2] https://ai.facebook.com/blog/self-supervised-learning-the-dark-matter-of-intelligence
 
+[3] Sun, Chen et al. “Revisiting Unreasonable Effectiveness of Data in Deep Learning Era.” 2017 IEEE International Conference on Computer Vision (ICCV) (2017)
 
+[4] Mahajan, Dhruv Kumar et al. “Exploring the Limits of Weakly Supervised Pretraining.” ArXiv abs/1805.00932 (2018)
 
-### Code Block
-```
-# This is a sample code block
-import torch
-print (torch.__version__)
-```
+[5] Zhai, Xiaohua et al. “Scaling Vision Transformers.” ArXiv abs/2106.04560 (2021)
 
+[6] Singh, Mannat et al. “Revisiting Weakly Supervised Pre-Training of Visual Perception Models.” ArXiv abs/2201.08371 (2022)
 
-### Formula
-Please use latex to generate formulas, such as:
+[7] Radford, Alec et al. “Learning Transferable Visual Models From Natural Language Supervision.” ICML (2021)
 
-$$
-\tilde{\mathbf{z}}^{(t)}_i = \frac{\alpha \tilde{\mathbf{z}}^{(t-1)}_i + (1-\alpha) \mathbf{z}_i}{1-\alpha^t}
-$$
-
-or you can write in-text formula $$y = wx + b$$.
-
-### More Markdown Syntax
-You can find more Markdown syntax at [this page](https://www.markdownguide.org/basic-syntax/).
-
-## Reference
-Please make sure to cite properly in your work, for example:
-
-[1] Redmon, Joseph, et al. "You only look once: Unified, real-time object detection." *Proceedings of the IEEE conference on computer vision and pattern recognition*. 2016.
+[8] Jia, Chao et al. “Scaling Up Visual and Vision-Language Representation Learning With Noisy Text Supervision.” ICML (2021)
 
 ---
