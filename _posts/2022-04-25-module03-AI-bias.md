@@ -119,36 +119,34 @@ $$
 \mathcal{L}^{AC} = \frac{1}{N} \sum^N_{n=0} \sum^{T}_{t=0} \mathbb{1}(w_t \in \mathcal{G}_w \cup \mathcal{G}_m) \mathcal{C}(\tilde{w}_t, I')  
 $$
 
-which is the average confusion value ($$\mathcal{C}$$)  of the gendered words in one image description, where the confusion of a gendered word is measured by,
+which is the average confusion value ($\mathcal{C}$)  of the gendered words in one image description, where the confusion of a gendered word is measured by,
 
 $$
 \mathcal{C} (\tilde{w_t}, I') = | \sum_{ g_w \in \mathcal{G_w} } p( \tilde{w_t} = g_w | w_{0:t-1}, I') - \sum_{ g_m \in \mathcal{G_m} } p( \tilde{w_t} = g_w | w_{0:t-1}, I') |
 $$
 
-Intritively, given a set of women gendered words ($$\mathcal{G_w}$$), and a set of men gendered words ($$\mathcal{G_m}$$), the confusion of a description word is the difference of probability that the word is in a specific group, conditioned on the previous sequence and a mask of the original image which only contains the direct gender evidence. On the other hand, the Confident Loss encourages the model to be confident when gender information is observed. The Confident loss is defined as the average confidence of the predicted gendered words in the description of one image, which is,
+Intritively, given a set of women gendered words ($\mathcal{G_w}$), and a set of men gendered words ($\mathcal{G_m}$), the confusion of a description word is the difference of probability that the word is in a specific group, conditioned on the previous sequence and a mask of the original image which only contains the direct gender evidence. On the other hand, the Confident Loss encourages the model to be confident when gender information is observed. The Confident loss is defined as the average confidence of the predicted gendered words in the description of one image, which is,
 
 $$ 
 \mathcal{L}^{Con} = \frac{1}{N} \sum_{n=0}^{N}  \sum_{t=0}^{T} (\mathbb{1}(w_t \in \mathcal{G_w}) \mathcal{F}^W(\tilde{W_t},I) + \mathbb{1}(w_t \in \mathcal{G_m})\mathcal{F}^W(\tilde{W_t},I) )
 $$ 
 
-where the confidence ($$\mathcal{F}$$) of a predicted gender word is measured by the quotient between predicted probabilities of the word belonging to each gender group, conditioned on the previous sequence and the input image. For instance, the confidence in the woman group is, 
+where the confidence ($\mathcal{F}$) of a predicted gender word is measured by the quotient between predicted probabilities of the word belonging to each gender group, conditioned on the previous sequence and the input image. For instance, the confidence in the woman group is, 
 
 $$
 \mathcal{F}^W (\tilde{w_t},I) = \frac{\sum_{g_m \in \mathcal{G_m} } p( \tilde{w_t} = g_m | w_{0:t-1}, I) }{\sum_{g_w \in \mathcal{G_w} } p( \tilde{w_t} = g_w | w_{0:t-1}, I) + \epsilon}
 $$
 
-The final Equalizer is a linear combination of the the Appearance Confusion Loss($$\mathcal{L}^{AC}$$), the Confident Loss($$\mathcal{L}^{Con}$$), and the standard cross entropy loss($$\mathcal{L}^{CE}$$). The two complementary loss terms works together to force the description model to focus on the appearance of gender information, other than the unrelated or stereotyped context, when producing a gendered description word. 
+The final Equalizer is a linear combination of the the Appearance Confusion Loss($\mathcal{L}^{AC}$), the Confident Loss($\mathcal{L}^{Con}$), and the standard cross entropy loss($\mathcal{L}^{CE}$). The two complementary loss terms works together to force the description model to focus on the appearance of gender information, other than the unrelated or stereotyped context, when producing a gendered description word. 
 
 AFter training and testing on MS-COCO dataset, the experiment result illustrated the ability of the Equalizer model to reduce outcome divergence between the majority and the minority groups, mitigating the bias ampilification issue. Moreover, applying explanation methods to the caption results, it is proved that the equalizer model is able to focus on the gender clue of the individuals from the target image other than the unrelated context when describing their gender. However, this method also comes with drawbacks. Firstly, the authors also mentioned that there was a small drop in performance on standard description metrics, possibly because the regularized model is more conservative, so that it uses gender neutral terms to describe appearance with little gender evidence. Also, proper genger evidence needs to be provided for training images, making it harder to apply this method to abstract features.
 
 
-### Commercial (Data-level) AI De-biasing
+### AI De-biasing practices and policies from the Industry
 
-Some of those attempts for commercial purposes[7], however, still rely on data pre/post-processing to mitigate the data-related bias in their business models that could have negative impacts on their profit statistics. <span style="color:red">[Sidi: Please help expand the description]</span>
+As the importance of AI de-biasing has been brought into the attention of the industry, a group of leaders from the academic disciplines and industry sectors has gathered together to draws upon the insight of identifying and mitigating AI-bias in real-world applications. First of all, it is never enough to emphasize how much harm a biased decision system could do to the minority group. AI decisions must be trustworthy and ethical to ensure that the users of the application could enjoy equal benefits from the system. To define and measure the fairness of a decision system, different notion of fairness such as equality of odds, or demographic parity has been proposed as measurement metrics. However, it is still hard to come up with a comprehensive standard to define an ethic and trustworthy automated decision system. Because fairness is not only a mathematical notion or metric, but more of a common value and an ethical belief to human-beings. Therefore, the authors of [7] proposed a discipline that the developers should consider before they could publish their work for public usage. Firstly, Operators of algorithms must develop a bias impact statement to guide them through the design, implementation, and application of the AI system. Such a statement contains questions to ask about themselves, which help the developers to better regularize the unfairness in their work. Some template questions could be: identifying the group of users, especially those minority groups who are more liked to experience unfair decision. What metrics will be used to properly measure the potential un-fairness of the system. And how to compensate the harm that could be done by the unfair decision. Questions should be asked and actions should be taken for all participants in this system, including the stakeholders, the developers, and all others who will be impacted by the decision. On the other hand, formal and regular auditing of algorithms to check for bias is another best practice to detecting and mitigating bias. Operators of algorithms must rely upon cross-functional work teams and expertise to review and detect blind-spots that could be missed from a single perspective. Lastly, black-box models lack of self-explanation ability to proclaim the validity of its decision. The subjects of automated decisions need better algorithmic literacy, such as the occurrence of bias, to be more actively participating in spotting any potential bias.
 
-
-
-In general, mitigating the AI bias in multiple levels has been granted more and more attention. As the solutions stabilize and fushion, it's definitely more than just a hope to solve the problem.
+In general, mitigating the AI bias in multiple levels has been granted more and more attention. As the solutions stabilize and fushion, and the regulirization be more developed, it's definitely more than just a hope to hear from less unfortunate accident from an unfair automated decision system in the future.
 
 ## Essentially addressing the AI Bias problem?
 Unfortunately, up to now, addressing the AI Bias problem is still beyond the best of our ability. However, more and more studies, with relaxed assumption of training/inference data beyond the classicial _i.i.d._ assumption, have been conducted [8,9,10]. While they are no essential solutions, step by step, they still shed light on how we can improve the model robustness towards (harmful) biases, and possibly defend the AI Bias-related consequences as a dynamic solution (rather than a static, ideal, essential solution).  
