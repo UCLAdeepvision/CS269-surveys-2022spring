@@ -2,7 +2,7 @@
 layout: post
 comments: true
 title: "Module 10: Debate on Explainable ML"
-author: Andong Hua, Boya Ouyang, Jiayue Sun(Drop), and Yu-Hsuan Liu 
+author: Andong Hua, Boya Ouyang, Jiayue Sun, and Yu-Hsuan Liu 
 date: 2022-06-08
 ---
 
@@ -22,17 +22,11 @@ In the next section, we go over the issues needed to be solved with the definiti
 ## Background
 
 
-## Feature Attribute 
-
-### Saliency Map
-
-### Evaluation 2
-
-### Maybe the third one
+## Feature Attribution Based Methods
 
 
 ## Conclusion
-(Might) not need this
+
 
 
 ## Reference
