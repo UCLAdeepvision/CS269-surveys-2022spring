@@ -83,7 +83,7 @@ The above evaluation methods focused on the effectiveness of interpretability me
 
 
 ## Conclusion
-(IP)
+In this survey, we discuss the issues that need to be solved when interpreting deep learning models. We emphasize the need for us to work on a formal and universal definition to quantify the interpretability. More importantly, an over-rely on the interpretation method can be misleading. As an example of post-hoc interpretation, feature attribution based methods analyze how much each feature in the model contributed to the prediction. We examine the commonly used strategies to evaluate those methods and how these methods can be ineffective under certain scenarios. It will be more rigorous for researchers to focus on quantitative analysis than solely relying on visualization to interpret deep learning models. Some of the saliency map methods are sensitive to both model parameter and training data, such as gradient and gradient variants, but some methods including Guided BackProp are independent to model parameter and dataset, which is not supposed to be applied to model or data relevant tasks, for example, finding outliers. Finally, some feature attribution methods including Gradients, SmoothGrad, Integrated Gradients, and Guided BackProp, are not sensitive to models’ reliance to spurious correlations. 
 
 
 ## Reference
