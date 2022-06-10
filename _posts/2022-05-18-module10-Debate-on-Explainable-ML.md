@@ -2,7 +2,7 @@
 layout: post
 comments: true
 title: "Module 10: Debate on Explainable ML"
-author: Andong Hua, Boya Ouyang, Jiayue Sun, and Yu-Hsuan Liu 
+author: Andong Hua, Boya Ouyang, and Yu-Hsuan Liu 
 date: 2022-06-08
 ---
 
