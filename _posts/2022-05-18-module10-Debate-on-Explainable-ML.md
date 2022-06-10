@@ -26,7 +26,7 @@ As Lipton [1] mentions in the paper, when interpreting the supervised learning m
 ![Blackbox]({{ '/assets/images/module10/blackbox.png' | relative_url }})
 {: style="width: 600px; max-width: 100%; display: block; margin-left: auto; margin-right: auto;"}
 <div style="text-align: center;">
-  <i>Fig 1. With the prediction values $$\hat{y}$$ from the model and the ground truth label y*, we calculate the evaluation metrics. We interpret the models with the evaluation metrics and the results from the interpretation techniques.</i>
+  <i>Fig 1. With the prediction values $\hat{y}$ from the model and the ground truth label y*, we calculate the evaluation metrics. We interpret the models with the evaluation metrics and the results from the interpretation techniques.</i>
 </div>
 
 Kim [2] and Ribeiro et al. [3] claim that “Interpretability is to be prerequisite for trust.” However, they do not define the standard of being able to trust. Some people argue that a sufficiently accurate model is trustworthy, but the examples for the model to decide the correct prediction may not be reliable. For instance, in a crime rate prediction model, the model can accurately predict which community has a higher crime rate, but we cannot account for the racial bias in the train data [1]. It is not only about how often a model is correct, but also about which examples are correct.
