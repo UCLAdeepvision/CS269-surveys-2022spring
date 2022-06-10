@@ -1,7 +1,7 @@
 ---
 layout: post
 comments: true
-title: "Module 5: Data collection and annotation; Interactive Object Instance Annotation: A Survey on Toronto Annotation Suite"
+title: "Module 5, Topic: Interactive Object Instance Annotation"
 author: Tingfeng Xia, & Ting-Po Huang
 date: 2021-05-02
 ---
