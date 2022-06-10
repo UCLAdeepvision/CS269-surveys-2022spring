@@ -24,6 +24,20 @@ To improve the robustness of a neural network, one common practice is adversaria
 This survey aims at selecting and summarizing object detection research from two perspectives. First, we briefly review the typical structure and the learning objective of object detection. Next, we are going to look into some attack attempts in object detection, compare their results, and discuss the potential threats to real-world scenarios. Then, we dive into the domain of robust training of object detectors. 
 
 ## Adversarial Training for Object Detection
+### Improve Robustness from the perspective of dataset
+In this subtopic, we will discuss methods that improve the robustness from the perspective of the dataset. In real applications such methods can not only increase the size and diversity of  the training set but also provide a simple method to train the model without requiring extra GPU memory.
+[9]proposed a Patch Gaussian method, which adds a W x W patch of Gaussian noise to the image. This approach first sampled a point within the image as the center of the patch.  Then, varying the W and maximum standard deviation of noise could change patch size and noise level. One sample image are shown below to illustrate their method.
+![gaussian patch visualization]({{ '/assets/images/Module04OD/gaussian_patch_vis.png' | relative_url }})
+
+The quantitative results on the object detection tasks shows that such a method could also improve the robustness of the detector. A RetinaNet detector with ResNet-50 backbone was trained on the COCO dataset. The COCO validation data was corrupted by i.i.d. Gaussian Noise (=0.25). The model trained with Gaussian Patch achieved mAP of 26.1%, which outperformed the baseline results 11.6%.
+
+[10] improve the robustness by letting the CNN make decisions based on the shape of information. Through extensive experiments, they empirically found that CNN tends to make decisions based on the texture of objects. They overcome this bias and let the CNN consider the shape information by converting the original dataset to images with different styles by using AdaIN Style Transfer. As the figure shows, after applying the AdaIN style transfer, the local texture is no longer maintained and the global shape information tends to be retained.
+![AdaIN Style transfer visualization]({{ '/assets/images/Module04OD/AdaIN_vis.png' | relative_url }})
+As the table shows, they train both the ResNet 50 model and Fast Mask-RCNN model based on the different combinations of original and converted dataset. From the table, we can observe the model trained on both original data and converted data achieve the best performance. What’s more, the paper also verifies that training the ResNet 50 model on the style transferred data is more robust to the distortions and noise than the model training on the original dataset. In total, they tested eight kinds of distortions, for example, uniform noise, Contrast, etc. The results indicate that as the distortions increase, the model performance making prediction based on shape information almost improves 20% than the model making decision based the texture.
+
+
+![AdaIN Style transfer visualization]({{ '/assets/images/Module04OD/robust_improve.png' | relative_url }})
+
 
 ### Improve Robustness by adversarial training
 
