@@ -34,7 +34,7 @@ The common practice of generating adversarial perturbations against object detec
 <center><i>Fig.1 Left two images: Output of the extended RP2 algorithm to attack YOLO v2 using poster and sticker attacks. Right image: Patch aimed at fooling YOLO v2 into detecting nonexistent Stop signs.</i></center>
 <br>
 
-[9] extended DPatch method into Clipped Attack method to generate adversarial patches against YOLO v3. The adversarial patches can be either attached to an image or placed in the physical world. In both cases, the adversarial patches successfully confused the object detector into focusing on the patches and ignoring detectable objects (Fig.2). Quantitatively, the Clipped Attack method caused YOLO v3 to drop from 55.4 to single digit mAP (mean average precision).
+[11] extended DPatch method into Clipped Attack method to generate adversarial patches against YOLO v3. The adversarial patches can be either attached to an image or placed in the physical world. In both cases, the adversarial patches successfully confused the object detector into focusing on the patches and ignoring detectable objects (Fig.2). Quantitatively, the Clipped Attack method caused YOLO v3 to drop from 55.4 to single digit mAP (mean average precision).
 
 ![virtual_attack]({{ '/assets/images/Module04OD/virtual_attack.png' | relative_url }})
 {: style="width: 300px; max-width: 100%; margin-left: auto; margin-right: auto"}
@@ -43,7 +43,7 @@ The common practice of generating adversarial perturbations against object detec
 <center><i>Fig.2 Top two rows: ROI plots for the clipped case. Bottom row: Physical attack using the patch.</i></center>
 <br>
 
-[10] proposed DAG algorithm (Fig.3) to effectively generate visually imperceptible perturbations, and confused the originally correct recognition results in a well controllable manner (Fig.4). An important property of DAG is that it can generate transferable adversarial perturbations. The perturbations can be transferred across different training sets, different network architectures and even different tasks. Consequently, it has caused several object detection networks to drop to single digit mAP. The performance and transferability of DAG has proven the effectiveness of adversarial attack.
+[12] proposed DAG algorithm (Fig.3) to effectively generate visually imperceptible perturbations, and confused the originally correct recognition results in a well controllable manner (Fig.4). An important property of DAG is that it can generate transferable adversarial perturbations. The perturbations can be transferred across different training sets, different network architectures and even different tasks. Consequently, it has caused several object detection networks to drop to single digit mAP. The performance and transferability of DAG has proven the effectiveness of adversarial attack.
 
 ![DAG]({{ '/assets/images/Module04OD/DAG.png' | relative_url }})
 {: style="width: 400px; max-width: 100%; margin-left: auto; margin-right: auto"}
@@ -57,6 +57,20 @@ The common practice of generating adversarial perturbations against object detec
 
 
 ## Adversarial Training for Object Detection
+### Improve Robustness from the perspective of dataset
+In this subtopic, we will discuss methods that improve the robustness from the perspective of the dataset. In real applications such methods can not only increase the size and diversity of  the training set but also provide a simple method to train the model without requiring extra GPU memory.
+[9]proposed a Patch Gaussian method, which adds a W x W patch of Gaussian noise to the image. This approach first sampled a point within the image as the center of the patch.  Then, varying the W and maximum standard deviation of noise could change patch size and noise level. One sample image are shown below to illustrate their method.
+![gaussian patch visualization]({{ '/assets/images/Module04OD/gaussian_patch_vis.png' | relative_url }})
+
+The quantitative results on the object detection tasks shows that such a method could also improve the robustness of the detector. A RetinaNet detector with ResNet-50 backbone was trained on the COCO dataset. The COCO validation data was corrupted by i.i.d. Gaussian Noise (=0.25). The model trained with Gaussian Patch achieved mAP of 26.1%, which outperformed the baseline results 11.6%.
+
+[10] improve the robustness by letting the CNN make decisions based on the shape of information. Through extensive experiments, they empirically found that CNN tends to make decisions based on the texture of objects. They overcome this bias and let the CNN consider the shape information by converting the original dataset to images with different styles by using AdaIN Style Transfer. As the figure shows, after applying the AdaIN style transfer, the local texture is no longer maintained and the global shape information tends to be retained.
+![AdaIN Style transfer visualization]({{ '/assets/images/Module04OD/AdaIN_vis.png' | relative_url }})
+As the table shows, they train both the ResNet 50 model and Fast Mask-RCNN model based on the different combinations of original and converted dataset. From the table, we can observe the model trained on both original data and converted data achieve the best performance. What’s more, the paper also verifies that training the ResNet 50 model on the style transferred data is more robust to the distortions and noise than the model training on the original dataset. In total, they tested eight kinds of distortions, for example, uniform noise, Contrast, etc. The results indicate that as the distortions increase, the model performance making prediction based on shape information almost improves 20% than the model making decision based the texture.
+
+
+![AdaIN Style transfer visualization]({{ '/assets/images/Module04OD/robust_improve.png' | relative_url }})
+
 
 ### Improve Robustness by adversarial training
 
@@ -163,8 +177,11 @@ Please make sure to cite properly in your work, for example:
 [6] Pin-Chun Chen, Bo-Han Kung, Jun-Cheng Chen; Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 2021, pp. 10420-10429<br>		
 [7] A. Madry, A. Makelov, L. Schmidt, D. Tsipras, and A. Vladu. Towards deep learning models resistant to adversarial attacks. In International Conference on Learning Representations, 2018.<br>
 [8] Zhang, Haichao, and Jianyu Wang. "Towards adversarially robust object detection." Proceedings of the IEEE/CVF International Conference on Computer Vision. 2019.<br>
-[9] Mark Lee and Zico Kolter. "On Physical Adversarial Patches for Object Detection." Computer Vision and Pattern Recognition. 2019.<br>
-[10] Cihang Xie, Jianyu Wang, Zhishuai Zhang, Yuyin Zhou, Lingxi Xie, Alan Yuille; "Adversarial Examples for Semantic Segmentation and Object Detection." Proceedings of the IEEE International Conference on Computer Vision (ICCV), 2017, pp. 1369-1378. <br>
+[9] Lopes, R. G., Yin, D., Poole, B., Gilmer, J., & Cubuk, E. D. (2019). Improving robustness without sacrificing accuracy with patch gaussian augmentation. arXiv preprint arXiv:1906.02611.
+[10] Geirhos, R., Rubisch, P., Michaelis, C., Bethge, M., Wichmann, F.A. and Brendel, W., 2018. ImageNet-trained CNNs are biased towards texture; increasing shape bias improves accuracy and robustness. arXiv preprint arXiv:1811.12231.
+Vancouver<br>
+[11] Mark Lee and Zico Kolter. "On Physical Adversarial Patches for Object Detection." Computer Vision and Pattern Recognition. 2019.<br>
+[12] Cihang Xie, Jianyu Wang, Zhishuai Zhang, Yuyin Zhou, Lingxi Xie, Alan Yuille; "Adversarial Examples for Semantic Segmentation and Object Detection." Proceedings of the IEEE International Conference on Computer Vision (ICCV), 2017, pp. 1369-1378. <br>
 
 ---
 
