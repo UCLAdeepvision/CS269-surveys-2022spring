@@ -62,7 +62,7 @@ In this subtopic, we will discuss methods that improve the robustness from the p
 [9]proposed a Patch Gaussian method, which adds a W x W patch of Gaussian noise to the image. This approach first sampled a point within the image as the center of the patch.  Then, varying the W and maximum standard deviation of noise could change patch size and noise level. One sample image are shown below to illustrate their method.
 ![gaussian patch visualization]({{ '/assets/images/Module04OD/gaussian_patch_vis.png' | relative_url }})
 {: style="width: 500px; max-width: 100%; margin-left: auto; margin-right: auto"}
-<center><i>Fig.2 The visualization of Gaussian Patch method</i></center>
+<center><i>Fig.2 The visualization of Gaussian Patch method [9]  </i></center>
 <br>
 
 
@@ -72,7 +72,7 @@ The quantitative results on the object detection tasks shows that such a method 
 
 ![AdaIN Style transfer visualization]({{ '/assets/images/Module04OD/AdaIN_vis.png' | relative_url }})
 {: style="width: 500px; max-width: 100%; margin-left: auto; margin-right: auto"}
-<center><i>Fig.2 The visualization of AdaIN style Transfer</i></center>
+<center><i>Fig.2 The visualization of AdaIN style Transfer  [10]</i></center>
 <br>
 
 
@@ -81,7 +81,7 @@ As the table shows, they train both the ResNet 50 model and Fast Mask-RCNN model
 
 ![robust_improve]({{ '/assets/images/Module04OD/robust_improve.png' | relative_url }})
 {: style="width: 500px; max-width: 100%; margin-left: auto; margin-right: auto"}
-<center><i>Fig.3 Accuracy comparison on the ImageNet (IN) validation data set as well as object detection performance (mAP50) on PASCAL VOC 2007.</i></center>
+<center><i>Fig.3 Accuracy comparison on the ImageNet (IN) validation data set as well as object detection performance (mAP50) on PASCAL VOC 2007 [10].</i></center>
 <br>
 
 ### Improve Robustness by adversarial training
