@@ -19,9 +19,42 @@ Object detection is an important computer vision task with plenty of real-world 
 
 **[TODO] Other part of introduction**
 
+There are many ways of adversarially attacking an object detector. One common way is adding adversarial perturbations as visible stickers or patches to the objects either virtually or physically. Such perturbation can successfully fool detectors, but are perceptible to humans. Another way of adversarial attack is adding human-imperceptible perturbations to the image, which can result in detectors failing to detect objects or detect wrong objects.
+
 To improve the robustness of a neural network, one common practice is adversarial training [2, 7]. It achieves robust model training by solving a minimax problem, where the inner maximization generates attacks according to the current model parameters while the outer optimization minimizes the training loss with respect to the model parameters. Zhang et al. [8] extend adversarial training to the object detection domain by leveraging attack sources from both classification and localization. Chen et al. [6] decompose the total adversarial loss into class-wise losses and normalize each class loss using the number of objects for the class. Det-AdvProp [4] achieves object detection robustness with a different approach. It improves the model-dependent data augmentation [5] and fits it into the object detection domain. Different from the previous work, Det-AdvProp considers the common practice of pre-train and fine-tine two-step paradigm. It performs data augmentation during the fine-tuning stage without touching the resource-consuming pre-train stage.
 				
-This survey aims at selecting and summarizing object detection research from two perspectives. First, we briefly review the typical structure and the learning objective of object detection. Next, we are going to look into some attack attempts in object detection, compare their results, and discuss the potential threats to real-world scenarios. Then, we dive into the domain of robust training of object detectors. 
+This survey aims at selecting and summarizing object detection research from two perspectives. First, we briefly review the typical structure and the learning objective of object detection. Next, we are going to look into some attack attempts in object detection, compare their results, and discuss the potential threats to real-world scenarios. Then, we dive into the domain of robust training of object detectors.
+
+## Adversarial Attacks for Object Detection
+
+The common practice of generating adversarial perturbations against object detectors is to optimize detection or classification loss. [1] extended PR2 algorithm and utilized it to generate physical adversarial posters and stickers (Fig.1) to attack YOLO v2 object detector. Physical objects with the posters and stickers attached to them will be misclassified. [1] also generated physical adversarial patches which can fool YOLO v2 into detecting non-existent objects. 
+
+![stop]({{ '/assets/images/Module04OD/stop.png' | relative_url }})
+{: style="width: 300px; max-width: 100%; margin-left: auto; margin-right: auto"}
+<center><i>Fig.1 Left two images: Output of the extended RP2 algorithm to attack YOLO v2 using poster and sticker attacks. Right image: Patch aimed at fooling YOLO v2 into detecting nonexistent Stop signs.</i></center>
+<br>
+
+[9] extended DPatch method into Clipped Attack method to generate adversarial patches against YOLO v3. The adversarial patches can be either attached to an image or placed in the physical world. In both cases, the adversarial patches successfully confused the object detector into focusing on the patches and ignoring detectable objects (Fig.2). Quantitatively, the Clipped Attack method caused YOLO v3 to drop from 55.4 to single digit mAP (mean average precision).
+
+![virtual_attack]({{ '/assets/images/Module04OD/virtual_attack.png' | relative_url }})
+{: style="width: 300px; max-width: 100%; margin-left: auto; margin-right: auto"}
+![physical_attack]({{ '/assets/images/Module04OD/physical_attack.png' | relative_url }})
+{: style="width: 300px; max-width: 100%; margin-left: auto; margin-right: auto"}
+<center><i>Fig.2 Top two rows: ROI plots for the clipped case. Bottom row: Physical attack using the patch.</i></center>
+<br>
+
+[10] proposed DAG algorithm (Fig.3) to effectively generate visually imperceptible perturbations, and confused the originally correct recognition results in a well controllable manner (Fig.4). An important property of DAG is that it can generate transferable adversarial perturbations. The perturbations can be transferred across different training sets, different network architectures and even different tasks. Consequently, it has caused several object detection networks to drop to single digit mAP. The performance and transferability of DAG has proven the effectiveness of adversarial attack.
+
+![DAG]({{ '/assets/images/Module04OD/DAG.png' | relative_url }})
+{: style="width: 400px; max-width: 100%; margin-left: auto; margin-right: auto"}
+<center><i>Fig.3 DAG Algorithm.</i></center>
+<br>
+
+![DAG_output]({{ '/assets/images/Module04OD/DAG_output.png' | relative_url }})
+{: style="width: 300px; max-width: 100%; margin-left: auto; margin-right: auto"}
+<center><i>Fig.4 An adversarial example for semantic segmentation and object detection. FCN is used for segmentation, and Faster-RCNN is used for detection. Left column: the original image (top row) with the normal segmentation (the purple region is predicted as dog) and detection results. Right column: after the adversarial perturbation (top row, magnified by 10) is added to the original image, both segmentation (the light green region as train and the pink region as person) and detection results are completely wrong. Note that, though the added perturbation can confuse both networks, it is visually imperceptible (the maximal absolute intensity in each channel is less than 10).</i></center>
+<br>
+
 
 ## Adversarial Training for Object Detection
 
@@ -130,6 +163,8 @@ Please make sure to cite properly in your work, for example:
 [6] Pin-Chun Chen, Bo-Han Kung, Jun-Cheng Chen; Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 2021, pp. 10420-10429<br>		
 [7] A. Madry, A. Makelov, L. Schmidt, D. Tsipras, and A. Vladu. Towards deep learning models resistant to adversarial attacks. In International Conference on Learning Representations, 2018.<br>
 [8] Zhang, Haichao, and Jianyu Wang. "Towards adversarially robust object detection." Proceedings of the IEEE/CVF International Conference on Computer Vision. 2019.<br>
+[9] Mark Lee and Zico Kolter. "On Physical Adversarial Patches for Object Detection." Computer Vision and Pattern Recognition. 2019.<br>
+[10] Cihang Xie, Jianyu Wang, Zhishuai Zhang, Yuyin Zhou, Lingxi Xie, Alan Yuille; "Adversarial Examples for Semantic Segmentation and Object Detection." Proceedings of the IEEE International Conference on Computer Vision (ICCV), 2017, pp. 1369-1378. <br>
 
 ---
 
