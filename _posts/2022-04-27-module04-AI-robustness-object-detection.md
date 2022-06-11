@@ -134,12 +134,10 @@ In conclusion, both papers demonstrate that traditional adversarial training of 
 
 ## Conclusion
 
-In this survey, we go over two object detector attack algorithms, one of which uses stickers and posters and the other generates visually imperceptible perturbations through DAG algorithm. In the robustness training part, we first introduced two different data representations, Patch Gaussian and shape-based representation, to improve the robustness to common corruptions without requiring much modification of models and could be simply deployed in real applications. We also introduced two related works on applying adversarial training to object detection domain. To ensure the safety of various real-life applications of object detectors, we believe its robustness is of topmost significance.
+In this survey, we go over three object detector attack algorithms, two of which use adersarial patches and the other generates visually imperceptible perturbations through DAG algorithm. In the robustness training part, we first introduced two different data representations, Patch Gaussian and shape-based representation, to improve the robustness to common corruptions without requiring much modification of models and could be simply deployed in real applications. We also introduced two related works on applying adversarial training to object detection domain. To ensure the safety of various real-life applications of object detectors, we believe its robustness is of topmost significance.
 
 
 ## Reference
-Please make sure to cite properly in your work, for example:
-
 [1] Song, Dawn, et al. "Physical adversarial examples for object detectors." 12th USENIX workshop on offensive technologies (WOOT 18). 2018.<br>
 [2] Madry, Aleksander, et al. "Towards deep learning models resistant to adversarial attacks." arXiv preprint arXiv:1706.06083 (2017).<br>
 [3] Haichao Zhang and Jianyu Wang. Towards adversarially robust object detection. In International Conference on Computer Vision, 2019 <br>
