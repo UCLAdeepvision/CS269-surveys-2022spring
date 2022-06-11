@@ -52,11 +52,9 @@ IRL methods have primarily focused on model-based methods because knowledge abou
 
 The agent is trained to mimic human expert demonstrations, but this training data does not generalize well. The key problem is that the training data distribution and the testing data distribution are different, causing the agent to end up in states it has never visited before. If an agent makes a mistake, it finds itself in conditions that are completely distinct from what it observed during training, leading to unpredictable behavior. This effect is known as covariate shift.
 
-<p align="center">
-<img src="../assets/images/module07-Intervention-Learning/BC_failure.png" width=600 alt>
+![BC_failure]({{ '/assets/images/module07-Intervention-Learning/BC_failure.png' | relative_url }})
 <br>
 <em> Figure 1. Failure scenario of behavior cloning. </em>
-</p>
 
 Another challenge faced by imitation learning is when the human expert demonstrations are insufficient and it is not possible for humans to provide the comprehensive annotations needed to train an agent.
 
@@ -68,11 +66,9 @@ The policy learned using imitation learning methods perform better when close to
 
 Essentially, DAgger has made the learning process online and overcome the distribution shift problem as shown below in Figure 2, but require expert annotations for all the new trajectories explored.
 
-<p align="center">
-<img src="../assets/images/module07-Intervention-Learning/DAgger.png" width=600 alt>
+![DAgger]({{ '/assets/images/module07-Intervention-Learning/DAgger.png' | relative_url }})
 <br>
 <em> Figure 2. DAgger and how it handles the failure scenario of behavior cloning. </em>
-</p>
 
 ## Intervention-based Learning
 
@@ -86,17 +82,13 @@ We go over three key approaches in the intervention-based learning literature th
 
 ### HG-DAgger
 
-One of the pioneering works in intervention-based learning, HG-DAgger, applies a simple modification to the original DAgger algorithm and is therefore quite intuitive to understand. In contrast to DAgger, HG-DAgger allows for the human expert to intervene and obtain stretches of uninterrupted control. Whereas DAgger requires the expert to label every learner-visited state $s$ with an action $$a^*$$ and trains over this entire set, HG-DAgger has the learner fully in control until the human expert intervenes. During intervention, only these expert state-action labels $$(s^*, a^*)$$ are recorded and added to a training data set $$\mathcal D$$. 
+One of the pioneering works in intervention-based learning, HG-DAgger, applies a simple modification to the original DAgger algorithm and is therefore quite intuitive to understand. In contrast to DAgger, HG-DAgger allows for the human expert to intervene and obtain stretches of uninterrupted control. Whereas DAgger requires the expert to label every learner-visited state $$s$$ with an action $$a^*$$ and trains over this entire set, HG-DAgger has the learner fully in control until the human expert intervenes. During intervention, only these expert state-action labels $$(s^*, a^*)$$ are recorded and added to a training data set $$\mathcal D$$. 
 
 Although HG-DAgger obtains significantly less human annotations than DAgger, HG-DAgger collects data from the human expert only while they have uninterrupted control. Therefore, such state-action pairs can be expected to be of high quality. This learning efficiency can be seen below in Figure 3 where HG-DAgger outperforms both behavioral cloning and DAgger with significantly less expert labels.
 
-
-<p align="center">
-<img src="../assets/images/module07-Intervention-Learning/HGDAgger_results.png" width=600 alt>
+![HGDAgger_results]({{ '/assets/images/module07-Intervention-Learning/HGDAgger_results.png' | relative_url }})
 <br>
 <em> Figure 3. Results for a self-driving car scenario experiment plotting mean road departure rate with respect to expert labels. Notice that HG-DAgger achieves and maintains a zero mean road departure rate with significantly less expert labels. [3] </em>
-</p>
-
 
 Despite this, HG-DAgger has several shortcomings. For example, although HG-DAgger may perfectly mimic expert recovery, it provides no explicit incentive for the learner to avoid scenarios requiring human intervention in the first place. We see how this drawback is addressed by the next two methods we cover.
 
@@ -104,53 +96,44 @@ Despite this, HG-DAgger has several shortcomings. For example, although HG-DAgge
 
 Expert intervention learning is a direct improvement over HG-DAgger that attempts to minimize human interventions by enforcing the learner to stay within a "good enough" region as defined by the human expert. This region is implicitly defined by the human expert by when they choose to intervene and release control back to the learner. We can see an example of this for the self-driving car task shown below in Figure 4.
 
-<p align="center">
-<img src="../assets/images/module07-Intervention-Learning/eil.png" width=600 alt>
+![eil]({{ '/assets/images/module07-Intervention-Learning/eil.png' | relative_url }})
 <br>
 <em> Figure 4. Example of EIL taking place in the self-driving car task. The light blue region defines the "good enough" region. Whenever the car veers away from this region, the human expert intervenes and controls the car back to the good enough region. [4] </em>
-</p>
 
-We define good enough state-action pairs as belonging to the set $\mathcal G$. With this, we define
+We define good enough state-action pairs as belonging to the set $$\mathcal G$$. With this, we define
 
 Three key assumptions for the EIL framework are now stated:
-1. The expert deems a region of the state-action space to be "good enough": $(s, a) \in \mathcal G$. 
-2. When a robot is in $\mathcal G$, the human does not intervene. The robot remains in control even though it may select actions different from what the expert would have chosen. Therefore, $\mathcal G$ must be defined in a manner so that all state-actions are tolerable even if they may be inefficient.
-3. As soon as a robot departs $\mathcal G$, the expert intervenes and controls the system back to $\mathcal G$.
+1. The expert deems a region of the state-action space to be "good enough": $$(s, a) \in \mathcal G$$. 
+2. When a robot is in $$\mathcal G$$, the human does not intervene. The robot remains in control even though it may select actions different from what the expert would have chosen. Therefore, $$\mathcal G$$ must be defined in a manner so that all state-actions are tolerable even if they may be inefficient.
+3. As soon as a robot departs $$\mathcal G$$, the expert intervenes and controls the system back to $$\mathcal G$$.
 
 We now formulate the problem as a rewardless MDP where we strive to obtain a policy
-$$
-\pi(s) = \textrm{arg} \min_a Q_\theta (s,a).
-$$ Instead of shaping the $Q$ function using a reward function, we shape the $Q$ function through constraints that encourage the model to learn human preference. To do this, we first define a scalar $B$ which acts as the threshold for "good" and "bad". The constraints can then be formulated as shown below.
-1. Learn good enough state-actions $\\ Q_\theta (s, a) \leq B \ \ \forall \ (s,a ) \in \mathcal G$
-2. Learn bad  state-actions $\\ Q_\theta (s, a) > B \ \ \forall \ (s,a ) \in \bar{\mathcal G}$ where $\bar{\mathcal G}$ is the bad state-action set.
-3. Learn to mimic the human expert during recovery $\\ Q_\theta(s,a) < Q_\theta(s, a') \ \ \forall \ (s, a) \in \mathcal I, a' \neq a$ where $a'$ is the expert action and $\mathcal I$ is the intervention state-action set.
+$$\pi(s) = \textrm{arg} \min_a Q_\theta (s,a).$$
+Instead of shaping the $$Q$$ function using a reward function, we shape the $$Q$$ function through constraints that encourage the model to learn human preference. To do this, we first define a scalar $$B$$ which acts as the threshold for "good" and "bad". The constraints can then be formulated as shown below.
+1. Learn good enough state-actions $$\\ Q_\theta (s, a) \leq B \ \ \forall \ (s,a ) \in \mathcal G$$
+2. Learn bad  state-actions $$\\ Q_\theta (s, a) > B \ \ \forall \ (s,a ) \in \bar{\mathcal G}$$ where $$\bar{\mathcal G}$$ is the bad state-action set.
+3. Learn to mimic the human expert during recovery $$\\ Q_\theta(s,a) < Q_\theta(s, a') \ \ \forall \ (s, a) \in \mathcal I, a' \neq a$$ where $$a'$$ is the expert action and $$\mathcal I$$ is the intervention state-action set.
 
-<p align="center">
-<img src="../assets/images/module07-Intervention-Learning/eil2.png" alt>
+![eil2]({{ '/assets/images/module07-Intervention-Learning/eil2.png' | relative_url }})
 <br>
 <em> Figure 5. Example sequence showcasing the different state-action pairs belonging to the good enough, bad, and intervention sets. [4] </em>
-</p>
 
 These constraints are then reduced to a convex optimization problem through the use of hinge loss where
-1. $Q_\theta (s, a) \leq B \rightarrow l^1_B(s, a, \theta) = \max(0, Q_\theta(s,a) - B)$
-2. $Q_\theta (s, a) > B \rightarrow l^2_B(s, a, \theta) = \max(0, B- Q_\theta(s,a))$
-3. $Q_\theta (s, a) < Q_\theta(s, a') \rightarrow l_C(s, a, \theta) = \sum_{a'} \max(0, Q_\theta(s,a) - Q_\theta(s, a'))$
+1. $$Q_\theta (s, a) \leq B \rightarrow l^1_B(s, a, \theta) = \max(0, Q_\theta(s,a) - B)$$
+2. $$Q_\theta (s, a) > B \rightarrow l^2_B(s, a, \theta) = \max(0, B- Q_\theta(s,a))$$
+3. $$Q_\theta (s, a) < Q_\theta(s, a') \rightarrow l_C(s, a, \theta) = \sum_{a'} \max(0, Q_\theta(s,a) - Q_\theta(s, a'))$$
 
-This results in the overall loss function $l(\cdot) = (l^1_B(\cdot) + l^2_B(\cdot)) + \lambda l_C(\cdot)$ where $\lambda$ is a tuning parameter. Here, the $l_B$ terms are referred to as an implicit feedback where the model implicitly learns the good enough region by when interventions start and end. The $l_C$ term is referred to as an explicit feedback where the model is learns to best mimic the human expert during recovery states. ***Note that the key contribution of EIL is the inclusion of the $l_B$ loss term. Without it, EIL degenerates to HG-DAgger***.
+This results in the overall loss function $$l(\cdot) = (l^1_B(\cdot) + l^2_B(\cdot)) + \lambda l_C(\cdot)$$ where $$\lambda$$ is a tuning parameter. Here, the $$l_B$$ terms are referred to as an implicit feedback where the model implicitly learns the good enough region by when interventions start and end. The $$l_C$$ term is referred to as an explicit feedback where the model is learns to best mimic the human expert during recovery states. ***Note that the key contribution of EIL is the inclusion of the $$l_B$$ loss term. Without it, EIL degenerates to HG-DAgger***.
 
 Below, a quick overview of the methods mentioned so far can be seen along with their respective intervention rules and loss functions in Figure 6. In Figure 7, we can see how these listed algorithms perform for a robot self-driving task. Notice that EIL significantly improves over all other methods in reducing the average Q-error with respect to both total environment samples and expert queries (expert state-action labels produced during intervention).
 
-<p align="center">
-<img src="../assets/images/module07-Intervention-Learning/EILresults.png" alt>
+![EILresults]({{ '/assets/images/module07-Intervention-Learning/EILresults.png' | relative_url }})
 <br>
 <em> Figure 6. Algorithm comparison. Note that BC stands for behavioral cloning (another word for imitation learning). [4] </em>
-</p>
 
-<p align="center">
-<img src="../assets/images/module07-Intervention-Learning/EILtable.png" width="600" alt>
+![EILtable]({{ '/assets/images/module07-Intervention-Learning/EILtable.png' | relative_url }})
 <br>
 <em> Figure 7. Results from a robot self-driving task. Average Q-error with respect to total environment samples and expert queries is plotted for EIL, HG-DAgger, DAgger, and BC. [4] </em>
-</p>
 
 
 ### Human-AI Co-pilot Optimization (HACO)
