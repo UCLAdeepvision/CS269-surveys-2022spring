@@ -8,9 +8,7 @@ date: 2022-06-10
 #image: "data_size_vs_model_performance.png"
 ---
 
-> This paper will discuss recent developments in the field of intervention-based learning. We motivate this paper by first reviewing the predecessors of intervention-based learning – imitation learning and DAgger
-We discuss the shortcomings of these algorithms and establish the need for a new paradigm of learning from human expert knowledge. This leads to an exploration of intervention-based learning algorithms which put the human expert in control. The following intervention-based learning techniques are analyzed in detail: HG-DAgger, Expert Intervention Learning (EIL) and Human-AI Co-pilot Optimization (HACO).
-
+> Intervention-based learning is a modern and rapidly progressing field based upon the utilization of knowledge from human experts to train an agent online. Prior to this, imitation learning and DAgger were the widely used algorithms, but we will expose the limitations of these methods and how intervention-based learning methods can be superior. This paper discusses three new intervention-based learning methods, out of which two are state-of-the-art algorithms: Expert Intervention Learning (EIL) and Human-AI Co-pilot Optimization (HACO). Both EIL and HACO outperform the other methods discussed and require significantly less human annotated data.
 
 <!--more-->
 
