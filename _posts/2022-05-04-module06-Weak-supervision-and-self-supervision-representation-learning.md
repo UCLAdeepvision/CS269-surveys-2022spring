@@ -2,7 +2,7 @@
 layout: post
 comments: true
 title: "Module 6: Weak Supervision and Self Supervision: Representation Learning"
-author: Ankur Kumar
+author: Ankur Kumar, Jingdong Gao
 date: 2022-06-07
 ---
 
