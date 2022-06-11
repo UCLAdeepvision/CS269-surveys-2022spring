@@ -32,7 +32,7 @@ $$
 
 with w = M(z) where M is an 8-layer multilayer perceptron. Normally, the vectors w controlling the synthesis at each layer are all equal; the authors demonstrate that allowing each layer to have its own $$w_i$$ enables powerful style mixing.
 
-GANSpace helps us in finding useful directions as the prior distribution p(z) does not indicate the useful directions. Since in the higher dimensions the pixel space is complex this method suggests that for the early layer of GANs the principal components of feature tensors represents important factors of variations.
+GANSpace[18] helps us in finding useful directions as the prior distribution p(z) does not indicate the useful directions. Since in the higher dimensions the pixel space is complex this method suggests that for the early layer of GANs the principal components of feature tensors represents important factors of variations.
 A new image defined by w can be edited by varying PCA coordinates x before it’s feeded to the synthesis network
 
 $$
@@ -107,22 +107,23 @@ Figure3: LatentCLR method results on StyleGAN2 and BigGAN.
 GANSpace is one of the first attempts to do unsupervised learning of interpretable directions on GANs. As GANSpace method includes sampling, the learned latent vector directions only pertain to the scope of sampled images. This is one of the drawbacks of the GANSpace method. SeFa overcomes this by directly analysing the weight matrix. Below are the qualitative and quantitative comparisions between SeFa and GANSpace. It has been identified that SeFa better preserves the identity and skin color of the person in the image while editing.
 
 ![]({{ '/assets/images/team10/sefa_ganspace_compare1.png' | relative_url }})
-Figure3: Qualitative comparision between (a) GANSPace and (b) SeFa.
+Figure4: Qualitative comparision between (a) GANSPace and (b) SeFa.
 
 ![]({{ '/assets/images/team10/sefa_ganspace_compare2.png' | relative_url }})
-Figure4: Quantitative comparision between GANSPace and SeFa(ours).
+Figure5: Quantitative comparision between GANSPace and SeFa(ours).
 
 When we compare all the three methods, each method shows its dominance in some of the directions. For example, in below figure we can see that reducing age is better handled by LatentCLR as compared to GANSpace and SeFa. And also, the difference between these methods increase when latent directions are moved in the negative direction but all methods perform similar when moved in the positive directions (compared on Smile, Age and Lipstick). The Quantitative results attached below also confirms the same pattern.
 
 ![]({{ '/assets/images/team10/latentclr_sefa_ganspace_compare1.png' | relative_url }})
-Figure5: Qualitative comparision between LatentCLR(ours), GANSPace and SeFa.
+Figure6: Qualitative comparision between LatentCLR(ours), GANSPace and SeFa.
 
 ![]({{ '/assets/images/team10/latentclr_sefa_ganspace_compare2.png' | relative_url }})
-Figure6: Quantitative comparision between LatentCLR(ours), GANSPace and SeFa.
+Figure7: Quantitative comparision between LatentCLR(ours), GANSPace and SeFa.
 
 
 
 ## Conclusion
+In conclusion, the three methods aim to discover control directions in an unsupervised way for different GAN models. These work suggests considerable future opportunity to analyze these image representations and discover richer control techniques in these spaces. GANspace uses an unsupervised method through PCA to find principal directions in latent space. It relies on taking existing general-purpose image representations and discovers techniques to control them instead of training a new model for each task and successfully creates images using existing GANs. It does not perform any training on images, just takes an existing GAN as input. Closed-Form Factorization technique examines the internal representations learned by GANs and in an unsupervised manner, reveals the underlying variation factors. Various versatile, meaningful semantics can be identified from different types of GAN models using this method which relies on directly decomposing the model weights and , and the performance is comparable to supervised methods. LatentCLR, on the other hand, uses contrastive learning to learn unsupervised directions. Unlike GANspaces and Closed-Form Factorization methods which discover fixed directions, this method can also discover nonlinear directions in pre-trained models and generates multiple distinct, transferrable and semantically meaningful directions. 
 ## Reference
 [1] Ian Goodfellow, Jean Pouget-Abadie, Mehdi Mirza, Bing Xu, David Warde-Farley, Sherjil Ozair, Aaron Courville, and Yoshua Bengio. Generative adversarial nets. In Adv. Neural Inform. Process. Syst., 2014.
 
@@ -160,6 +161,8 @@ the image quality of StyleGAN. In Proc. CVPR, 2020.
 
 [17] A. Brock, J. Donahue, and K. Simonyan. Large scale GAN training for high fidelity natural
 image synthesis. In Proc. ICLR, 2019.
+
+[18] Erik H¨ark¨onen, Aaron Hertzmann, Jaakko Lehtinen, and Sylvain Paris. Ganspace: Discovering interpretable gancontrols. In Adv. Neural Inform. Process. Syst., 2020. 2
 
 
 ---
