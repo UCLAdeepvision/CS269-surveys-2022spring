@@ -17,7 +17,7 @@ date: 2021-04-20
 ## Introduction
 Generative Adversarial Networks have been widely succesful in generating varied images. Various GAN architectures like PGGAN[[6]](#reference), StyleGAN[[6]](#reference), BigGAN[[7]](#reference), StyleGAN2[[8]](#reference) have become popular for different kind of tasks. Most of these GANs generate images from random input latent vectors. Every GAN gains understanding of the kind of image to be generated based on the provided random input. So inherently, the input vectors holds the information needed by GAN to generate the corresponding image. It has been found [[9,10,11]](#reference) that when learning to generate images, the GANs represent multiple interpretable attributes in the latent space such as gender for face synthesis, lighting condition for scene synthesis etc. By understanding these interpretable dimensions we can modulate them later to control the image generation process. And also similar techniques can be extended to other deep generative models like VAE.
 
-There exists both supervised and unsupervised interpretaion methods for GANs. Supervised methods focus on generating lots of images and hand labeling them to different categories and then train models to classify latent space. GANDissection[[12](#reference)] is one of the earliest such interpretion method where individual convolutional filters in the network mapped to the segmented objects in the output image are identified and then controlling the object placement by varying the individual units in the network. Later similar supervised interpretaion methods have been developed like InterfaceGAN[[13]](#reference) to edit facial attributes, Steerability of GAN attributes[[10]](#reference) etc. Major concern of supervised approaches involves in annotation of output images to various attribuets. To learn the latent representation of each attribute, the data has to be labeled and trained again. Even though we can learn very accurate latent semantics for various attributes, labeling overhead is critical with supervised approaches. In this paper, we won't go into the specifics on supervised approaches. Rather we analyse various unsupervised interpretation methods which doesn't require any labeling. <----write about GANSPace, SeFa, LatentCLR (one sentence about each)----> 
+There exists both supervised and unsupervised interpretaion methods for GANs. Supervised methods focus on generating lots of images and hand labeling them to different categories and then train models to classify latent space. GANDissection[[12](#reference)] is one of the earliest such interpretion method where individual convolutional filters in the network mapped to the segmented objects in the output image are identified and then controlling the object placement by varying the individual units in the network. Later similar supervised interpretaion methods have been developed like InterfaceGAN[[13]](#reference) to edit facial attributes, Steerability of GAN attributes[[10]](#reference) etc. Major concern of supervised approaches involves in annotation of output images to various attribuets. To learn the latent representation of each attribute, the data has to be labeled and trained again. Even though we can learn very accurate latent semantics for various attributes, labeling overhead is critical with supervised approaches. In this paper, we won't go into the specifics on supervised approaches. Rather we analyse various unsupervised interpretation methods which doesn't require any labeling. Specifically we focus on three methods GANSpace, Semantic Factorization and LatentCLR. GANSpace is an approach based on Principal Component Analysis (PCA) and data sampling while SeFa takes a closer look at the weight matrix to analyse the latent directions. LatentCLR tried a different approach using contrastive learning to identify diverse interpretable directions of GANs.
 
 
 ## GANSpace
@@ -104,6 +104,24 @@ The intuition behind the objective function is that all feature divergences obta
 Figure3: LatentCLR method results on StyleGAN2 and BigGAN.
 
 ## Comparision
+GANSpace is one of the first attempts to do unsupervised learning of interpretable directions on GANs. As GANSpace method includes sampling, the learned latent vector directions only pertain to the scope of sampled images. This is one of the drawbacks of the GANSpace method. SeFa overcomes this by directly analysing the weight matrix. Below are the qualitative and quantitative comparisions between SeFa and GANSpace. It has been identified that SeFa better preserves the identity and skin color of the person in the image while editing.
+
+![]({{ '/assets/images/team10/sefa_ganspace_compare1.png' | relative_url }})
+Figure3: Qualitative comparision between (a) GANSPace and (b) SeFa.
+
+![]({{ '/assets/images/team10/sefa_ganspace_compare2.png' | relative_url }})
+Figure4: Quantitative comparision between GANSPace and SeFa(ours).
+
+When we compare all the three methods, each method shows its dominance in some of the directions. For example, in below figure we can see that reducing age is better handled by LatentCLR as compared to GANSpace and SeFa. And also, the difference between these methods increase when latent directions are moved in the negative direction but all methods perform similar when moved in the positive directions (compared on Smile, Age and Lipstick). The Quantitative results attached below also confirms the same pattern.
+
+![]({{ '/assets/images/team10/latentclr_sefa_ganspace_compare1.png' | relative_url }})
+Figure5: Qualitative comparision between LatentCLR(ours), GANSPace and SeFa.
+
+![]({{ '/assets/images/team10/latentclr_sefa_ganspace_compare2.png' | relative_url }})
+Figure6: Quantitative comparision between LatentCLR(ours), GANSPace and SeFa.
+
+
+
 ## Conclusion
 ## Reference
 [1] Ian Goodfellow, Jean Pouget-Abadie, Mehdi Mirza, Bing Xu, David Warde-Farley, Sherjil Ozair, Aaron Courville, and Yoshua Bengio. Generative adversarial nets. In Adv. Neural Inform. Process. Syst., 2014.
