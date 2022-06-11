@@ -132,6 +132,10 @@ Another improvement to [3] is that [4] draws adversarial examples from another d
 
 In conclusion, both papers demonstrate that traditional adversarial training of classification tasks can be transferred to train a robust object detector. When generating adversarial examples, it’s suggested to attack classification or localization separately and pick the one that maximizes the total loss. In the context of pretraining and finetuning, [4] indicates that augmenting data during finetune step can better preserve the performance gain during pretraining.
 
+## Conclusion
+
+In this survey, we go over two object detector attack algorithms, one of which uses stickers and posters and the other generates visually imperceptible perturbations through DAG algorithm. In the robustness training part, we first introduced two different data representations, Patch Gaussian and shape-based representation, to improve the robustness to common corruptions without requiring much modification of models and could be simply deployed in real applications. We also introduced two related works on applying adversarial training to object detection domain. To ensure the safety of various real-life applications of object detectors, we believe its robustness is of topmost significance.
+
 
 ## Reference
 Please make sure to cite properly in your work, for example:
