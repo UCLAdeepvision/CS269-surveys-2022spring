@@ -8,7 +8,7 @@ date: 2022-06-10
 #image: "data_size_vs_model_performance.png"
 ---
 
-> Intervention-based learning is a modern and rapidly progressing field based upon the utilization of knowledge from human experts to train an agent online. Prior to this, imitation learning and DAgger were the widely used algorithms, but we will expose the limitations of these methods and how intervention-based learning methods can be superior. This paper discusses three new intervention-based learning methods, out of which two are state-of-the-art algorithms: Expert Intervention Learning (EIL) and Human-AI Co-pilot Optimization (HACO). Both EIL and HACO outperform the other methods discussed and require significantly less human annotated data.
+> Intervention-based learning is a modern and rapidly progressing field based on utilizing human interventions in the learning process to train an agent online. Traditionally, imitation learning and DAgger were used to instill human expert knowledge to the learner, but such methods require the human expert to manually label tediously large amounts of data. With this in mind, intervention-based learning has arisen to tackle the need for large amounts of expert queries by learning from periods of uninterrupted human expert control. This paper discusses three key intervention-based learning methods, HG-DAgger, Expert Intervention Learning (EIL), and Human-AI Co-pilot Optimization (HACO). We provide an in-depth explanation of how intervention-based learning improves upon imitation learning and DAgger. In addition to this, we discuss how EIL and HACO, the current state-of-the-art, improve upon HG-DAgger and outperform all other methods discussed while requiring significantly less human annotated data.
 
 <!--more-->
 
@@ -136,25 +136,25 @@ Below, a quick overview of the methods mentioned so far can be seen along with t
 
 ### Human-AI Co-pilot Optimization (HACO)
 
-Human-AI Co-pilot Optimization trains agent from human interventions, partial demonstrations and free exploration. The agent do not have access to(or need) any explicit rewards from the environment. Figure 8 shows a typical setup for HACO learning in a self-driving scenario where the human expert can take control and drive the agent to safety when needed.
+Human-AI Co-pilot Optimization trains an agent from human interventions, partial demonstrations and free exploration. The agent does not have access to (or need) any explicit rewards from the environment. Figure 8 shows a typical setup for HACO learning in a self-driving scenario where the human expert can take control and drive the agent to safety when needed.
 
 ![HACO setup]({{ '/assets/images/module07-Intervention-Learning/HACOsetup.png' | relative_url }})
 <em> Figure 8. Typical Human-AI Co-pilot scenario for self driving. [5] </em>
 
-It is an online learning technique which operates similar to EIL where the expert intervenes whenever deemed necessary and the policy is learned using specific objective loss functions. However, HACO directly improves over prior methods by introducing the following two key characteristics in the learning objective.
+HACO is an online learning technique which operates similar to EIL where the expert intervenes whenever deemed necessary and the policy is learned using an objective loss function designed to learn human preference. However, HACO directly improves over prior methods by introducing the following two key characteristics in the learning objective.
 
 1. **Exploring the actions in the human-allowed action subspace.**
 2. **Explicit cost(implicit negative reward) for human interventions.**
 
-The first one helps the agent to consider wide range of allowed actions at a particular state, there by opening more possibilities where as the second one helps in reducing human interventions over time to make the agent self-sufficient. Next, we briefly go over the learning objectives that are considered and how they help achieve the above notions. 
+The first point helps the agent to consider a wide range of allowed actions at a particular state, thereby opening more possibilities whereas the second point helps in reducing human interventions over time to make the agent self-sufficient. Next, we briefly go over the learning objectives that are considered and how they help achieve the above notions. 
 
-Majority of learning data in HACO comes from **partial demonstration** when the human expert takes over the control to drive the agent to a safe state. We record the state action sequence $$\{(s_t, a_{n,t}, a_{h,t}, I(s_t, a_{n,t}), s_{t+1}),...\}$$ in a takeover trajectory and add it to our buffer $$B$$. Here $$a_{n,t}$$ is action by agent, $$a_{h,t}$$ is action taken by human and $$I(s_t, a_{n,t})$$ is a boolean which is true if an expert intervention has taken place.
+Majority of learning data in HACO comes from **partial demonstrations** when the human expert takes over control to drive the agent to a safe state. We record the state action sequence $$\{(s_t, a_{n,t}, a_{h,t}, I(s_t, a_{n,t}), s_{t+1}),...\}$$ in a takeover trajectory and add it to our buffer $$B$$. Here $$a_{n,t}$$ is the action by the agent, $$a_{h,t}$$ is the action taken by the human and $$I(s_t, a_{n,t})$$ is a boolean which is true if an expert intervention has taken place.
 
-The learning objective maintains a **proxy value function $$Q(s,a)$$** which is similar to Q-value function in a general RL setting but rather parameterized as we are dealing with continuous state, action spaces. The following loss term helps attain the agent actions closer to that of expert in terms of proxy value, there by implicitly capturing the expert behaviour.
+The learning objective maintains a **proxy value function $$Q(s,a)$$** which is similar to a Q-value function in a general RL setting. The following loss term helps attain the agent actions closer to that of expert in terms of proxy value, thereby implicitly capturing the expert behaviour.
 
 $$ \min_{\phi} \mathbb{E}_{(s, a_n, a_h, I(s,a_n))\sim B} [I(s,a_n)(Q(s,a_n;\phi)-Q(s,a_h;\phi))] $$
 
-Next, HACO utilizes **entropy regularization** technique to encourage exploration of the agent in the allowed subspace by introducing an additional term in the loss which penalises actions that achieve higher probability at a given state. This forces the agent to consider alternate actions eventually. The combined loss function to learn the proxy value with entropy regularization now becomes
+Next, HACO utilizes an **entropy regularization** technique to encourage exploration of the agent in the allowed subspace by introducing an additional term in the loss which penalizes actions that achieve higher probability at a given state. This forces the agent to consider alternate actions eventually. The combined loss function to learn the proxy value with entropy regularization now becomes
 
 $$ \min_{\phi}\mathbb{E}_{B}[(y-Q(s_t, \hat{a_t};\phi))^2+I(s_t,a_{n,t})(Q(s_t,a_{n,t};\phi)-Q(s_t,a_{h,t};\phi))] $$
 
@@ -162,7 +162,7 @@ where
 
 $$ y = \gamma \mathbb{E}_{a'\sim\pi_n(.|s_{t+1})}[Q(s_{t+1},a';\phi')-\alpha log \pi_n(a'|s_{t+1})] $$
 
-parameters of the proxy Q-value are iteratively updated(or trained) based on the above loss function.
+Parameters of the proxy Q-value are iteratively updated (or trained) based on the above loss function.
 
 Finally, it incorporates an **intervention cost** in the learning to minimize expert interventions over time. Whenever an expert intervenes, a cost based on the cosine similarity of agent action $$a_{n,t}$$ and expert action $$a_{h,t}$$ is accumulated. The net intervention cost $$Q^{int}(s_t, a_t)$$ is calculated using the bellman backup to account for future costs.
 
@@ -174,7 +174,7 @@ The following equation represents the final objective for policy learning.
 
 $$\max_{\theta}\mathbb{E}_{s_t\sim B}[Q(s_t, a_n)-\alpha log\pi_n(a_n|s_t;\theta)-Q^{int}(s_t, a_n)], a_n\sim \pi_n(.|s_t;\theta)$$
 
-Over the episodes, the algorithm updates $$Q, Q^{int}, \pi$$ in an online fashion based on above equations. Therefore HACO learns from **partial demonstrations** and **human intervention** by incorporating three key objectives namely **proxy value, free exploration** and **intervention cost** in learning. Figures 9 and 10 depicts results of this method, achieving high sample efficiency and training safety when compared to baselines. In particular, in Figure 10, we can see that HACO outperforms both behavioral cloning and HG-DAgger.
+Over the episodes, the algorithm updates $$Q, Q^{int}, \pi$$ in an online fashion based on above equations. Therefore, HACO learns from **partial demonstrations** and **human intervention** by incorporating three key objectives namely **proxy value, free exploration** and **intervention cost** in learning. Figures 9 and 10 depicts results of this method, achieving high sample efficiency and training safety when compared to baselines. In particular, in Figure 10, we can see that HACO outperforms both behavioral cloning and HG-DAgger.
 
 ![HACO results]({{ '/assets/images/module07-Intervention-Learning/HACOresult.png' | relative_url }})
 <em align="center"> Figure 9. Plots showcasing comparision of HACO results on self-driving task w.r.t baselines. [5] </em>
