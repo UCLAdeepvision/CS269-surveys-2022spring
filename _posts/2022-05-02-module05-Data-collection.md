@@ -1,7 +1,7 @@
 ---
 layout: post
 comments: true
-title: "Module 5, Topic: : Data collection for Autonomous Driving"
+title: "Module 5, Topic: Data collection for Autonomous Driving"
 author: Keli Huang, & Yunbo Wang
 date: 2021-05-02
 ---
