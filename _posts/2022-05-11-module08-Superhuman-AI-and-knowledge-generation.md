@@ -30,14 +30,13 @@ Chess long been a “Drosophila” of AI research [1], i.e., a  prototype game f
 
 Two concurrent works [5, 6] both attemp to answer this same question. If we view each ResNet [11] block in the AlphaZero neural network as a layer, [6] probes the activations of each layer for a broad range of human chess concepts using pre-specified functions which encapsulate a particular piece of domain-specific knowledge. Those pre-specified functions, such as material, imbalance, mobility, king safety, are directly adopted from the public [Stockfish](https://en.wikipedia.org/wiki/Stockfish_(chess))’s evaluation function. Then, the authors map the input feature ($d_0$ dimensional vector $z^0$) into a single real value $c(z^0)$. Therefore, the probing can be transformed into learning a set of linear regression parameters {$w$, $b$} by minimizing the empirical mean squared error between $c(z^0)$ and $w^T z^{lt} + b_{lt}$, where $z^{lt}$ is the activations in the $l$-th layer at training step $t$. The authors then visualize this concept learning with the what-when-where plots, as shown in Figure 1. 
 
-
-![](https://i.imgur.com/rz1UqL0.png =x700)
+![](https://i.imgur.com/rz1UqL0.png)
 *Figure 1: What-when-where plots for a selection of Stockfish 8 and custom concepts. [6]*
 
 From Figure 1, we see that the information related to human-defined concepts of multiple levels of complexity, is being learned over the course of training. Many of these concepts are computed over the course of multiple blocks.
 
 Similarly, [5] investigate AlphaZero’s representations but in Hex (a game in which two players attempt to connect opposite sides of a rhombus-shaped hex board) using both model probing and behavioral tests. While both [5] and [6] use human defined concepts and investigate AZ's representations, [5]'s investigation is more in-depth thanks to the easier problem setting in Hex. The main findings (as shown in Figure 2) are that 1）concepts related to short-term end-game planning are best encoded in the final layers of the model, whereas concepts related to long-term planning are encoded in the middle layers of the model; and 2) improvements in behavioral tests occur before improvements in probing accuracy, which align with the findings in [6].
-![](https://i.imgur.com/RwmojeB.png =x400)
+![](https://i.imgur.com/RwmojeB.png)
 *Figure 2: Changes in Hex concept representation and use during training.[5] The checkpoint at which behavioral tasks improve are blue, and converge are yellow. The checkpoint at which probing tasks improve are pink, and converge are green. Improvements in board structure are orange, and convergence, purple.*
 
 
