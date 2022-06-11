@@ -52,9 +52,11 @@ IRL methods have primarily focused on model-based methods because knowledge abou
 
 The agent is trained to mimic human expert demonstrations, but this training data does not generalize well. The key problem is that the training data distribution and the testing data distribution are different, causing the agent to end up in states it has never visited before. If an agent makes a mistake, it finds itself in conditions that are completely distinct from what it observed during training, leading to unpredictable behavior. This effect is known as covariate shift.
 
-![]({{ '/assets/images/team17/BC_failure.png' | relative_url }})
-{: style="width: 600px; max-width: 100%;"}
-*Figure 1. Failure scenario of behavior cloning.*
+<p align="center">
+<img src="../assets/images/module07-Intervention-Learning/BC_failure.png" width=600 alt>
+<br>
+<em> Figure 1. Failure scenario of behavior cloning. </em>
+</p>
 
 Another challenge faced by imitation learning is when the human expert demonstrations are insufficient and it is not possible for humans to provide the comprehensive annotations needed to train an agent.
 
@@ -66,10 +68,11 @@ The policy learned using imitation learning methods perform better when close to
 
 Essentially, DAgger has made the learning process online and overcome the distribution shift problem as shown below in Figure 2, but require expert annotations for all the new trajectories explored.
 
-<p align="center"></p>
-<img src="https://i.imgur.com/AoQakwP.png" width=600 alt>
+<p align="center">
+<img src="../assets/images/module07-Intervention-Learning/DAgger.png" width=600 alt>
 <br>
 <em> Figure 2. DAgger and how it handles the failure scenario of behavior cloning. </em>
+</p>
 
 ## Intervention-based Learning
 
@@ -89,7 +92,7 @@ Although HG-DAgger obtains significantly less human annotations than DAgger, HG-
 
 
 <p align="center">
-<img src="https://i.imgur.com/qpNQzAX.png" width=600 alt>
+<img src="../assets/images/module07-Intervention-Learning/HGDAgger_results.png" width=600 alt>
 <br>
 <em> Figure 3. Results for a self-driving car scenario experiment plotting mean road departure rate with respect to expert labels. Notice that HG-DAgger achieves and maintains a zero mean road departure rate with significantly less expert labels. [3] </em>
 </p>
@@ -102,7 +105,7 @@ Despite this, HG-DAgger has several shortcomings. For example, although HG-DAgge
 Expert intervention learning is a direct improvement over HG-DAgger that attempts to minimize human interventions by enforcing the learner to stay within a "good enough" region as defined by the human expert. This region is implicitly defined by the human expert by when they choose to intervene and release control back to the learner. We can see an example of this for the self-driving car task shown below in Figure 4.
 
 <p align="center">
-<img src="https://i.imgur.com/P4DbwOT.png" width=600 alt>
+<img src="../assets/images/module07-Intervention-Learning/eil.png" width=600 alt>
 <br>
 <em> Figure 4. Example of EIL taking place in the self-driving car task. The light blue region defines the "good enough" region. Whenever the car veers away from this region, the human expert intervenes and controls the car back to the good enough region. [4] </em>
 </p>
@@ -123,7 +126,7 @@ $$ Instead of shaping the $Q$ function using a reward function, we shape the $Q$
 3. Learn to mimic the human expert during recovery $\\ Q_\theta(s,a) < Q_\theta(s, a') \ \ \forall \ (s, a) \in \mathcal I, a' \neq a$ where $a'$ is the expert action and $\mathcal I$ is the intervention state-action set.
 
 <p align="center">
-<img src="https://i.imgur.com/zGqgLMz.png" alt>
+<img src="../assets/images/module07-Intervention-Learning/eil2.png" alt>
 <br>
 <em> Figure 5. Example sequence showcasing the different state-action pairs belonging to the good enough, bad, and intervention sets. [4] </em>
 </p>
@@ -138,13 +141,13 @@ This results in the overall loss function $l(\cdot) = (l^1_B(\cdot) + l^2_B(\cdo
 Below, a quick overview of the methods mentioned so far can be seen along with their respective intervention rules and loss functions in Figure 6. In Figure 7, we can see how these listed algorithms perform for a robot self-driving task. Notice that EIL significantly improves over all other methods in reducing the average Q-error with respect to both total environment samples and expert queries (expert state-action labels produced during intervention).
 
 <p align="center">
-<img src="https://i.imgur.com/wrhIQir.png" width=600 alt>
+<img src="../assets/images/module07-Intervention-Learning/EILresults.png" alt>
 <br>
 <em> Figure 6. Algorithm comparison. Note that BC stands for behavioral cloning (another word for imitation learning). [4] </em>
 </p>
 
 <p align="center">
-<img src="https://i.imgur.com/cCYhSuo.png" alt>
+<img src="../assets/images/module07-Intervention-Learning/EILtable.png" width="600" alt>
 <br>
 <em> Figure 7. Results from a robot self-driving task. Average Q-error with respect to total environment samples and expert queries is plotted for EIL, HG-DAgger, DAgger, and BC. [4] </em>
 </p>
