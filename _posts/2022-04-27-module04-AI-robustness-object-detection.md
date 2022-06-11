@@ -58,64 +58,74 @@ The common practice of generating adversarial perturbations against object detec
 ### Improve Robustness from the perspective of dataset
 In this subtopic, we will discuss methods that improve the robustness from the perspective of the dataset. In real applications such methods can not only increase the size and diversity of  the training set but also provide a simple method to train the model without requiring extra GPU memory.
 [9]proposed a Patch Gaussian method, which adds a W x W patch of Gaussian noise to the image. This approach first sampled a point within the image as the center of the patch.  Then, varying the W and maximum standard deviation of noise could change patch size and noise level. One sample image are shown below to illustrate their method.
+
 ![gaussian patch visualization]({{ '/assets/images/Module04OD/gaussian_patch_vis.png' | relative_url }})
+{: style="width: 500px; max-width: 100%; margin-left: auto; margin-right: auto"}
+<center><i>Fig.5 The visualization of Gaussian Patch method [9] </i></center>
+<br>
+
 
 The quantitative results on the object detection tasks shows that such a method could also improve the robustness of the detector. A RetinaNet detector with ResNet-50 backbone was trained on the COCO dataset. The COCO validation data was corrupted by i.i.d. Gaussian Noise (=0.25). The model trained with Gaussian Patch achieved mAP of 26.1%, which outperformed the baseline results 11.6%.
 
 [10] improve the robustness by letting the CNN make decisions based on the shape of information. Through extensive experiments, they empirically found that CNN tends to make decisions based on the texture of objects. They overcome this bias and let the CNN consider the shape information by converting the original dataset to images with different styles by using AdaIN Style Transfer. As the figure shows, after applying the AdaIN style transfer, the local texture is no longer maintained and the global shape information tends to be retained.
+
 ![AdaIN Style transfer visualization]({{ '/assets/images/Module04OD/AdaIN_vis.png' | relative_url }})
+{: style="width: 500px; max-width: 100%; margin-left: auto; margin-right: auto"}
+<center><i>Fig.6 The visualization of AdaIN style Transfer  [10]</i></center>
+<br>
+
+
 As the table shows, they train both the ResNet 50 model and Fast Mask-RCNN model based on the different combinations of original and converted dataset. From the table, we can observe the model trained on both original data and converted data achieve the best performance. What’s more, the paper also verifies that training the ResNet 50 model on the style transferred data is more robust to the distortions and noise than the model training on the original dataset. In total, they tested eight kinds of distortions, for example, uniform noise, Contrast, etc. The results indicate that as the distortions increase, the model performance making prediction based on shape information almost improves 20% than the model making decision based the texture.
 
+![robust_improve]({{ '/assets/images/Module04OD/robust_improve.png' | relative_url }})
+{: style="width: 500px; max-width: 100%; margin-left: auto; margin-right: auto"}
+<center><i>Fig.7 Accuracy comparison on the ImageNet (IN) validation data set as well as object detection performance (mAP50) on PASCAL VOC 2007 [10].</i></center>
 
-![AdaIN Style transfer visualization]({{ '/assets/images/Module04OD/robust_improve.png' | relative_url }})
-
-<br>
 
 ### Improve Robustness by adversarial training
 
 #### The role of task losses in adversarial training
 
-Although robustness can be improved by adversarial training [2,7], it’s much tricker in object detection. Different from adversarial training on classification tasks which usually has only one loss, object detection tasks consist of two losses (Fig.5). One is the classification loss and the other is localization loss. It’s natural to ask, should we perform the adversarial attack on the sum of them or each of them? Both [3] and [4] experiment with this problem. 
+Although robustness can be improved by adversarial training [2,7], it’s much tricker in object detection. Different from adversarial training on classification tasks which usually has only one loss, object detection tasks consist of two losses (Fig.8). One is the classification loss and the other is localization loss. It’s natural to ask, should we perform the adversarial attack on the sum of them or each of them? Both [3] and [4] experiment with this problem. 
 
 ![loss1]({{ '/assets/images/Module04OD/loss.png' | relative_url }})
 {: style="width: 400px; max-width: 100%; margin-left: auto; margin-right: auto"}
-<center><i>Fig.5 Loss function of object detector training</i></center>
-<br>
+<center><i>Fig.8 Loss function of object detector training</i></center>
 
-[3] attacks the classification loss and the localization loss respectively. The result indicates that two attacks have mutual impacts and the adversarial attacks trailered for one task can reduce the performance of the model on the other task. For example, the attack on the classification not only hurts classification accuracy but also drops localization IoU significantly (Fig.6a). This observation has two indications. First, attacking an object detector is easy. Even attacks on one individual task loss can effectively impede the performance as a whole. Second, we have to study the interaction of these two losses. When generating adversarial examples by attacking both losses, whether the gradients of two losses counteract or enhance will significantly impact the quality of adversarial examples.
+[3] attacks the classification loss and the localization loss respectively. The result indicates that two attacks have mutual impacts and the adversarial attacks trailered for one task can reduce the performance of the model on the other task. For example, the attack on the classification not only hurts classification accuracy but also drops localization IoU significantly (Fig.9a). This observation has two indications. First, attacking an object detector is easy. Even attacks on one individual task loss can effectively impede the performance as a whole. Second, we have to study the interaction of these two losses. When generating adversarial examples by attacking both losses, whether the gradients of two losses counteract or enhance will significantly impact the quality of adversarial examples.
 
 ![lossdrop]({{ '/assets/images/Module04OD/lossdrop.png' | relative_url }})
 {: style="width: 500px; max-width: 100%; margin-left: auto; margin-right: auto"}
-<center><i>Fig.6 Marginal performance drop in attacking two tasks loss individually</i></center>
+<center><i>Fig.9 Marginal performance drop in attacking two tasks loss individually</i></center>
 <br>
 
-[3] conducts the second experiment to answer this question. In Fig.6b, we can draw two conclusions. (1) the magnitudes of the task gradients are not the same. They spread onto different value ranges, indicating the potential existence of imbalance between two losses; (2) the directions of two gradients are inconsistent (non-diagonal), implying the potential conflicts between them. [4] also does a similar experiment. In Fig.7, LOC, CLS, and DET denote attacks on localization, classification, and both respectively. We can see that the highest mAP is not achieved by the row DET, indicating two losses cancel out each other.
+[3] conducts the second experiment to answer this question. In Fig.9b, we can draw two conclusions. (1) the magnitudes of the task gradients are not the same. They spread onto different value ranges, indicating the potential existence of imbalance between two losses; (2) the directions of two gradients are inconsistent (non-diagonal), implying the potential conflicts between them. [4] also does a similar experiment. In Fig.10, LOC, CLS, and DET denote attacks on localization, classification, and both respectively. We can see that the highest mAP is not achieved by the row DET, indicating two losses cancel out each other.
 
 ![tab1]({{ '/assets/images/Module04OD/tab1.png' | relative_url }})
 {: style="width: 400px; max-width: 100%; margin-left: auto; margin-right: auto"}
-<center><i>Fig.7 mAP score for attacking LOC, CLS, DET</i></center>
+<center><i>Fig.10 mAP score for attacking LOC, CLS, DET</i></center>
 <br>
 
 The solution to this is simple. Both [3] and [4] proposed a similar algorithm regarding this issue. Here we present the algorithm in [3]. Intuitively, it attacks localization and classification loss respectively, and only keeps the one that maximizes the total loss. The adversarial output then replaces the original sample in a normal training process. 
 
 ![Algo1]({{ '/assets/images/Module04OD/Algo1.png' | relative_url }})
 {: style="width: 400px; max-width: 100%; margin-left: auto; margin-right: auto"}
-<center><i>Fig.8 Algorithm of adversarial training for robust object detectors [3] </i></center>
+<center><i>Fig.11 Algorithm of adversarial training for robust object detectors [3] </i></center>
 <br>
 
 #### To improve the algorithm
 
 Based on the algorithm proposed in [3], [4] has two improvements. First, it puts robust object detector training in the context of the pretrain-finetune paradigm. Second, it argues that the adversarial samples have different distributions from the original images. The batch norm layers have to take this discrepancy into account.
 
-Using adversarial examples to augment data can be taken place in two periods. One is during the pretraining, and the other is during finetuning. [4] argues that although adversarial examples boost up robustness on pretraining, such performance gains cannot transfer after finetuning. Fig.9 shows that pretraining on AdvProp[5] and Noisy Student[11] have similar or even worse performance after finetuning (D2 and D5 are two object detection models where D2 is more light-weighted). Therefore, [4] purposed to move the adversarial data augmentation step from pretraining to finetuning. Fig.10 shows that finetuning 6 models with Det-AdvProp surpasses the vanilla baseline.
+Using adversarial examples to augment data can be taken place in two periods. One is during the pretraining, and the other is during finetuning. [4] argues that although adversarial examples boost up robustness on pretraining, such performance gains cannot transfer after finetuning. Fig.12 shows that pretraining on AdvProp[5] and Noisy Student[11] have similar or even worse performance after finetuning (D2 and D5 are two object detection models where D2 is more light-weighted). Therefore, [4] purposed to move the adversarial data augmentation step from pretraining to finetuning. Fig.13 shows that finetuning 6 models with Det-AdvProp surpasses the vanilla baseline.
 
 ![bar]({{ '/assets/images/Module04OD/bar.png' | relative_url }})
 {: style="width: 400px; max-width: 100%; margin-left: auto; margin-right: auto"}
-<center><i>Fig.9  mAP comparsion for vanilla model and finetuned pretrained models. The data augmentation is at pretraining step</i></center>
+<center><i>Fig.12  mAP comparsion for vanilla model and finetuned pretrained models. The data augmentation is at pretraining step</i></center>
 
 ![tab2]({{ '/assets/images/Module04OD/tab2.png' | relative_url }})
 {: style="width: 500px; max-width: 100%; margin-left: auto; margin-right: auto"}
-<center><i>Fig.10  mAP comparsion for vanilla model and Det-AdvProp finetuned models. The data augmentation is at finetuning step</i></center>
+<center><i>Fig.13  mAP comparsion for vanilla model and Det-AdvProp finetuned models. The data augmentation is at finetuning step</i></center>
 <br>
 
 Another improvement to [3] is that [4] draws adversarial examples from another distribution. [4] computes the distribution of adversarial examples in an online manner. Note that adversarial examples for classification loss and classification loss are drawn from the same distribution. Therefore, [4] manages two distributions. One is for the original images and the other is for adversarial examples. One last tiny difference is that [4] does not replace the original image with an adversarial example. Instead, it puts both samples into the normal training process.
