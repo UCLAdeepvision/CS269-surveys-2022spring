@@ -53,6 +53,8 @@ Behavioral stylometry means predicting the identity of a player from the moves t
 
 Figure 3 shows the opening move preference for White at move 1. Most of the earliest recorded human games seem to feature 1. e4 as the opening move. On the other hand, AlphaZero simultaneous in comparison, rather than relying mainly on a single initial move before branching into alternatives, which seems to be the case in early human play.
 
+
+
 ![](https://i.imgur.com/FuVHOD6.png)-
 *Figure 3. A comparison between AlphaZero’s and human first-move preferences over training steps and time. [6]*
 
@@ -89,6 +91,8 @@ Now that we know the supervised learning approach in AlphaStar training enables 
 
 In Figure 4, AlphaStar final (on the right) build significantly more "Dark Templar", "Disruptor", and "Phoenix" than AlphaStar Supervised. Fewer "Dark Templar" and "Zealot" are built by AlphaStar Final. AlphaStar Supervised is the model of AlphaStar after supervised learning; AlphaStar Final is the model of AlphaStar after multi-agent learning. Because AlphaStar Supervised intends to learn human strategies, it highly resembles human behaviors. Thus, AlphaStar Supervised can be used as a baseline for the discovery of novel strategies and AlphaStar Final can show the strategies learned from reinforcement learning and multi-agent learning. The comparison between AlphaStar Supervised and AlphaStar final shows what novel strategies are learned. As novel strategies in StarCraft II relates to the units built in the game, the differences in built units between AlphaStar Supervised and AlphaStar Final depict the learning of novel strategies for AlphaStar. 
 
+
+
 ![](https://i.imgur.com/0ju2Ir9.jpg)
 
 *Figure 4. Units built by Protoss AlphaStar Supervised (left) and AlphaStar Final (right) over multiple self-play games.[12]*
@@ -120,7 +124,9 @@ Similar to AlphaStar, the training of GT Sophy also utilizes deep reinforcement 
 
 #### Knowledge Modelled in  Multi-agent Learning 
 
-GT Sophy also utilizes multi-agent training to improve its performance. Multi-agent traning is used due to similar reasons that AlphaStar uses multi-agent traning. Training against itself would make the agent lose the preparation for future dangers. For example, when there is a hard corner in the front, human drivers would break earlier than the agent. Even though the time difference is very small, it can lead to one driver losing control of one's car. This cause-and-effect setting in which one player's choices causing another player to be penalized is rarely seen in other games. This setting is also non-existent in zero-sum games such as chess. [14] In order to ensure the policy an agent learned will actually benefit that agent, a mixture of opponents is used by researchers from [14]. The inclusion of various agents enables GT Sophy to learn more diverse strategies. The discovery of knowledge also happens during this process. With more agents involves in the training, GT Sophy is able to detect its weaknesses and resolves them. 
+GT Sophy also utilizes multi-agent training to improve its performance. Multi-agent traning is used due to similar reasons that AlphaStar uses multi-agent traning. Training against itself would make the agent lose the preparation for future dangers. For example, when there is a hard corner in the front, human drivers would break earlier than the agent. Even though the time difference is very small, it can lead to one driver losing control of one's car. This cause-and-effect setting in which one player's choices causing another player to be penalized is rarely seen in other games. This setting is also non-existent in zero-sum games such as chess. [14] In order to ensure the policy an agent learned will actually benefit that agent, a mixture of opponents is used by researchers from [14]. The inclusion of various agents enables GT Sophy to learn more diverse strategies. The discovery of knowledge also happens during this process. With more agents involves in the training, GT Sophy is able to detect its weaknesses and resolves them.
+
+ 
 
 ![](https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-021-04357-7/MediaObjects/41586_2021_4357_Fig1_HTML.png?as=webp)
 *Figure 7. The Training Process of GT Sophy [14]*
@@ -173,6 +179,9 @@ $$
 $$
 
 To understand the $8*8*K$-dimension NMF factors, the researchers overlay the K columns onto the input $z^0$. The selected visualization in Figure 8 shows some illustrative cases of how much NMF factor K contributes to each neuron’s representation. The factors shown in Figure 4a and Figure 4b show the development of potential move computations for the player’s and opponent’s diagonal moves respectively. We can see from Figure 4a that only three squares or fewer highlighted in the first move, which is consistent with the convolutional structure that all computations from one layer to the next involve only spatially adjacent neurons. 
+
+
+
 ![](https://i.imgur.com/YBNQPkv.png)--
 
 *Figure 8. Visualisation of NMF factors in a fully-trained AlphaZero network, showing development of threats and anticipation of possible moves by the opponent, as well as a factor that may be involved in move selection. [6]*
@@ -189,6 +198,9 @@ Figure 4c shows a more complex factor in layer 3: a count of the number of the o
 Nash equilibria have been proven to difficult to find in large imperfect-information games such as multi-player poker, than zero-sum two-players game such as chess. Notably, [9] presents Pluribus, an AI that is stronger than top human professionals in six-player no-limit Texas hold’em poker through simialr self play and MCTS. Figure 9 is a simplified diagram of the real-time search in Pluribus.
 
 By looking at the strategy stored in Pluribus, the authors find out that Pluribus aligns with the conventional human wisdom that limping (calling the “big blind” rather than folding or raising) is suboptimal for any player, except the “small blind” player who already has half the big blind in the pot by the rules, and thus has to invest only half as much as the other players to call. In addition, while Pluribus initially experimented with limping when computing its blueprint strategy offline through self play, it gradually discarded this action from its strategy as self play continued. 
+
+
+
 ![poker](https://i.imgur.com/vOF8I09.png =x250)-->
 *Figure 9.  Real-time search in Pluribus. For simplicity the subgame shows just two players [9].*
 
