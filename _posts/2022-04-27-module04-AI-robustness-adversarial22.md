@@ -1,16 +1,12 @@
 ---
 layout: post
 comments: true
-title: "Module 4: AI robustness - Advesarial"
+title: "Module 4: AI robustness- Benchmarking Adversarial Robustness for Image Classification"
 author: Lalit Bhagat, Vishnu Devarakonda
 date: 2021-06-05
 ---
 
-# Benchmarking Adversarial Robustness for Image Classification
-
-## Abstract
-
-Deep neural networks subject to adversarial examples has become one of the most significant research issues in deep learning. One of the most difficult aspects of benchmarking robustness is that its assessment is frequently prone to inaccuracy, resulting in robustness overestimation. The research on adversarial robustness is faced with the absolutes between attacks and defenses. Defensive methods proposed to prevent existing attacks became outdated as new attacks emerge. Therefore it's hard to truly understand the effects of these methods. In this paper, we investigate various thorough, rigorous, and coherent benchmarks for evaluating adversarial robustness on image classification tasks. 
+> Deep neural networks subject to adversarial examples has become one of the most significant research issues in deep learning. One of the most difficult aspects of benchmarking robustness is that its assessment is frequently prone to inaccuracy, resulting in robustness overestimation. The research on adversarial robustness is faced with the absolutes between attacks and defenses. Defensive methods proposed to prevent existing attacks became outdated as new attacks emerge. Therefore it's hard to truly understand the effects of these methods. In this paper, we investigate various thorough, rigorous, and coherent benchmarks for evaluating adversarial robustness on image classification tasks. 
 
 <!--more-->
 {: class="table-of-content"}
@@ -72,11 +68,11 @@ This paper establishes rigorous benchmarks for image classifier robustness[1].
 They introduced 2 new datasets, the IMAGETNET-C dataset for input corruption robustness and the IMAGENET-P dataset for input perturbation robustness. This benchmark evaluates performance on common corruptions and perturbations instead of worst-case adversarial perturbations. Corruption robustness measures the classifier’s average-case performance on corruption. Perturbation robustness is defined as the average-case performance on tiny, generic, classifier-independent perturbations; i.e. assessing perturbation resilience and tracking the classifier's prediction stability, dependability, or consistency in the face of modest input changes.
 
 
-**IMAGENET-C** - ImageNet validation photos were subjected to 15 different types of corruption. There are five levels of severity for each sort of corruption, totaling 75 unique corruptions. Noise, blur, weather, and digital are the four basic forms of corruption. Because the corruptions are diverse and numerous, research that improves performance on this benchmark should show broad robustness advantages.
+**IMAGENET-C**  ImageNet validation photos were subjected to 15 different types of corruption. There are five levels of severity for each sort of corruption, totaling 75 unique corruptions. Noise, blur, weather, and digital are the four basic forms of corruption. Because the corruptions are diverse and numerous, research that improves performance on this benchmark should show broad robustness advantages.
 
 ![IMAGENETC]({{ '/assets/images/module04/ImageNetC.jpeg' | relative_url }})
 
-**IMAGENET-P** - Noise, blur, weather, and digital aberrations are all present in IMAGENET-P, just as they are in IMAGENET-C. IMAGENET-P differs from IMAGENET-C in that each ImageNet validation image generates perturbation sequences. Models with poor perturbation robustness give irregular predictions, eroding user confidence.
+**IMAGENET-P**  Noise, blur, weather, and digital aberrations are all present in IMAGENET-P, just as they are in IMAGENET-C. IMAGENET-P differs from IMAGENET-C in that each ImageNet validation image generates perturbation sequences. Models with poor perturbation robustness give irregular predictions, eroding user confidence.
 
 ![IMAGENETP]({{ '/assets/images/module04/ImageNetP.jpeg' | relative_url }})
 
@@ -211,3 +207,11 @@ In this paper, we look at robustness in the context of adversarial training. Eac
 [5] Dong, Y., Fu, Q. A., Yang, X., Pang, T., Su, H., Xiao, Z., & Zhu, J. Benchmarking adversarial robustness on image classification. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (pp. 321-331). (2020). 
 
 [6] Croce, F., Andriushchenko, M., Sehwag, V., Debenedetti, E., Flammarion, N., Chiang, M., ... & Hein, M. Robustbench: a standardized adversarial robustness benchmark. arXiv preprint arXiv:2010.09670 (2020).
+
+[7] Yang, Xiao, et al. "RobFR: Benchmarking Adversarial Robustness on Face Recognition." arXiv preprint arXiv:2007.04118 (2020).
+
+[8] Lorenz, Peter, et al. "Is RobustBench/AutoAttack a suitable Benchmark for Adversarial Robustness?." arXiv preprint arXiv:2112.01601 (2021).
+
+[9] Tang, Shiyu, et al. "Robustart: Benchmarking robustness on architecture design and training techniques." arXiv preprint arXiv:2109.05211 (2021).
+
+[10] Sun, Jiachen, et al. "Certified Adversarial Defenses Meet Out-of-Distribution Corruptions: Benchmarking Robustness and Simple Baselines." arXiv preprint arXiv:2112.00659 (2021).
