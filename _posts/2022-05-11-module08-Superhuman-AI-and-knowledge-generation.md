@@ -36,6 +36,7 @@ Two concurrent works [5, 6] both attemp to answer this same question. If we view
 From Figure 1, we see that the information related to human-defined concepts of multiple levels of complexity, is being learned over the course of training. Many of these concepts are computed over the course of multiple blocks.
 
 Similarly, [5] investigate AlphaZero’s representations but in Hex (a game in which two players attempt to connect opposite sides of a rhombus-shaped hex board) using both model probing and behavioral tests. While both [5] and [6] use human defined concepts and investigate AZ's representations, [5]'s investigation is more in-depth thanks to the easier problem setting in Hex. The main findings (as shown in Figure 2) are that 1）concepts related to short-term end-game planning are best encoded in the final layers of the model, whereas concepts related to long-term planning are encoded in the middle layers of the model; and 2) improvements in behavioral tests occur before improvements in probing accuracy, which align with the findings in [6].
+
 ![](https://i.imgur.com/RwmojeB.png)
 *Figure 2: Changes in Hex concept representation and use during training.[5] The checkpoint at which behavioral tasks improve are blue, and converge are yellow. The checkpoint at which probing tasks improve are pink, and converge are green. Improvements in board structure are orange, and convergence, purple.*
 
@@ -120,7 +121,6 @@ Similar to AlphaStar, the training of GT Sophy also utilizes deep reinforcement 
 #### Knowledge Modelled in  Multi-agent Learning 
 
 GT Sophy also utilizes multi-agent training to improve its performance. Multi-agent traning is used due to similar reasons that AlphaStar uses multi-agent traning. Training against itself would make the agent lose the preparation for future dangers. For example, when there is a hard corner in the front, human drivers would break earlier than the agent. Even though the time difference is very small, it can lead to one driver losing control of one's car. This cause-and-effect setting in which one player's choices causing another player to be penalized is rarely seen in other games. This setting is also non-existent in zero-sum games such as chess. [14] In order to ensure the policy an agent learned will actually benefit that agent, a mixture of opponents is used by researchers from [14]. The inclusion of various agents enables GT Sophy to learn more diverse strategies. The discovery of knowledge also happens during this process. With more agents involves in the training, GT Sophy is able to detect its weaknesses and resolves them. 
-
 
 ![](https://media.springernature.com/full/springer-static/image/art%3A10.1038%2Fs41586-021-04357-7/MediaObjects/41586_2021_4357_Fig1_HTML.png?as=webp)
 *Figure 7. The Training Process of GT Sophy [14]*
