@@ -45,9 +45,7 @@ modified by a user.
 To compute the principal componenets N random vectors are sampled from Z and their corresponding $$w_i$$ is computed using $$w_i = M(z_i)$$. The PCA values are then computed from these $$w_1:N$$ values which forms the basis V for W and is used to make edits in the image. 
 This technique also provides layerwise control through intermediate latent vectors $$w_i$$. For doing the layerwise edits, the modification of $$w_i$$ inputs is done only to the range of layers and other layers are left unchanged. For BigGAN[17] as well the image edits are suggested using the similar approach. BigGAN does not have the built-in layerwise control mechanism. But the similar behaviour can be produced by varying the Skip-z inputs $$z_i$$ seperately from the latent $$z: y_i = G(y_{i-1}; zi)$$
 
-The results obtained using this method is shown below. This method demonstrates simple but powerful ways to create images with existing GANs. Rather
-than training a new model for each task, existing general-purpose image representations is taken 
-and techniques for controlling them is suggested.
+The results obtained using this method is shown below. This method demonstrates simple but powerful ways to create images with existing GANs. 
 
 ![]({{ '/assets/images/team10/ganspace.png' | relative_url }})
 Figure1: GANspace results on StyleGAN2.
