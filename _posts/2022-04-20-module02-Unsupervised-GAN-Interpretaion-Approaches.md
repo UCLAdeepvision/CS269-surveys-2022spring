@@ -21,6 +21,39 @@ There exists both supervised and unsupervised interpretaion methods for GANs. Su
 
 
 ## GANSpace
+
+The key principles used in this approach includes using Principal Component Analysis to determine important directions in GAN latent spaces for StyleGAN[15], and using feature space for BigGAN[17]. While the mechanisms are fundamental, the controls that they lead to are quite powerful and dictate image attributes ranging from simple properties like pose and shape to subtle attributes like landscape, facial features, and image lighting.
+
+The most basic GAN comprises a probability distribution p(z), from which a latent vector z is sampled, and a neural network G(z) that produces an output image I:z~p(z), I = G(z). The network can be further decomposed into a series of L intermediate layers $$G_1...G_L$$. In a StyleGAN model[15, 16], the first layer takes a constant input $$y_0$$. Instead, the output is controlled by a non-linear function of z as input to intermediate layers:
+
+$$
+y_i = G_i(y_{i-1}, w)   
+$$
+
+with w = M(z) where M is an 8-layer multilayer perceptron. Normally, the vectors w controlling the synthesis at each layer are all equal; the authors demonstrate that allowing each layer to have its own $$w_i$$ enables powerful style mixing.
+
+GANSpace helps us in finding useful directions as the prior distribution p(z) does not indicate the useful directions. Since in the higher dimensions the pixel space is complex this method suggests that for the early layer of GANs the principal components of feature tensors represents important factors of variations.
+A new image defined by w can be edited by varying PCA coordinates x before it’s feeded to the synthesis network
+
+$$
+w_0 = w + Vx
+$$
+
+where each entry $$x_k$$ of x is a separate control parameter. The entries xk are initially zero until
+modified by a user.
+
+To compute the principal componenets N random vectors are sampled from Z and their corresponding $$w_i$$ is computed using $$w_i = M(z_i)$$. The PCA values are then computed from these $$w_1:N$$ values which forms the basis V for W and is used to make edits in the image. 
+This technique also provides layerwise control through intermediate latent vectors $$w_i$$. For doing the layerwise edits, the modification of $$w_i$$ inputs is done only to the range of layers and other layers are left unchanged. For BigGAN[17] as well the image edits are suggested using the similar approach. BigGAN does not have the built-in layerwise control mechanism. But the similar behaviour can be produced by varying the Skip-z inputs $$z_i$$ seperately from the latent $$z: y_i = G(y_{i-1}; zi)$$
+
+The results obtained using this method is shown below. This method demonstrates simple but powerful ways to create images with existing GANs. Rather
+than training a new model for each task, existing general-purpose image representations is taken 
+and techniques for controlling them is suggested.
+
+![]({{ '/assets/images/team10/ganspace.png' | relative_url }})
+Figure1: GANspace results on StyleGAN2.
+
+
+
 ## Semantic Factorization 
 Semantic Factorization (SeFa) is a closed-form unsupervised method to discover interpretable dimensions in GANs. SeFa method doesn't involve any training and sampling of latent vectors like the GANSpace method, instead it takes a deeper look into the generation mechanism of GANs to understand the steerable directions in latent space. This method identifies the semantically meaningfully directions in the latent space by efficiently decomposing the model weights. Let G(.) be the generator function of the GAN which maps an input d-dimensional to an RGB image. G(.) consists of multiple layers and each learns a transformation from one to another. Let the first layer's output of GAN be G1 as shown below:
 
@@ -40,7 +73,7 @@ From above equation we can observe that manipulation process is instance indepen
 Using above solution, this method shows a beautiful result which says that semantically meaningful directions can be obtained by finding the eigen vectors of the weight matrix A. Thus this method doesn't need both training and sampling. But we need human intervention to map the directions to corresponding human interpretable dimensions. As discussed before, annotation of discovered dimensions is the main challenge of unsupervised approaches. Also, the dimensions found could include entaglements of multiple interpretable elements and thus might not be useful for editing. Disentaglement of those dimensions is one of gaols of research in this direction.
 
 ![]({{ '/assets/images/team10/sefa1.png' | relative_url }})
-Figure1: Semantic Factorization method results on StyleGAN and PGGAN.
+Figure2: Semantic Factorization method results on StyleGAN and PGGAN.
 
 ## LatentCLR
 Recently there was a new paper which proposes a different unsupervised approach to discover interpretable directions in the latent space of pre-trained GAN models such as StyleGAN2 and BigGAN. They have showed the method finding distinct and fine grained directions on a variety of datasets. This method proposes a contrastive learning-based approach to discover semantic directions in the latent space of pre-trained GANs in a self-supervised manner. Contrastive learning has recently become popular due to leading state-of-the-art results in various unsupervised representation learning tasks. It aims to learn representations by contrasting positive pairs against negative pairs, and learning goal is to move the representations of similar pairs near and dissimilar pairs far. Let us first take a look at SimCLR[[13]](#reference) to understand constrastive loss function. Given a random mini-batch of N samples, SimCLR generates N positive pairs using specified data augmentation method. Let **f** be the representation of all 2N samples and **z** be the projections of these samples. The average loss over all positive pairs would be defined as below:
@@ -68,7 +101,7 @@ $$
 The intuition behind the objective function is that all feature divergences obtained with the same edit operation 1 $$\leq$$ k $$\leq$$ K, i.e each of $$f_1^{k},f_2^{k},...f_N^{k}$$ are considered as positive pairs and contribute to the numerator. All other pairs are considered as negative pairs and contribute to the denominator. With this generalized contrastive loss, the method was able to enforce latent edit operations to have orthogonal effects on the features. In contrast to SeFa, this method additionally can fuse the effects of all selected layers into the target feature layer due to its flexible optimization-based objective.
 
 ![]({{ '/assets/images/team10/latent_clr.png' | relative_url }})
-Figure2: LatentCLR method results on StyleGAN2 and BigGAN.
+Figure3: LatentCLR method results on StyleGAN2 and BigGAN.
 
 ## Comparision
 ## Conclusion
@@ -100,5 +133,15 @@ Figure2: LatentCLR method results on StyleGAN2 and BigGAN.
 [13] Shen, Y., Yang, C., Tang, X., Zhou, B.: Interfacegan: Interpreting the disentangled face representation learned by gans. IEEE Trans. on Pattern Analysis and Machine Intelligence (2020)
 
 [14] Ting Chen, Simon Kornblith, Mohammad Norouzi, and Ge- offrey Hinton. A simple framework for contrastive learning of visual representations. In International conference on ma- chine learning, pages 1597–1607. PMLR, 2020.
+
+[15] T. Karras, S. Laine, and T. Aila. A style-based generator architecture for generative adversarial
+networks. In Proc. CVPR, 2019.
+
+[16] T. Karras, S. Laine, M. Aittala, J. Hellsten, J. Lehtinen, and T. Aila. Analyzing and improving
+the image quality of StyleGAN. In Proc. CVPR, 2020.
+
+[17] A. Brock, J. Donahue, and K. Simonyan. Large scale GAN training for high fidelity natural
+image synthesis. In Proc. ICLR, 2019.
+
 
 ---
