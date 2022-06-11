@@ -38,7 +38,7 @@ There are 2 general categories of methods to achieve imitation learning - Behavi
 
 #### Behavior Cloning
 
-Behavior Cloning (BC) is an attempt at getting the agent to directly replicate expert behavior. Given a dataset of human expert demonstrations, the dataset consists of expert states and actions $(s^*, a^*)$. This dataset is used to learn a direct mapping from states to actions without constructing a reward function. This can be framed as a supervised learning scenario where a policy is learned by minimizing some loss function.
+Behavior Cloning (BC) is an attempt at getting the agent to directly replicate expert behavior. Given a dataset of human expert demonstrations, the dataset consists of expert states and actions $$(s^*, a^*)$$. This dataset is used to learn a direct mapping from states to actions without constructing a reward function. This can be framed as a supervised learning scenario where a policy is learned by minimizing some loss function.
 
 BC methods have primarily focused on model-free methods, meaning that they do not explicitly learn or use a forward model of the system. Model-free BC methods are well suited for applications such as trajectory planning of robotic systems.
 
@@ -52,11 +52,9 @@ IRL methods have primarily focused on model-based methods because knowledge abou
 
 The agent is trained to mimic human expert demonstrations, but this training data does not generalize well. The key problem is that the training data distribution and the testing data distribution are different, causing the agent to end up in states it has never visited before. If an agent makes a mistake, it finds itself in conditions that are completely distinct from what it observed during training, leading to unpredictable behavior. This effect is known as covariate shift.
 
-<p align="center">
-<img src="https://imgur.com/KhhaN5V.png" width=600 lt>
-<br>
-<em> Figure 1. Failure scenario of behavior cloning. </em>
-</p>
+![]({{ '/assets/images/team17/BC_failure.png' | relative_url }})
+{: style="width: 600px; max-width: 100%;"}
+*Figure 1. Failure scenario of behavior cloning.*
 
 Another challenge faced by imitation learning is when the human expert demonstrations are insufficient and it is not possible for humans to provide the comprehensive annotations needed to train an agent.
 
