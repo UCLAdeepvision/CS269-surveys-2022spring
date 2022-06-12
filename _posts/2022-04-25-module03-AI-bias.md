@@ -2,7 +2,7 @@
 layout: post
 comments: true
 title: "Module 3 Survey: On the Emergence and Elimination of Biases in Artificial Intelligence"
-author: Sidi Lu and Yufeng Li and Yuxin Huang and Rakesh Bal
+author: Sidi Lu and Yufeng Li and Yuxin Wang and Rakesh Bal
 date: 2021-04-25
 ---
 
