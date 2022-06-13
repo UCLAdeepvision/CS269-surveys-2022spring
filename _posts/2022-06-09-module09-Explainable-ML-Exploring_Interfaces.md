@@ -2,7 +2,7 @@
 layout: post
 comments: true
 title: "Module 9: Explainable ML - Topic: Exploring Powerful Interfaces for Explainable AI"
-authors: Shardul Shailendra Parab
+author: Shardul Shailendra Parab
 date: 2022-06-09
 ---
 

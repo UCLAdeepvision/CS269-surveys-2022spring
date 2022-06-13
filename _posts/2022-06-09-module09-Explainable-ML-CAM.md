@@ -2,7 +2,7 @@
 layout: post
 comments: true
 title: "Module 9: Explainable ML - Topic: Class Activation Mapping and its Variants"
-authors: Zi-Yi Dou, Sicheng Jiang
+author: Zi-Yi Dou, Sicheng Jiang
 date: 2022-06-09
 ---
 
