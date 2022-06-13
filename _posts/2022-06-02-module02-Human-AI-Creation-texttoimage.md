@@ -3,7 +3,7 @@ layout: post
 comments: true
 title: "Module 2: Human-AI Creation - Text to Image Generation"
 author: Vishnu Vardhan Bachupally, Sri Keerthi Bolli
-date: 2022-06-09
+date: 2022-06-02
 ---
 
 
@@ -367,5 +367,3 @@ Dm-gan: Dynamic memory generative adversarial net-
 works for text-to-image synthesis. In Proceedings of
 the IEEE/CVF Conference on Computer Vision and
 Pattern Recognition, pages 5802–5810, 2019.
-
-

@@ -3,7 +3,7 @@ layout: post
 comments: true
 title: "Module 9: Explainable ML - Topic: Exploring Powerful Interfaces for Explainable AI"
 authors: Shardul Shailendra Parab
-date: 2021-06-08
+date: 2022-06-09
 ---
 
 
@@ -19,13 +19,13 @@ date: 2021-06-08
 
 ### Understanding Neural Networks Through Deep Visualization
 
-The paper[6] does build the initial steps towards DNN Feature visualization. We are introduced with two main tools. The first one visualizes the activations produced on each layer of a trained convnet as it processes an image or video. The authors did find an interesting aspect that representations on some layers seem to be surprisingly local. 
+The paper[6] does build the initial steps towards DNN Feature visualization. We are introduced with two main tools. The first one visualizes the activations produced on each layer of a trained convnet as it processes an image or video. The authors did find an interesting aspect that representations on some layers seem to be surprisingly local.
 
 ![Activis]({{ '/assets/images/module09/fv.png' | relative_url }})
 {: style="width: 800px; max-width: 100%;"}
 *Fig. Visual look of the system
 
-Secondly, multiple regularization techniques are also introduced to bias images found via optimization toward more visually interpretable examples. While each of these regularization methods helps on its own, in combination they are even more effective. The following four regularizations  were investigated: L2 decay, Gaussian blur, Clipping pixels with small norm and Clipping pixels with small contribution. Additionally, a random hyperparameter search was useful for finding joint hyperparameter settings that worked well together. 
+Secondly, multiple regularization techniques are also introduced to bias images found via optimization toward more visually interpretable examples. While each of these regularization methods helps on its own, in combination they are even more effective. The following four regularizations  were investigated: L2 decay, Gaussian blur, Clipping pixels with small norm and Clipping pixels with small contribution. Additionally, a random hyperparameter search was useful for finding joint hyperparameter settings that worked well together.
 
 
 While the techniques introduced in this paper are surely building blocks for strong interfaces, there is still a lot of scope to improve, especially focus is on only neuron level activation, which might not be enough to get a better picture of interpretability. This issue is resolved by future papers in the survey.
@@ -34,7 +34,7 @@ While the techniques introduced in this paper are surely building blocks for str
 The paper [4] focuses on how a visual tool can be built especially for large scale dataset which can help in better interpreting deep learning models. It introduces ACTIVIS, an interactive visualization system for interpreting large-scale deep learning models and results which was designed with the help of  over 15 researchers and engineers at Facebook. It provides the users with multiple useful views such as computation graph overview
 of the model architecture, and a neuron activation view for pattern discovery and comparison. This tight integration does give a lot of helpful input to the user.
 
-The diagram below explains the working of ACTIVIS same: 
+The diagram below explains the working of ACTIVIS same:
 As per the paper:
 
 ![Activis]({{ '/assets/images/module09/activis.png' | relative_url }})
@@ -60,7 +60,7 @@ The authors introduce a technique called “Integrated Gradients”  requires no
 *Fig. Results from integrated gradient. Visualizations obtained from integrated gradients are better at reflecting
 distinctive features of the image.
 
-The technique specified in the paper is definitely innovative and does clearly show its advantage over existing methods. This technique (although not in stand alone) can be used to get a clearer picture for multiple downstream tasks. 
+The technique specified in the paper is definitely innovative and does clearly show its advantage over existing methods. This technique (although not in stand alone) can be used to get a clearer picture for multiple downstream tasks.
 
 ### Inceptionism: Going Deeper into Neural Networks
 
@@ -75,7 +75,7 @@ Another important result – in some cases, it is revealed that the neural net i
 {: style="width: 800px; max-width: 100%;"}
 *Fig: Showing the failure of the model
 
-This is a very important paper as this did spearhead visualization research and also introduce optimization objectives. As explained earlier, this approach can be combined with regularizations as well layer and channel attributions to bring about an even better interpretability interfaces. 
+This is a very important paper as this did spearhead visualization research and also introduce optimization objectives. As explained earlier, this approach can be combined with regularizations as well layer and channel attributions to bring about an even better interpretability interfaces.
 
 
 ### Building blocks of interpretability
@@ -83,12 +83,12 @@ This paper[2] does truly embrace a combination of multiple available techniques 
 
 This paper introduces  Semantic dictionaries. The technique is as follows - pair every neuron activation with a visualization of that neuron and sort them by the magnitude of the activation. Activations now map to iconic representations, instead of abstract indices, with many appearing to be similar to salient human ideas, such as “floppy ear,” “dog snout,” or “fur.” In this way, semantic dictionaries are powerful not just because they move away from meaningless indices, but because they express a neural network’s learned abstractions with canonical examples. For instance, GoogLeNet has multiple floppy ear detectors that appear to detect slightly different levels of droopiness, length, and surrounding context to the ears. Now all these techniques can be easily combined to not only see what the network detects at each position, but also what the network understands of the input image as a whole. However, there are manifold problems with this approach - First, it is not clear that individual pixels should be the primary unit of attribution. The meaning of each pixel is extremely entangled with other pixels, is not robust to simple visual transforms (e.g., brightness, contrast, etc.)Also traditional saliency maps are a very limited type of interface — they only display the attribution for a single class at a time.
 
-Next portion, talks about using saliency maps and channel attribution - however there are huge issues with the same too i.e It is Easy to end up with too much information, would take hours to understand the large number of channels that slightly impact the output; secondly, Both techniques  are lossy and can miss important parts. Hence, One could avoid loss by working with individual neurons aka not aggregating, but once again defeats the purpose of these techniques. 
+Next portion, talks about using saliency maps and channel attribution - however there are huge issues with the same too i.e It is Easy to end up with too much information, would take hours to understand the large number of channels that slightly impact the output; secondly, Both techniques  are lossy and can miss important parts. Hence, One could avoid loss by working with individual neurons aka not aggregating, but once again defeats the purpose of these techniques.
 ![Axiom]({{ '/assets/images/module09/b2.png' | relative_url }})
 {: style="width: 800px; max-width: 100%;"}
 *Fig: Showing how the channel attribution system works
 
-Hence, now the paper introduces another important component called using neuron groups. These neuron groups are created using matrix factorization. 
+Hence, now the paper introduces another important component called using neuron groups. These neuron groups are created using matrix factorization.
 
 ![Axiom]({{ '/assets/images/module09/b1.png' | relative_url }})
 {: style="width: 800px; max-width: 100%;"}
@@ -104,7 +104,7 @@ There is scope for improvement although this is the most powerful out of all the
 
 
 ## Conclusions
-With models being huge and growing even larger day by day building powerful interpretation interfaces is a daunting task especially when one wants to capture everything possible. 
+With models being huge and growing even larger day by day building powerful interpretation interfaces is a daunting task especially when one wants to capture everything possible.
 If we succeed, interpretability promises to be a powerful tool in enabling meaningful human oversight and in building fair, safe, and aligned AI systems.
 
 

@@ -2,8 +2,8 @@
 layout: post
 comments: true
 title: "Module 10: Debate on Explainable ML"
-author: Andong Hua, Boya Ouyang, and Yu-Hsuan Liu 
-date: 2022-06-08
+author: Andong Hua, Boya Ouyang, and Yu-Hsuan Liu
+date: 2022-06-10
 ---
 
 
@@ -17,7 +17,7 @@ date: 2022-06-08
 ## Introduction
 With the rapid development of machine learning and AI, more and more applications adopt ML and AI. For example, object detection, image classification, image generations, etc. However, the models are a black box to humans. As the dimension and the number of parameters grow insanely to increase the performance, it is hard for a human to realize what the models learn and what the model analyzes and processes. Therefore, people start trying to interpret the model. For example, they try to build the association between the results and the model properties. Post-hoc interpretation techniques are invented to help with the explanation of how the model works. With a better understanding of the models, people believe that they can adjust the model based on the demand. However, the end goal of the interpretation models has no formal definition. Yet we do not know whether the interpretation models actually improve the model’s performance, robustness, or generalization.
 
-In the next section, we go over the issues needed to be solved with the definition and the desiderata of interpretability and a brief introduction to the current interpretation techniques. Since many interpretation techniques are proposed to explain the models, we focus on the analysis of feature attribution based methods, which is one example of post-hoc interpretation, in the following section. 
+In the next section, we go over the issues needed to be solved with the definition and the desiderata of interpretability and a brief introduction to the current interpretation techniques. Since many interpretation techniques are proposed to explain the models, we focus on the analysis of feature attribution based methods, which is one example of post-hoc interpretation, in the following section.
 
 ## Background
 
@@ -83,17 +83,17 @@ The above evaluation methods focused on the effectiveness of interpretability me
 
 
 ## Conclusion
-In this survey, we discuss the issues that need to be solved when interpreting deep learning models. We emphasize the need for us to work on a formal and universal definition to quantify the interpretability. More importantly, an over-rely on the interpretation method can be misleading. As an example of post-hoc interpretation, feature attribution based methods analyze how much each feature in the model contributed to the prediction. We examine the commonly used strategies to evaluate those methods and how these methods can be ineffective under certain scenarios. It will be more rigorous for researchers to focus on quantitative analysis than solely relying on visualization to interpret deep learning models. Some of the saliency map methods are sensitive to both model parameter and training data, such as gradient and gradient variants, but some methods including Guided BackProp are independent to model parameter and dataset, which is not supposed to be applied to model or data relevant tasks, for example, finding outliers. Finally, some feature attribution methods including Gradients, SmoothGrad, Integrated Gradients, and Guided BackProp, are not sensitive to models’ reliance to spurious correlations. 
+In this survey, we discuss the issues that need to be solved when interpreting deep learning models. We emphasize the need for us to work on a formal and universal definition to quantify the interpretability. More importantly, an over-rely on the interpretation method can be misleading. As an example of post-hoc interpretation, feature attribution based methods analyze how much each feature in the model contributed to the prediction. We examine the commonly used strategies to evaluate those methods and how these methods can be ineffective under certain scenarios. It will be more rigorous for researchers to focus on quantitative analysis than solely relying on visualization to interpret deep learning models. Some of the saliency map methods are sensitive to both model parameter and training data, such as gradient and gradient variants, but some methods including Guided BackProp are independent to model parameter and dataset, which is not supposed to be applied to model or data relevant tasks, for example, finding outliers. Finally, some feature attribution methods including Gradients, SmoothGrad, Integrated Gradients, and Guided BackProp, are not sensitive to models’ reliance to spurious correlations.
 
 
 ## Reference
 [1] Zachary C. Lipton. ["The Mythos of Model Interpretability."](http://arxiv.org/abs/1606.03490) 2016.
 
-[2] Kim, Been. ["Interactive and interpretable machine learning models for human machine collaboration."](https://dspace.mit.edu/handle/1721.1/98680) *PhD thesis, Massachusetts Institute of Technology*. 2015. 
+[2] Kim, Been. ["Interactive and interpretable machine learning models for human machine collaboration."](https://dspace.mit.edu/handle/1721.1/98680) *PhD thesis, Massachusetts Institute of Technology*. 2015.
 
 [3] Marco Tulio Ribeiro, Sameer Singh, and Carlos Guestrin. [""Why Should I Trust You?": Explaining the Predictions of Any Classifier."](http://arxiv.org/abs/1602.04938) 2016.
 
-[4] Liu, Changchun, Rani, Pramila, and Sarkar, Nilanjan. ["An empirical study of machine learning techniques for affect recognition in human-robot interaction."](https://ieeexplore.ieee.org/document/1545344) *In International Conference on Intelligent Robots and Systems*. IEEE, 2005. 
+[4] Liu, Changchun, Rani, Pramila, and Sarkar, Nilanjan. ["An empirical study of machine learning techniques for affect recognition in human-robot interaction."](https://ieeexplore.ieee.org/document/1545344) *In International Conference on Intelligent Robots and Systems*. IEEE, 2005.
 
 [5] Bryce Goodman, and Seth Flaxman. ["European Union regulations on algorithmic decision-making and a "right to explanation"."](http://arxiv.org/abs/1606.08813) 2016, AI Magazine, Vol 38, No 3, 2017.
 

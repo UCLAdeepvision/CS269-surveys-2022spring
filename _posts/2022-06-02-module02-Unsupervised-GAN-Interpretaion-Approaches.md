@@ -3,7 +3,7 @@ layout: post
 comments: true
 title: "Module 2: Unsupervised appraoches for latent space interpretaion of GANs"
 author: Manish Reddy Gottimukkula, Sonia Jaiswal
-date: 2021-04-20
+date: 2022-06-02
 ---
 
 
@@ -42,17 +42,17 @@ $$
 where each entry $$x_k$$ of x is a separate control parameter. The entries xk are initially zero until
 modified by a user.
 
-To compute the principal componenets N random vectors are sampled from Z and their corresponding $$w_i$$ is computed using $$w_i = M(z_i)$$. The PCA values are then computed from these $$w_1:N$$ values which forms the basis V for W and is used to make edits in the image. 
+To compute the principal componenets N random vectors are sampled from Z and their corresponding $$w_i$$ is computed using $$w_i = M(z_i)$$. The PCA values are then computed from these $$w_1:N$$ values which forms the basis V for W and is used to make edits in the image.
 This technique also provides layerwise control through intermediate latent vectors $$w_i$$. For doing the layerwise edits, the modification of $$w_i$$ inputs is done only to the range of layers and other layers are left unchanged. For BigGAN[17] as well the image edits are suggested using the similar approach. BigGAN does not have the built-in layerwise control mechanism. But the similar behaviour can be produced by varying the Skip-z inputs $$z_i$$ seperately from the latent $$z: y_i = G(y_{i-1}; zi)$$
 
-The results obtained using this method is shown below. This method demonstrates simple but powerful ways to create images with existing GANs. 
+The results obtained using this method is shown below. This method demonstrates simple but powerful ways to create images with existing GANs.
 
 ![]({{ '/assets/images/team10/ganspace.png' | relative_url }})
 Figure1: GANspace results on StyleGAN2.
 
 
 
-## Semantic Factorization 
+## Semantic Factorization
 Semantic Factorization (SeFa) is a closed-form unsupervised method to discover interpretable dimensions in GANs. SeFa method doesn't involve any training and sampling of latent vectors like the GANSpace method, instead it takes a deeper look into the generation mechanism of GANs to understand the steerable directions in latent space. This method identifies the semantically meaningfully directions in the latent space by efficiently decomposing the model weights. Let G(.) be the generator function of the GAN which maps an input d-dimensional to an RGB image. G(.) consists of multiple layers and each learns a transformation from one to another. Let the first layer's output of GAN be G1 as shown below:
 
 <img src="https://latex.codecogs.com/svg.image?\mathcal{Z}&space;\subseteq&space;\mathbb{R}^d&space;\to&space;\mathcal{I}&space;\subseteq&space;\mathbb{R}^{H&space;\times&space;W&space;\times&space;C}"/> \
@@ -88,7 +88,7 @@ The above loss function constrains the projections of positive pairs to be simil
 $$
 f_i^{k} = G_f(z_i^{k}) - G_f(z_i) \\
 \text{where } G_f \text{is the feed-forward of GAN upto target layer f.}
-$$ 
+$$
 
 loss function for each edited latent code $$z_i^{k}$$:
 
@@ -128,7 +128,7 @@ In conclusion, the three methods aim to discover control directions in an unsupe
 
 [2] Erik Harkonen, Aaron Hertzmann, Jaakko Lehtinen, and Sylvain Paris. Ganspace: Discovering interpretable gan controls. In Adv. Neural Inform. Process. Syst., 2020.
 
-[3] Yujun Shen, Bolei Zhou. Closed-Form Factorization of Latent Semantics in GANs. Computer Vision and Pattern Recognition (CVPR), 2021 
+[3] Yujun Shen, Bolei Zhou. Closed-Form Factorization of Latent Semantics in GANs. Computer Vision and Pattern Recognition (CVPR), 2021
 
 [4] Oğuz Kaan Yüksel, Enis Simsar, Ezgi Gülperi Er, Pinar Yanardag. LatentCLR: A Contrastive Learning Approach for Unsupervised Discovery of Interpretable Directions. ICCV 2021
 

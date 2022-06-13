@@ -3,7 +3,7 @@ layout: post
 comments: true
 title: "Module 1: Human-AI Collaborated Generation: From Programming to Creativity"
 author: Feiyang Chen, Wenhe Zhang
-date: 2021-04-18
+date: 2022-06-01
 ---
 
 
@@ -20,9 +20,9 @@ date: 2021-04-18
 
 In recent years, Artificial Intelligence(AI) technologies’ striking performance has drawn people’s attention to a new area “Human-AI Collaboration”, where human and AI work together towards a shared goal. Various forms of collaboration were achieved on an array of tasks, including programming, artistic creation, medical diagnosis, virtual assistants, autonomous driving, teaching, and decision-making. These tasks could further be categorized as the classification task and generation task. The former usually requires a “human+AI” team to make correct predictions before taking action, while the latter needs human-AI teamwork on producing fit-for-purpose or creative content.
 
-In this survey, we will focus on human-AI collaborated **generation** tasks, where human and AI work jointly to create visual, audio, or text contents, such as code, stories, poems, paintings, and music. Generation tasks are challenging for both human and AI, as it involves multiple steps before completion, communications between teammates, observations of existing work, imitations of examples, and production of new content. It is also hard to have explicit criteria of "good generations" in many situations, which leads to difficulties in improving human-AI collaborated generation. Delving into such a challenging but intriguing area, we hope to answer 2 questions: 
+In this survey, we will focus on human-AI collaborated **generation** tasks, where human and AI work jointly to create visual, audio, or text contents, such as code, stories, poems, paintings, and music. Generation tasks are challenging for both human and AI, as it involves multiple steps before completion, communications between teammates, observations of existing work, imitations of examples, and production of new content. It is also hard to have explicit criteria of "good generations" in many situations, which leads to difficulties in improving human-AI collaborated generation. Delving into such a challenging but intriguing area, we hope to answer 2 questions:
 
-- To what extent is the ongoing collaboration between human and AI on generation tasks? 
+- To what extent is the ongoing collaboration between human and AI on generation tasks?
 
 - Does AI or human contribute more in human-AI generation tasks?
 
@@ -99,12 +99,12 @@ The difference between the two generation tasks lies in the level of collaborati
 
 The investigations on human-AI programming and human-AI co-creation provide us with insights into the future work of human-AI generation tasks, or even the larger area of "Human-AI Collaboration":
 
-- To achieve a higher level of collaboration, we need to **strengthen AI's ability** on corresponding tasks. For example, code generation methods could be improved to solve more complex coding problems and process more complicated instructions from humans. Besides performance, interpretability and generalization ability are also equally important. 
+- To achieve a higher level of collaboration, we need to **strengthen AI's ability** on corresponding tasks. For example, code generation methods could be improved to solve more complex coding problems and process more complicated instructions from humans. Besides performance, interpretability and generalization ability are also equally important.
 - **Communication** is the essential part of human-AI generation tasks. It is worth noticing that the communications in human-AI collaboration are bi-directional: Human conveys task-related information, intentions, emotions, and expectations to AI, while AI gives suggestions, confidence scores, and explanations to human. We need to take both directions into consideration when designing human-AI collaboration systems.
 
 ## Conclusion
 
-In this survey, we delved into two human-AI collaborated generation tasks: Human-AI Programming and Human-AI Co-Creation. In both of the tasks, human plays the dominant role, and AI could help human complete tasks or inspire human with new ideas. Our investigation shows that both "human factors" and "AI factors" are indispensable components in human-AI collaboration. Future work needs to work on the improvement of AI's ability as well as the bi-directional communication between human and AI  during collaboration. 
+In this survey, we delved into two human-AI collaborated generation tasks: Human-AI Programming and Human-AI Co-Creation. In both of the tasks, human plays the dominant role, and AI could help human complete tasks or inspire human with new ideas. Our investigation shows that both "human factors" and "AI factors" are indispensable components in human-AI collaboration. Future work needs to work on the improvement of AI's ability as well as the bi-directional communication between human and AI  during collaboration.
 
 ## Reference
 

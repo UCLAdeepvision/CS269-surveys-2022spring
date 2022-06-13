@@ -3,7 +3,7 @@ layout: post
 comments: true
 title: "Module 9: Explainable ML - Topic: Class Activation Mapping and its Variants"
 authors: Zi-Yi Dou, Sicheng Jiang
-date: 2021-06-08
+date: 2022-06-09
 ---
 
 
@@ -16,15 +16,15 @@ date: 2021-06-08
 {:toc}
 
 ## An Overview of CAM
-Class activation mapping (CAM) and its variants (e.g. [1-8]) are techniques originally designed to obtain the discriminative image regions of a convolutional neural network (CNN) when the model is predicting a specific class during image classification, highlighting the importance of image regions that are relevant to a given class. The visualization enables us to gain insights into why neural networks are generating their outputs, whether their decision process is intuitive and if they are using spurious input-output correlations. 
+Class activation mapping (CAM) and its variants (e.g. [1-8]) are techniques originally designed to obtain the discriminative image regions of a convolutional neural network (CNN) when the model is predicting a specific class during image classification, highlighting the importance of image regions that are relevant to a given class. The visualization enables us to gain insights into why neural networks are generating their outputs, whether their decision process is intuitive and if they are using spurious input-output correlations.
 
-Since the first CAM paper [1] was introduced, there are a lot of follw-up works in this direction [2-8] and have been widely applied in models of various fields, including both CNN and vision transformer-based [9] image classification, visual question answering, and image captioning models. In this survey, we will first introduce the original CAM paper, then briefly cover four representative CAM variants categorized into two groups (i.e. gradient-based and gradient-free methods) and compare the similarities and differences between them. 
+Since the first CAM paper [1] was introduced, there are a lot of follw-up works in this direction [2-8] and have been widely applied in models of various fields, including both CNN and vision transformer-based [9] image classification, visual question answering, and image captioning models. In this survey, we will first introduce the original CAM paper, then briefly cover four representative CAM variants categorized into two groups (i.e. gradient-based and gradient-free methods) and compare the similarities and differences between them.
 
 ## Class Activation Mapping
-The CAM paper [1] is specifically designed for convolutional networks with an global average pooling layer before outputs. In this section, we will first introduce GAP and then illustrate the details of CAM. 
+The CAM paper [1] is specifically designed for convolutional networks with an global average pooling layer before outputs. In this section, we will first introduce GAP and then illustrate the details of CAM.
 
-### Background: Global Average Pooling 
-Convolutional neural networks usually consists of a sequence of convolutional layers at the beginning and one or a few fully-connected layers at the end. The fully-connected layers can take most of the parameters of the whole network and make the model prone to over-fitting. In order to solve the issue, Lin et al. [10] propose a novel architecture called Network in Network, one of the main contributions of which is to use a global average pooling (GAP) layer before outputs instead of the fully-connected layers. The GAP layer can significantly reduce the total number of the model parameters and make the model more efficienct and less prone to over-fitting. 
+### Background: Global Average Pooling
+Convolutional neural networks usually consists of a sequence of convolutional layers at the beginning and one or a few fully-connected layers at the end. The fully-connected layers can take most of the parameters of the whole network and make the model prone to over-fitting. In order to solve the issue, Lin et al. [10] propose a novel architecture called Network in Network, one of the main contributions of which is to use a global average pooling (GAP) layer before outputs instead of the fully-connected layers. The GAP layer can significantly reduce the total number of the model parameters and make the model more efficienct and less prone to over-fitting.
 
 The idea of GAP is quite simple: for a given image, if we denote the activation of channel $k$ in the last convolutional layer at spatial location $(x, y)$ as $f_k(x, y)$, then the output of the GAP layer for channel $k$ is simply $F^k = \sum_{x, y} f_k(x, y)$. Essentially, we average all the activations in channel $k$ and convert them into a single value. After we obtain the $k$-dimensional vector output from GAP, we perform a weighted sum of each element in the vector for a given class $c$, denoted as $S_c = \sum_k w_k^c F_k$, where $w_k^c$ is a parameter that is learned during training. The resulting scores are then fed into a softmax layer to generate the final output probability $Y_c=\frac{\exp(S_c)}{\sum_{c_i} \exp(S_{c_i})}$.
 
@@ -38,7 +38,7 @@ where $M_c(x, y)$ directly measure the importance of spatial location $(x, y)$ f
 
 After we obtain the class activation map, we can perform unsampling to the size of the input image, so that we can visualize which image regions contribute the most to the prediction of class $c$.
 
-The authors demonstrate the effectiveness of CAM, enalbing us to visualize the convolutional neural networks as well as directly adapting image classification models for object localization. While promising, one notable drawback of CAM is that they can only be applied to GAP-based convolutional networks, while a lot of the existing models have fully-connected layers at the end. In the paper, the authors show that replacing the fully-connect layers with GAP will not hurt the model performance significantly, but there indeed exists an accurary-interpretability trade-off. 
+The authors demonstrate the effectiveness of CAM, enalbing us to visualize the convolutional neural networks as well as directly adapting image classification models for object localization. While promising, one notable drawback of CAM is that they can only be applied to GAP-based convolutional networks, while a lot of the existing models have fully-connected layers at the end. In the paper, the authors show that replacing the fully-connect layers with GAP will not hurt the model performance significantly, but there indeed exists an accurary-interpretability trade-off.
 
 Inspired by CAM, there are a number of follow-ups in this direction and we will then describe how they inherent the general idea and improve the algorithm. We will introduce four representative works and we categorize them into two groups, including gradient-based and gradient-free methods.
 
@@ -58,15 +58,15 @@ $$M_c(x, y) = \sum_k w_k^cf_k(x, y).$$
 
 We can see that the main difference between CAM and Grad-CAM is that the weights are learned during training for CAM, whereas they are computed during inference for Grad-CAM.In fact, the authors prove that when applying Grad-CAM to GAP-based convolutional neural networks, the channel weights for CAM and Grad-CAM are the same. In other words, Grad-CAM is a strict generalization of CAM.
 
-The authors also demonstrate that Grad-CAM can be applied to a wide range of models, including image classification, visual question answering, and image captioning models. In addition, it has been recently shown that Grad-CAM can also be applied to vision transformer-based models [9]. These results demonstrate that Grad-CAM is generally applicable and much more flexible than CAM. 
+The authors also demonstrate that Grad-CAM can be applied to a wide range of models, including image classification, visual question answering, and image captioning models. In addition, it has been recently shown that Grad-CAM can also be applied to vision transformer-based models [9]. These results demonstrate that Grad-CAM is generally applicable and much more flexible than CAM.
 
-### Grad-CAM++ 
+### Grad-CAM++
 Grad-CAM has two main limitations: firstly, Grad-CAM fails to localize objects in an image if the image contains multiple occurrences of the same class. In addition, Grad-CAM heatmaps often fail to capture the entire object in completeness which is important to recognition task for single object images. Therefore, Grad-CAM++ [3] was proposed to address these shortcomings.
 
 In particular, different feature maps may be activated with differing spatial footprints, and the feature maps with lesser footprints fade away in the final saliency map. To solve this problem, GradCAM++ works by taking a weighted average of the pixel-wise gradients to calculate weights:
 $$w_k^c=\sum_{x,y} \alpha_{xy}^{kc} \text{ReLU}(\frac{\partial Y_c}{\partial f_k(x,y)})$$.
 
-The $\alpha_{xy}^{kc}$ terms are weighting co-efficients for the pixel-wise gradients for class $c$ and convolutional feature map $A^k$. By taking 
+The $\alpha_{xy}^{kc}$ terms are weighting co-efficients for the pixel-wise gradients for class $c$ and convolutional feature map $A^k$. By taking
 $$\alpha_{xy}^{kc} = \frac{1}{\sum_{l,m} \frac{\partial Y_c}{\partial f_k(l, m)}} $$
 if $\frac{\partial Y_c}{\partial f_k(x, y)} = 1$ and $0$ otherwise, all the spatially relevant regions of the input images are equally highlighted. As a result, Grad-CAM++ provides more general visualization for multiple occurrences of a class in an image and poor object localizations. In addition, the authors further show that Grad-CAM++ can be extended to tasks such as image captioning and video understanding.
 
@@ -110,7 +110,7 @@ In summary, we introduce five ways of generating class activation maps, includin
 
 [5] Wang, Haofan, Zifan Wang, Mengnan Du, Fan Yang, Zijian Zhang, Sirui Ding, Piotr Mardziel, and Xia Hu. "Score-CAM: Score-weighted visual explanations for convolutional neural networks." In Proceedings of the IEEE conference on computer vision and pattern recognition workshops, 2020.
 
-[6] Muhammad, Mohammed Bany, and Mohammed Yeasin. "Eigen-CAM: Class activation map using principal components." In Proceedings of the international joint conference on neural networks, 2020. 
+[6] Muhammad, Mohammed Bany, and Mohammed Yeasin. "Eigen-CAM: Class activation map using principal components." In Proceedings of the international joint conference on neural networks, 2020.
 
 [7] Belharbi, Soufiane, Aydin Sarraf, Marco Pedersoli, Ismail Ben Ayed, Luke McCaffrey, and Eric Granger. "F-CAM: Full resolution class activation maps via guided parametric upscaling." In Proceedings of the IEEE winter conference on applications of computer vision, 2022.
 

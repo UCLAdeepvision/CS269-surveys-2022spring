@@ -3,7 +3,7 @@ layout: post
 comments: true
 title: "Module 1: A study of Human-AI Collaboration in Healthcare"
 author: Tanmay Sanjay Hukkeri, Tianqi Zhao
-date: 2021-04-18
+date: 2022-06-01
 ---
 
 

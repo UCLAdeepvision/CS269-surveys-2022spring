@@ -3,7 +3,7 @@ layout: post
 comments: true
 title: "Module 6: Weak Supervision and Self Supervision: Representation Learning"
 author: Ankur Kumar, Jingdong Gao
-date: 2022-06-07
+date: 2022-06-06
 ---
 
 
@@ -16,7 +16,7 @@ date: 2022-06-07
 
 ## Introduction
 We discuss techniques to learn high quality features for computer vision models without large supervised datasets. The motivation is to reduce huge amount of manual efforts that goes in creating large supervised dataset. This manual approach is also not scalable. Existing works on reducing supervision can be divided into two broad categories: weak supervision and self-supervision. Weak supervision uses lower quality labels which are easier to obtain, generally from non-experts [1]. On the other hand, self-supervison algorithms completely discard the label information and create supervisiory signal from input itself, often leveraging the underlying structure in the data [2]. Recent works using weak supervision or self-supervision have shown strong performance on downstream tasks. We next discuss some important works for both the categories in detail.
- 
+
 ## Weak Supervision
 The success of deep learning is attributed to large, high quality datasets such as ImageNet, and improvement in computing resources which helps in training much deeper models. There is a belief that improving the model architecture (depth, novel components etc) and training on larger datasets will help to learn better representations (evaluated by performance on downstream tasks). Many works following the success of AlexNet focused on desigining novel architectures whereas few works explored the other direction, i.e. how to increase the dataset size for representation learning. Since it is not feasible to employ human labor to create a massive, carefully annotated dataset, the idea is to use potentially noisy labels, for example, hashtags, image captions etc. which can be easily collected from the internet. Such labels provide weak signals compared to high quality labels provided by domain experts. Therefore, it is imperative to train with large weakly supervised dataset, which has its own challenges. We discuss below four works providing insights into different aspects of weakly supervised pre-training. The first work [3] shows that such pre-training indeed improves performance on downstream tasks. The second work [4] uses an even larger dataset with different type of weak supervision and provides some analysis. The third [5] and fourth [6] works are sort of followup works of the first and second respectively. We only do a qualitative discussion of results from these works because of varying experimental setup.
 
@@ -34,7 +34,7 @@ This paper revisits pre-training using Instagram images and hashtags. Similar to
 
 ## Self Supervision
 Self-supervised learning refers to the paradigm of learning feature representations in an unsupervised manner, by defining an annotation free pretext task that derives the task’s supervision from the input itself. The success of the paradigm has been demonstrated in the field of natural language processing by well-known works such as BERT [9] and GPT [10], with the emergence of the Transformer model. On the other hand, in the computer vision field, early works in the self-supervised learning regime mainly utilized convolutional based architectures such as residual networks. Recent research in self-supervised representation learning in computer vision follow several directions. One major direction is the design of pretext tasks, with the rationale that solving such self-supervised tasks will force the model to learn semantic image features that can be useful for other vision tasks. For example, Zhang et al. [11] use the image colorization task, colorizing gray scale images, to train ConvNets to learn features. Doersch et al. [12] predict the relative position of image patches, and [13] propose to learn features by predicting image rotations. Another line of research derives from the emergence of contrastive learning, which models image similarity and dissimilarity between two or more different views, generated with data augmentation. While contrastive learning is a general framework that can be combined with different pretext tasks, works in this direction typically utilize the instance discrimination task [14]. This survey includes MOCO [15] as a representative work in this area. In contrast with contrastive pre-training, a recent line of work only leverages the similarity between multiple views of the same data and has demonstrated even better linear probing performance on ImageNet. This direction also heavily depends on data augmentation to create different views. We present DINO [16] as a representative paper. The last direction in self-supervised pre-training included in this survey is reconstruction based autoencoders. Most recent works such as BEiT [17] and MAE [18] are inspired by the success of autoencoders in NLP and seek to directly apply the same or similar approach in computer vision with vision transformers [19].
-	
+
 
 ### UNSUPERVISED REPRESENTATION LEARNING BY PREDICTING IMAGE ROTATIONS
 In this paper the authors propose a new pretext task: predicting the number of degrees an image has been rotated with. This work proposes to learn image representations by training ConvNets to recognize the geometric transformation that is applied to an image that it gets as input. In detail, it first defines a set of geometric transformations and a set of training images. Then each geometric transformation is applied to every image and is assigned as the label to the transformed image. Under this setup, the pretext task becomes a classification problem with the number of classes equal to the number of transformations. In particular, the authors chose to define the geometric transformations as the image rotations by 0, 90, 180, and 270 degrees. As in a standard classification problem, a regular negative log likelihood loss function for maximizing the likelihood the model predicts the correct class is used. The authors claim that the intuition behind this task is that to successfully predict the rotation of an image the model must necessarily learn to localize the main objects in the image, recognize their orientation based on the object type, and then relate the object orientation with the dominant orientation that each type of object tends to be depicted within the available images. This problem is well-posed because most people tend to take images where the main objects in the image are in the upright direction, and using sparse rotation categories reduces the ambiguity that may exist when the objects are not fully upright. The method was evaluated on CIFAR10, ImageNet, PASCAL VOC [20], and Places [21]. The authors used ConvNet as the backbone on CIFAR10, and AlexNet for other datasets. With selected architectures, the proposed method consistently outperforms previous self-supervised methods on all datasets except Places. We recommend readers to refer to the original paper for detailed evaluation setting. However, the performance gap between the proposed method and supervised method still remains large. For example, on ImageNet, the top-1 accuracy of fitting a linear classifier to self-supervise learned features is only 38.7 percent, much lower training with labels, which has 50.5 percent.
@@ -65,7 +65,7 @@ Reconstruction based autoencoders have been studied in computer vision prior to 
 [7] Radford, Alec et al. “Learning Transferable Visual Models From Natural Language Supervision.” ICML (2021)
 
 [8] Jia, Chao et al. “Scaling Up Visual and Vision-Language Representation Learning With Noisy Text Supervision.” ICML (2021)
- 
+
 [9] Devlin, Chang et al. "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding." NAACL (2019)
 
 [10] Radford, Narasimhan et al. "Improving Language Understanding by Generative Pre-Training." (2018)
@@ -96,5 +96,3 @@ Reconstruction based autoencoders have been studied in computer vision prior to 
 
 
 ---
-
-

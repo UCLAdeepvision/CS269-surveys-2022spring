@@ -3,7 +3,7 @@ layout: post
 comments: true
 title: "Module 6: Weak supervision and self supervision - Semantic Segmentation with Scribbles"
 author: Arvind Vepa
-date: 2021-05-04
+date: 2022-06-06
 ---
 
 
@@ -31,7 +31,7 @@ $$
 \sum_{i}\psi_i(y_i|X,S) + \sum_{i,i}\psi_{i,j}(y_i,y_j|X,S)
 $$
 
-where $$ \psi_i = \psi^{scribble}+\psi^{net}$$, $$X$$ is the set of segments, $$S$$ is the set of scribbles and scribble category labels, and the set of $$y_i$$ are the label assignments for segment $$i$$. 
+where $$ \psi_i = \psi^{scribble}+\psi^{net}$$, $$X$$ is the set of segments, $$S$$ is the set of scribbles and scribble category labels, and the set of $$y_i$$ are the label assignments for segment $$i$$.
 
 If the scribbles intersect with the segment, $$\psi^{scribble}$$ is $$0$$; otherwise each label has an equal positive value. $$\psi^{net}$$ represents the deep learning network probability for the label. For segments with the different labels, the value of $$\psi_{i,j}$$ increases depending on how close the segments are in appearance (measured in terms of color and texture). This results in the following objective
 
@@ -49,17 +49,17 @@ Similar to the previous work, the "On Regularized Losses for Weakly-supervised C
 $$
 arg\,min_{\theta} \sum_{p \in \Omega_{L}}H(Y_p,S_p)+\sum_{p \in \Omega_{U}}H(X_p,S_p)\;\;S \equiv f_{\theta}(I)$$
 
-where $$Y$$ are the set of labeled pixels, $$X$$ is the set of proposed groundtruth,  $$f_{\theta}(I)$$ is the network outputs, $$\Omega_{L}$$ are the set of labeled pixels, $$\Omega_{U}$$ are the set of unlabeled pixels, and $$H$$ is the standard cross entropy loss. As discussed before, $$X$$ is fixed. The objective for the groundtruth proposal is 
+where $$Y$$ are the set of labeled pixels, $$X$$ is the set of proposed groundtruth,  $$f_{\theta}(I)$$ is the network outputs, $$\Omega_{L}$$ are the set of labeled pixels, $$\Omega_{U}$$ are the set of unlabeled pixels, and $$H$$ is the standard cross entropy loss. As discussed before, $$X$$ is fixed. The objective for the groundtruth proposal is
 
 $$
 arg\,min_{X} \sum_{p \in \Omega_{U}}H(X_p,S_p) + \lambda R(X)
-$$ 
+$$
 
 where $$R$$ is the dense CRF loss and the other terms are defined as before. In this case, we fix the network parameters and optimize for the groundtruth proposals.
 
 
 ### Tree Energy Loss: Towards Sparsely Annotated Semantic Segmentation
-Similar to the previously mentioned paper, in "Tree Energy Loss: Towards Sparsely Annotated Semantic Segmentation" [6], the researchers also separate optimization of labeled and unlabeled pixels. However, rather than using an alternating optimization framework, their approach is trained end-to-end. Specifically, while the loss for labeled pixels involve a standard cross-entropy loss ($$L_{seg}$$), network predictions for unlabeled pixels are evaluated based on a novel tree loss. 
+Similar to the previously mentioned paper, in "Tree Energy Loss: Towards Sparsely Annotated Semantic Segmentation" [6], the researchers also separate optimization of labeled and unlabeled pixels. However, rather than using an alternating optimization framework, their approach is trained end-to-end. Specifically, while the loss for labeled pixels involve a standard cross-entropy loss ($$L_{seg}$$), network predictions for unlabeled pixels are evaluated based on a novel tree loss.
 
 In the tree loss, the image pixels are represented as a vertices in a graph with edges to four adjacent pixels. In order to capture low-level and high-level information, there are two sets of edge weights. In the first set, the difference between the pixel intensities is obtained. In the second set, the difference between the network outputs (prior to softmax) is obtained. A minimum spanning tree is then obtained, pruning edges between dissimilar pixels. A matrix of path distances between is then obtained between pixels for the low-level and high-level features and then an element-wise sigmoid function is applied to generate an affinity matrix for low-level and high-level features.
 
@@ -71,7 +71,7 @@ $$
 \tilde{Y} = F(F(P, A_{low}), A_{high})
 $$
 
-where $$A^{*}$$ are the affinity matrices and $$F$$ is a filtering function defined as 
+where $$A^{*}$$ are the affinity matrices and $$F$$ is a filtering function defined as
 
 $$
 F(P, A) = \frac{1}{z_{i}}\sum_{\forall j \in \Omega}A_{i,j}P_j
@@ -95,13 +95,13 @@ The metric results for three different approaches can be seen here on PASCAL VOC
 | TEL [6]	       | 77.3 		 |
 
 <br>
-As can be seen, the ScribbleSup results are outperformed by the more recent papers. One noticable shift in recent papers is the emphasis on generating pixel-wise groundtruth proposals (DenseCRF Loss and TEL) rather than segment-wise groundtruth proposals (ScribbleSup). Additionally, ScribbleSup's reliance on static segments may have been detrimental: both DenseCRF Loss and TEL are not limited in this way. 
+As can be seen, the ScribbleSup results are outperformed by the more recent papers. One noticable shift in recent papers is the emphasis on generating pixel-wise groundtruth proposals (DenseCRF Loss and TEL) rather than segment-wise groundtruth proposals (ScribbleSup). Additionally, ScribbleSup's reliance on static segments may have been detrimental: both DenseCRF Loss and TEL are not limited in this way.
 
 TEL performs slightly better than DenseCRF Loss though the results are similar. However, TEL does not require alternating optimization and has a simpler training procedure. While both approaches generate pixel-level groundtruth proposals, TEL also utilizes both high-level and low-level semantic features to generate these while the DenseCRF Loss approach relies on only low-level features. This suggests future models will also consider how to creatively utilize low-level and high-level image features to boost model performance.
 
 ## Conclusion
 
-This report outlines the recent developments in weakly supervised semantic segmentation using scribbles. We discussed methodological developments as well as the experimental results from recent models. 
+This report outlines the recent developments in weakly supervised semantic segmentation using scribbles. We discussed methodological developments as well as the experimental results from recent models.
 
 ## Reference
 

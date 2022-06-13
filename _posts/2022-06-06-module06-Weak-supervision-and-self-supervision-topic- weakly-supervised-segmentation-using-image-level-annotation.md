@@ -3,7 +3,7 @@ layout: post
 comments: true
 title: "Module 6: Weak supervision and self supervision - Topic weakly supervised segmentation"
 author: Jiarui Wang, Jiaying Li
-date: 2021-05-04
+date: 2022-06-06
 ---
 
 

@@ -3,10 +3,10 @@ layout: post
 comments: true
 title: "Module 4: AI robustness- Benchmarking Adversarial Robustness for Image Classification"
 author: Lalit Bhagat, Vishnu Devarakonda
-date: 2021-06-05
+date: 2022-06-04
 ---
 
-> Deep neural networks subject to adversarial examples has become one of the most significant research issues in deep learning. One of the most difficult aspects of benchmarking robustness is that its assessment is frequently prone to inaccuracy, resulting in robustness overestimation. The research on adversarial robustness is faced with the absolutes between attacks and defenses. Defensive methods proposed to prevent existing attacks became outdated as new attacks emerge. Therefore it's hard to truly understand the effects of these methods. In this paper, we investigate various thorough, rigorous, and coherent benchmarks for evaluating adversarial robustness on image classification tasks. 
+> Deep neural networks subject to adversarial examples has become one of the most significant research issues in deep learning. One of the most difficult aspects of benchmarking robustness is that its assessment is frequently prone to inaccuracy, resulting in robustness overestimation. The research on adversarial robustness is faced with the absolutes between attacks and defenses. Defensive methods proposed to prevent existing attacks became outdated as new attacks emerge. Therefore it's hard to truly understand the effects of these methods. In this paper, we investigate various thorough, rigorous, and coherent benchmarks for evaluating adversarial robustness on image classification tasks.
 
 <!--more-->
 {: class="table-of-content"}
@@ -29,7 +29,7 @@ In the following sections, typical methods from each approach are summarized, an
 
 In this paper, the authors introduce a new dataset called MNIST-C for benchmarking robustness of computer vision models on out-of-distribution samples. It extends some of the work done in IMAGETNET-C but specifically for the  MNIST dataset. They showcase that this new MNIST-C dataset causes an increase in error rate for common neural networks, showcasing that there is still much more to be done on improving the robustness of deep neural networks.
 
-Initially, the authors start with 31 possible image corruptions based on prior literature on robustness and image processing. Out of these, they were able to benchmark 15 different corruptions that tended to have the most adverse effect on augmented data trained CNN model performance. These 15 include - shot noise, impulse noise, glass blur, motion blur, shear, translate, scale, rotate, brightness stripe, fog, splatter, zigzag, dotted line and Canny edges. Each of the corruptions itself is further parameterized by a severity metric such that a model’s performance is affected by not the semantics of the content. Each of the different perturbations can be seen in the figure below. 
+Initially, the authors start with 31 possible image corruptions based on prior literature on robustness and image processing. Out of these, they were able to benchmark 15 different corruptions that tended to have the most adverse effect on augmented data trained CNN model performance. These 15 include - shot noise, impulse noise, glass blur, motion blur, shear, translate, scale, rotate, brightness stripe, fog, splatter, zigzag, dotted line and Canny edges. Each of the corruptions itself is further parameterized by a severity metric such that a model’s performance is affected by not the semantics of the content. Each of the different perturbations can be seen in the figure below.
 
 ![MNISTC]({{ '/assets/images/module04/MNISTC.jpeg' | relative_url }})
 
@@ -64,7 +64,7 @@ Finally, the authors of the paper disregarded horizontal and vertical flips. The
 
 #### Brief Summary
 
-This paper establishes rigorous benchmarks for image classifier robustness[1]. 
+This paper establishes rigorous benchmarks for image classifier robustness[1].
 They introduced 2 new datasets, the IMAGETNET-C dataset for input corruption robustness and the IMAGENET-P dataset for input perturbation robustness. This benchmark evaluates performance on common corruptions and perturbations instead of worst-case adversarial perturbations. Corruption robustness measures the classifier’s average-case performance on corruption. Perturbation robustness is defined as the average-case performance on tiny, generic, classifier-independent perturbations; i.e. assessing perturbation resilience and tracking the classifier's prediction stability, dependability, or consistency in the face of modest input changes.
 
 
@@ -100,7 +100,7 @@ The main results of the paper can be seen in the figure above. The findings in t
 
 The goal of this paper is to investigate some properties of adversarial training on a large scale like on ImageNet. Certain architectures and ideas have become commonplace in deep learning like batch normalization and deeper networks with the aim to improve generalization. The study finds two properties related to BN and deep networks in the context of robustness. First, batch normalization may not be effective in improving robustness at the ImageNet scale. Second, deep networks are still “shallow” in the sense that adversarial learning incurs strong demand to achieve higher robustness but it may be worth it.
 
-To explore these findings, the authors use a ResNet-152 model and projected gradient descent as the adversarial attacker. They employ different adversarial training strategies (check paper for hyperparameters). In short, the findings reveal that training only on adversarial images without including clean images is more robust than combining the two. The results are evident in the figures below. 
+To explore these findings, the authors use a ResNet-152 model and projected gradient descent as the adversarial attacker. They employ different adversarial training strategies (check paper for hyperparameters). In short, the findings reveal that training only on adversarial images without including clean images is more robust than combining the two. The results are evident in the figures below.
 
 ![PGDPerformance]({{ '/assets/images/module04/PGDPerformance.jpeg' | relative_url }})
 
@@ -124,7 +124,7 @@ Finally, the authors test the impact of network depth in improving robustness in
 
 ![ResNetDepth]({{ '/assets/images/module04/ResNetDepth.jpeg' | relative_url }})
 
-This figure shows how the depth of a network’s impact on performance is 
+This figure shows how the depth of a network’s impact on performance is
 
 Furthermore, one additional observation that the authors present is that convolution filters trained to extract features on adversarial images are effective for both clean and adversarial images but the inverse is not true. This indicates that employing adversarial training may incur computational costs during training but because the filters can handle both adversarial and regular inputs they may be crucial for critical systems that would benefit from the added protection.
 
@@ -133,7 +133,7 @@ Furthermore, one additional observation that the authors present is that convolu
 
 When considering the normalization statistics and the two-domain hypothesis, the results in regards to the impact of batch normalization are not surprising but are very informative. Batch normalization has become customary in deep learning applications and these results showcase its limitations when performing adversarial training. There are several avenues to take these findings further. It would be interesting to see if they also hold up for datasets that are much smaller than ImageNet and if performance levels off for ultra deep networks. Oftentimes, datasets are not as large as ImageNet and the extensive use of BN could be detrimental to building robust networks trained using adversarial strategies.
 
-Finally, one of the proposed methods to improve robustness is to simply build more deep networks. Although this does yield better results, it’s important to consider if robustness though depth is “worth it”. Ultra deep networks consume an enormous amount of energy and computational resources to train and maintain. This presents obvious ethical considerations like access to and consumption of these resources. 
+Finally, one of the proposed methods to improve robustness is to simply build more deep networks. Although this does yield better results, it’s important to consider if robustness though depth is “worth it”. Ultra deep networks consume an enormous amount of energy and computational resources to train and maintain. This presents obvious ethical considerations like access to and consumption of these resources.
 
 
 ### Comparison
@@ -143,25 +143,25 @@ The first two papers discussed above are similar in the sense that they both int
 The last paper is concerned purely with adversarial training, its properties, and how to exploit knowledge of these properties to improve robustness. It is more focused on architectural choices and training paradigm to improve the overall robustness of the model. The results indicate that robustness can be improved by employing separate batch normalization or training models purely on adversarial images with zero “clean” images. The objective then is for the model to discover the corruptions during adversarial training and learn steps to combat them. It would be interesting to see how a modified model would fare against the MNIST-C, IMAGENET-C and IMAGENET-P datasets introduced in the first two papers. One could see how well they hold up against ultra deep networks as results from the final paper indicate that network depth can improve robustness. Given that these datasets were designed with practical robustness in mind, it may present a significant challenge in both cases: the types of corruption seen in them may be too abstract for purely adversarial training to handle.
 
 
-## Evaluation of existing methods 
+## Evaluation of existing methods
 
-### Benchmarking Adversarial Robustness on Image Classification 
+### Benchmarking Adversarial Robustness on Image Classification
 
 #### Brief Summary
 
-The goal of this work is to develop a benchmark to comprehensively evaluate the adversarial robustness of the existing methods and serve as a useful standard for future work. 
+The goal of this work is to develop a benchmark to comprehensively evaluate the adversarial robustness of the existing methods and serve as a useful standard for future work.
 
-To build a robustness benchmark they first define the threat models which state how an attack is performed and in which situation a defense is robust. There are three aspects of a stress model described in this paper. The first one is the adversary scope, which can be categorized into untargeted attacks and targeted attacks. The second one is the adversary's capabilities in this work. They only consider l2 and l-infinity norms. The third one is the adversary's knowledge. White box attacks, transfer-based attacks, score-based black-box attacks, and decision-based attacks are taken into account. A lot of typical attack methods for the robustness evaluations are used. The defenses are roughly classified into five categories which include robust training, input transformation, randomization, model ensemble, and certified defenses. There are 16 typical certified defenses on CIFAR-10 and ImageNet. These models cover all different categories and include the state of the art in each category. 
+To build a robustness benchmark they first define the threat models which state how an attack is performed and in which situation a defense is robust. There are three aspects of a stress model described in this paper. The first one is the adversary scope, which can be categorized into untargeted attacks and targeted attacks. The second one is the adversary's capabilities in this work. They only consider l2 and l-infinity norms. The third one is the adversary's knowledge. White box attacks, transfer-based attacks, score-based black-box attacks, and decision-based attacks are taken into account. A lot of typical attack methods for the robustness evaluations are used. The defenses are roughly classified into five categories which include robust training, input transformation, randomization, model ensemble, and certified defenses. There are 16 typical certified defenses on CIFAR-10 and ImageNet. These models cover all different categories and include the state of the art in each category.
 
 For evaluation, two robustness curves are proposed to fully show the performance of attacks and defenses. The first one is the attack success rate versus perturbation budget curves. This gives a global understanding of the robustness of the class sphere and the effectiveness of the attack. The second one is the accuracy of the attack success rate versus the attack strength curve. This curve can show the efficiency of the attack.
 
 
 #### Analysis
 
-Experiments on the cross-evaluation of the attacks and defenses are performed for example under the l-infinity and targeted white-box attacks. The accuracy curves of the eight defenses on CFAIR-10 are calculated. The most robust models are found to be the ones that are adversarially trained. Another finding is that the relative robustness between two models against an attack could be different under different perturbation budgets or attack iterations. This finding implies that the cooperation between the defense models at a chosen perturbation budget or attack iteration, which is common in previous works, cannot fully demonstrate the performance of a model. But the robustness curves adopted in this paper can better show the global behavior of these methods. In the end, they created a platform where people can test the robustness of their model. 
+Experiments on the cross-evaluation of the attacks and defenses are performed for example under the l-infinity and targeted white-box attacks. The accuracy curves of the eight defenses on CFAIR-10 are calculated. The most robust models are found to be the ones that are adversarially trained. Another finding is that the relative robustness between two models against an attack could be different under different perturbation budgets or attack iterations. This finding implies that the cooperation between the defense models at a chosen perturbation budget or attack iteration, which is common in previous works, cannot fully demonstrate the performance of a model. But the robustness curves adopted in this paper can better show the global behavior of these methods. In the end, they created a platform where people can test the robustness of their model.
 
 
-### RobustBench: a standardized adversarial robustness benchmark 
+### RobustBench: a standardized adversarial robustness benchmark
 
 #### Brief Summary
 
@@ -173,11 +173,11 @@ A model zoo for adversarially robust models is also included in the work, allowi
 
 There are over 3000 papers have been published on the subject of adversarial examples, with a major fraction of these articles suggesting new strategies for training robust models and defending against adversarial examples. The community requires a systematic way to catalog and evaluate these defenses. RobustBench is the best attempt to date at solving this problem, overcoming the limits of previous work such as robust-ml.org.
 
-RobustBench provides a number of useful insights. One is that many viable defenses meet the following criteria: 
+RobustBench provides a number of useful insights. One is that many viable defenses meet the following criteria:
 
-1. Differentiable 
+1. Differentiable
 1. Deterministic
-1. Devoid of optimization loops. 
+1. Devoid of optimization loops.
 
 The other is that AutoAttack, a parameter-free assault that runs versions of various well-known white-box and black-box attacks, frequently provides reasonable upper bounds for defenses that satisfy that set of constraints.
 
@@ -200,11 +200,11 @@ In this paper, we look at robustness in the context of adversarial training. Eac
 
 [2] Dodge, S., & Karam, L. : A study and comparison of human and deep learning recognition performance under visual distortions. In 2017 26th international conference on computer communication and networks (ICCCN) (pp. 1-7). IEEE. (2017).
 
-[3] Norman Mu, Justin Gilmer: “MNIST-C: A Robustness Benchmark for Computer Vision”. http://arxiv.org/abs/1906.02337 arXiv:1906.02337 (2019). 
+[3] Norman Mu, Justin Gilmer: “MNIST-C: A Robustness Benchmark for Computer Vision”. http://arxiv.org/abs/1906.02337 arXiv:1906.02337 (2019).
 
 [4] Cihang Xie, Alan Yuille: “Intriguing properties of adversarial training at scale”. http://arxiv.org/abs/1906.03787 arXiv:1906.03787 (2019)
 
-[5] Dong, Y., Fu, Q. A., Yang, X., Pang, T., Su, H., Xiao, Z., & Zhu, J. Benchmarking adversarial robustness on image classification. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (pp. 321-331). (2020). 
+[5] Dong, Y., Fu, Q. A., Yang, X., Pang, T., Su, H., Xiao, Z., & Zhu, J. Benchmarking adversarial robustness on image classification. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (pp. 321-331). (2020).
 
 [6] Croce, F., Andriushchenko, M., Sehwag, V., Debenedetti, E., Flammarion, N., Chiang, M., ... & Hein, M. Robustbench: a standardized adversarial robustness benchmark. arXiv preprint arXiv:2010.09670 (2020).
 

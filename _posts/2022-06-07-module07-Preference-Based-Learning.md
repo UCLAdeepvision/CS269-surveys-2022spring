@@ -3,7 +3,7 @@ layout: post
 comments: true
 title: "Module 7: Human-in-the-loop autonomy - Preference Based Reinforcement Learning"
 author: Shi Liu, Yuyue Wang, Pengzhan Zhao
-date: 2022-06-10
+date: 2022-06-07
 ---
 
 
@@ -75,7 +75,7 @@ The authors further enhance their work one year later, by introducing expert dem
 ### Unsupervised/Semi-supervised Learning and Data Augmentation
 
 The most recent works in this field have been introduced to solve new problems: Although human can give effective preference feedback to RL agent to learn a good policy, such approach is only feasible when the feedback is both pratical for a human to provide and sufficiently high-bandwidth. However at the beginning of RL training, the RL agent's behavior is very random and doesn't show meaningful and understandable semantic information to human evaluators and thus the feedback is less useful. Moreover, the expensiveness and slow-speed of human evaluation prevents the agent to get enough amount of feedback information to update its reward and policy. To solve these problems, researchers use unsupervised/semi-supervised learning methods to generate more training data without increasing human preference labeling effort.  
- 
+
 In Pebble [5] algorithm, the RL agent, at its early training stage, doesn't ask for feedback from humans, instead, it optimzies policy using the intrinsic reward (that is to explore more diverse states and actions and reduce uncertainty). After Collecting enough breadth of state-action sequences, it provides clip pairs to human evaluators, and now human can give more reasonable feedbacks. Pebble then uses human's preference-based feedback to optimize its reward function, which is a neural network in this case. Contrast to previous method that uses updated reward function to calculate the agent's current behavior and optimize the policy, Pebble has a replay buffer storing all previous state-action sequences and it uses updated reward function to relabel all these sequences as training data. The relabeling technique greatly increases avaiable training data amount and enables the agent policy to reflect the time-varying reward function more quickly.  
 
 ![pebble]({{ '/assets/images/module7-preferences/pebble.jpg' | relative_url }})

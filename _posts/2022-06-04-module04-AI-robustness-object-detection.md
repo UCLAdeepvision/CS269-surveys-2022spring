@@ -3,7 +3,7 @@ layout: post
 comments: true
 title: "Module 4: AI robustness for Object Detection"
 author: Weichong Ling, Yanxun Li, Zonglin Meng
-date: 2021-04-27
+date: 2022-06-04
 ---
 
 
@@ -20,12 +20,12 @@ Object detection is an important computer vision task with plenty of real-world 
 There are many ways of adversarially attacking an object detector. One common way is adding adversarial perturbations as visible stickers or patches to the objects either virtually or physically. Such perturbation can successfully fool detectors, but are perceptible to humans. Another way of adversarial attack is adding human-imperceptible perturbations to the image, which can result in detectors failing to detect objects or detect wrong objects.
 
 To improve the robustness of a neural network, one common practice is adversarial training [2, 7]. It achieves robust model training by solving a minimax problem, where the inner maximization generates attacks according to the current model parameters while the outer optimization minimizes the training loss with respect to the model parameters. Zhang et al. [8] extend adversarial training to the object detection domain by leveraging attack sources from both classification and localization. Chen et al. [6] decompose the total adversarial loss into class-wise losses and normalize each class loss using the number of objects for the class. Det-AdvProp [4] achieves object detection robustness with a different approach. It improves the model-dependent data augmentation [5] and fits it into the object detection domain. Different from the previous work, Det-AdvProp considers the common practice of pre-train and fine-tine two-step paradigm. It performs data augmentation during the fine-tuning stage without touching the resource-consuming pre-train stage.
-				
+
 This survey aims at selecting and summarizing object detection research from two perspectives. First, we briefly review the typical structure and the learning objective of object detection. Next, we are going to look into some attack attempts in object detection. Then, we dive into the domain of robust training of object detectors.
 
 ## Adversarial Attacks for Object Detection
 
-The common practice of generating adversarial perturbations against object detectors is to optimize detection or classification loss. [1] extended PR2 algorithm and utilized it to generate physical adversarial posters and stickers (Fig.1) to attack YOLO v2 object detector. Physical objects with the posters and stickers attached to them will be misclassified. [1] also generated physical adversarial patches which can fool YOLO v2 into detecting non-existent objects. 
+The common practice of generating adversarial perturbations against object detectors is to optimize detection or classification loss. [1] extended PR2 algorithm and utilized it to generate physical adversarial posters and stickers (Fig.1) to attack YOLO v2 object detector. Physical objects with the posters and stickers attached to them will be misclassified. [1] also generated physical adversarial patches which can fool YOLO v2 into detecting non-existent objects.
 
 ![stop]({{ '/assets/images/Module04OD/stop.png' | relative_url }})
 {: style="width: 300px; max-width: 100%; margin-left: auto; margin-right: auto"}
@@ -86,7 +86,7 @@ As the table shows, they train both the ResNet 50 model and Fast Mask-RCNN model
 
 #### The role of task losses in adversarial training
 
-Although robustness can be improved by adversarial training [2,7], it’s much tricker in object detection. Different from adversarial training on classification tasks which usually has only one loss, object detection tasks consist of two losses (Fig.8). One is the classification loss and the other is localization loss. It’s natural to ask, should we perform the adversarial attack on the sum of them or each of them? Both [3] and [4] experiment with this problem. 
+Although robustness can be improved by adversarial training [2,7], it’s much tricker in object detection. Different from adversarial training on classification tasks which usually has only one loss, object detection tasks consist of two losses (Fig.8). One is the classification loss and the other is localization loss. It’s natural to ask, should we perform the adversarial attack on the sum of them or each of them? Both [3] and [4] experiment with this problem.
 
 ![loss1]({{ '/assets/images/Module04OD/loss.png' | relative_url }})
 {: style="width: 400px; max-width: 100%; margin-left: auto; margin-right: auto"}
@@ -106,7 +106,7 @@ Although robustness can be improved by adversarial training [2,7], it’s much t
 <center><i>Fig.10 mAP score for attacking LOC, CLS, DET</i></center>
 <br>
 
-The solution to this is simple. Both [3] and [4] proposed a similar algorithm regarding this issue. Here we present the algorithm in [3]. Intuitively, it attacks localization and classification loss respectively, and only keeps the one that maximizes the total loss. The adversarial output then replaces the original sample in a normal training process. 
+The solution to this is simple. Both [3] and [4] proposed a similar algorithm regarding this issue. Here we present the algorithm in [3]. Intuitively, it attacks localization and classification loss respectively, and only keeps the one that maximizes the total loss. The adversarial output then replaces the original sample in a normal training process.
 
 ![Algo1]({{ '/assets/images/Module04OD/Algo1.png' | relative_url }})
 {: style="width: 400px; max-width: 100%; margin-left: auto; margin-right: auto"}
@@ -153,4 +153,3 @@ Vancouver<br>
 [12] Cihang Xie, Jianyu Wang, Zhishuai Zhang, Yuyin Zhou, Lingxi Xie, Alan Yuille; "Adversarial Examples for Semantic Segmentation and Object Detection." Proceedings of the IEEE International Conference on Computer Vision (ICCV), 2017, pp. 1369-1378. <br>
 
 ---
-

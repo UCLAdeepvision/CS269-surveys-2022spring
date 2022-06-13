@@ -3,7 +3,7 @@ layout: post
 comments: true
 title: "Module 3 Survey: On the Emergence and Elimination of Biases in Artificial Intelligence"
 author: Sidi Lu and Yufeng Li and Yuxin Wang and Rakesh Bal
-date: 2021-04-25
+date: 2022-06-03
 ---
 
 
@@ -24,11 +24,11 @@ For dataset bias, the most worrisome (and common) case is that the model over-co
 
 While we can tell and probably name some of such overly-constructed correlations, some other important classes of problems are even more hot potatoes: for example, the lack of diversity in how each dataset presents the world. Datasets with such problems hinder effective cross-dataset generalization and introduce irrelevant, anonymous factors that affect models' compositional generalizability. Four experiments are conducted in the paper _unbiased look at data bias_[3] to show that diversity within the same label affects model performance.
 
-The authors first verify that: 
-* 1) different models vary in their abilities to classify different datasets,  and 
-* 2) different computer vision datasets have their own preferences. 
+The authors first verify that:
+* 1) different models vary in their abilities to classify different datasets,  and
+* 2) different computer vision datasets have their own preferences.
 
-As an example, the authors select "car" images in different datasets and show that the "car" images differ in many aspects, as shown in Figure 2. 
+As an example, the authors select "car" images in different datasets and show that the "car" images differ in many aspects, as shown in Figure 2.
 
 ![Car images: cross-dataset diversity and in-dataset lack of diversity]({{ '/assets/images/team03/cars.png' | relative_url }})
 *Figure 2. Images of cars in different datasets vary in poses, colors, resolutions, etc. However, images from the same dataset can still severely lack such diversity.*
@@ -37,14 +37,14 @@ Such differences (and lack of diversity in how the objects are presented) can be
 
 ![Quantative Analysis of dataset bias]({{ '/assets/images/team03/table1.png' | relative_url }})
 
-The results show that (see Table 1), even if keeping the labels the same but testing models on a different dataset, the model can still suffer from a significant inner-distribution discrepancy and hence degenerate severely in performance. As a comprehensive study, they try to vary negative samples during training/inference and find that whether the negative sample is *representative* and *diverse* can also highly affect the model performance. With training data being very different from the inference/validation one, much more data (typically, 5 times more) would be necessary than the vanilla case where the _i.i.d._ assumption holds well. 
+The results show that (see Table 1), even if keeping the labels the same but testing models on a different dataset, the model can still suffer from a significant inner-distribution discrepancy and hence degenerate severely in performance. As a comprehensive study, they try to vary negative samples during training/inference and find that whether the negative sample is *representative* and *diverse* can also highly affect the model performance. With training data being very different from the inference/validation one, much more data (typically, 5 times more) would be necessary than the vanilla case where the _i.i.d._ assumption holds well.
 
-In the paper's conclusion, the authors provide some suggestions for this particular issue. The authors relate the issue to *selection bias*, *capture bias* and *negative set bias*, and provide their proposals of possible solutions: 
-* Selection bias: the authors suggest obtaining data from multiple sources (multiple countries, multiple search engines) and starting with a large collection of unannotated images. They argue this is better than finding a specific type of image intentionally. 
-* Capture bias: the authors recommend applying different kinds of augmentations and transformations to reduce model overfitting in one type of environment. 
-* Negative set bias: the authors recommend adding negatives from different kinds of datasets and mining hard negatives samples if possible. 
+In the paper's conclusion, the authors provide some suggestions for this particular issue. The authors relate the issue to *selection bias*, *capture bias* and *negative set bias*, and provide their proposals of possible solutions:
+* Selection bias: the authors suggest obtaining data from multiple sources (multiple countries, multiple search engines) and starting with a large collection of unannotated images. They argue this is better than finding a specific type of image intentionally.
+* Capture bias: the authors recommend applying different kinds of augmentations and transformations to reduce model overfitting in one type of environment.
+* Negative set bias: the authors recommend adding negatives from different kinds of datasets and mining hard negatives samples if possible.
 
-But still, algorithm-wise, regardless of all these concerns, ever after connectionism methods re-conquered the mainstream of AI, data-driven methods with connectionism philosophy have been producing impressive milestone-level results, refreshing people's understanding and expectations of which. There is no doubt that data-driven methods do have their merits and are usually the ones with the best practical rationality. Moreover, R.Sutton states his understanding of best practices in methodology in his famous blog post _The Bitter Lesson_[4]. 
+But still, algorithm-wise, regardless of all these concerns, ever after connectionism methods re-conquered the mainstream of AI, data-driven methods with connectionism philosophy have been producing impressive milestone-level results, refreshing people's understanding and expectations of which. There is no doubt that data-driven methods do have their merits and are usually the ones with the best practical rationality. Moreover, R.Sutton states his understanding of best practices in methodology in his famous blog post _The Bitter Lesson_[4].
 
 ![The bitter lesson]({{ '/assets/images/team03/the_bitter_lesson.png' | relative_url }})
 *Figure 3. Imagine how heartbroken the man was when Richard Sutton, the very pioneer and grand master in cybernetics, reinforcement learning and the general field of machine learning, wrote these.*
@@ -62,7 +62,7 @@ This work was the first of its kind comprehensive study of the performance of co
 
 The authors mention that commercially available gender classification models have been provided by various top companies without proper documentation and peer review. Hence there is limited information as to the exact technologies they are using for such models. These models will be used by lots of people as they are commercially available, and trust in these large companies is high. So their study is of great significance. In this regard, they propose a new face dataset which they claim to be balanced based on skin and gender types. They also conduct a thorough analysis of the performance of such models on intersectional categories like light males, light females, dark males and dark females. They use 3 commercially available models for this purpose, which we will discuss in the upcoming sections.
 
-A key component of the paper deals with proposing a new dataset called **PPB (Pilot Parliaments Benchmark)** and discussing its collection, annotation and processing of balancing. The dataset consists of two gender classification labels (Male/Female) and a 6 point Fitzpatrick labeling system to show skin type. The type of 6 point Fitzpatrick label is determined according to the reaction of a person's skin to Ultraviolet Radiation (UVR). Dermatologists use this as a standard for skin classification and determining skin cancer risk. They also classify the labels (I - III) as White and (IV-VI) as Black. 
+A key component of the paper deals with proposing a new dataset called **PPB (Pilot Parliaments Benchmark)** and discussing its collection, annotation and processing of balancing. The dataset consists of two gender classification labels (Male/Female) and a 6 point Fitzpatrick labeling system to show skin type. The type of 6 point Fitzpatrick label is determined according to the reaction of a person's skin to Ultraviolet Radiation (UVR). Dermatologists use this as a standard for skin classification and determining skin cancer risk. They also classify the labels (I - III) as White and (IV-VI) as Black.
 
 ![PPB bias]({{ '/assets/images/team03/PPBbias.png' | relative_url }})
 *Figure 4. The images in PPB are constrained with relatively little variation in pose.*
@@ -70,12 +70,12 @@ A key component of the paper deals with proposing a new dataset called **PPB (Pi
 Coming to statistics of **PPB** (see Figure 4), it consists of 1270 parliamentarians from 6 countries -- 3 African countries (Rwanda, Senegal and South Africa) and 3 European countries (Iceland, Finland and Sweden). It is a highly constrained dataset, i.e. the pose is relatively fixed, illumination is constant, and expressions are neutral or smiling. Coming to labelling, 3 annotators and the authors provided gender and Fitzpatrick skin type labels for PPB Dataset. They also took help from an ABS board-certified surgical dermatologist who provided the definitive labels for the Fitzpatrick skin type. The overall intersectional statistics of the dataset are below (the dataset is balanced across different categories) :
 
 | Demography | n | F | M | Darker | Lighter | DF | DM | LF | LM |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | 
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | All Subjects | 1270 | 44.6% | 55.4% | 46.4% | 53.6% | 21.3% | 25.0% | 23.3% | 30.3% |
 | Africa | 661 | 43.9% | 56.1% | 86.2% | 13.8% | 39.8% | 46.4% | 4.1% | 9.7% |
 | Europe | 609 | 45.5% | 54.5% | 3.1% | 96.9% | 1.3% | 1.8% | 44.2% | 52.7% |
- 
-Now coming to commercial gender classification models, the authors pick 3 commercial gender classification models: 
+
+Now coming to commercial gender classification models, the authors pick 3 commercial gender classification models:
 1. Microsoft’s Cognitive Services Face API
 2. IBM’s Watson Visual Recognition API
 3. Face ++
@@ -95,11 +95,11 @@ While this could be arguably correct in philosophy, in practice, recent discussi
 
 For the latter, satisfying both are often infeasible. This is primarily due to the high dimensionality and large size of the actual data we deal with (e.g. image, language, even videos, etc.). It is hard to guarantee all features are comprehensively labeled and can hardly be alleviated with even a limited number of attributes.
 
-Even if we could, it would still raise more problems than it resolves. Forbidden labels, like gender/races, can actually be implicitly reconstructed by leveraging proxy variables (those that we use to mask out the bias-introducing factors). This could be worse than just letting the model learn from the original data. Also, inappropriate corruption of the data can lead to noisy and/or incomplete labels. 
+Even if we could, it would still raise more problems than it resolves. Forbidden labels, like gender/races, can actually be implicitly reconstructed by leveraging proxy variables (those that we use to mask out the bias-introducing factors). This could be worse than just letting the model learn from the original data. Also, inappropriate corruption of the data can lead to noisy and/or incomplete labels.
 
 In practice, we just can't guarantee zero-bias data. Considering the fact that _"The overall harm in a system is a product of the interactions between the data and our model design choices."_, de-biasing at the model level seems an essential solution.
 
-For our audience curious about how the author strengthens his point, the author actually presents it by analyzing a concrete case on the Celeb-A human face dataset (see Figure 5). 
+For our audience curious about how the author strengthens his point, the author actually presents it by analyzing a concrete case on the Celeb-A human face dataset (see Figure 5).
 
 ![CelebA bias]({{ '/assets/images/team03/celebabias.png' | relative_url }})
 *Figure 5. Datasets like CelebA can be very unbalanced for different subgroups of people. This is essentially causing a large proportion of the AI bias problems.*
@@ -107,14 +107,14 @@ For our audience curious about how the author strengthens his point, the author 
 Detailed explanation can diverge a little bit from this survey paper of ours, thus we won't be further extend the description here. If you feel very eager about how the author tackles the analysis, we encourage you to refer to the original blog post (which is also a survey paper).
 
 #### The Equalizer Model: Reduce Bias Amplification in Captioning Models
-Some well-founded approaches have been achieved following this way of thinking in the past few years. For example, one work [6] discussed in detail how such de-biasing can be achieved (at least by a large margin) in caption generation models. In this work, the authors proposed a novel Equalizer model that could reduce gender bias in the caption generation model by forcing the model to look at the proper evidence of the target image. The authors believe that the generality of their work allows the model to be expanded to other common protected attributes, such as race and ethnicity, making it a universal approach to overcoming bias in captioning models. 
+Some well-founded approaches have been achieved following this way of thinking in the past few years. For example, one work [6] discussed in detail how such de-biasing can be achieved (at least by a large margin) in caption generation models. In this work, the authors proposed a novel Equalizer model that could reduce gender bias in the caption generation model by forcing the model to look at the proper evidence of the target image. The authors believe that the generality of their work allows the model to be expanded to other common protected attributes, such as race and ethnicity, making it a universal approach to overcoming bias in captioning models.
 
 ![Illustration of Equalizer]({{ '/assets/images/team03/equalizer.png' | relative_url }})
 *Figure 6. Illustration of the Equalizer model.*
 
 The key point of the Equalizer model (see Figure 6) is to introduce two complementary loss terms additional to the base loss, which are the Appearance Confusion Loss and the Confident Loss so that they could restrict the model to only focus on the appropriate gender evidence on the target image. Appearance Confusion Loss allows the description model to be confused when the gender evidence of the description target does not appear on the image. Formally, the Appearance Confusion Loss is defined as,<br/>
 
-$$ 
+$$
 \mathcal{L}^{AC} = \frac{1}{N} \sum^N_{n=0} \sum^{T}_{t=0} \mathbb{1}(w_t \in \mathcal{G}_w \cup \mathcal{G}_m) \mathcal{C}(\tilde{w}_t, I')  
 $$
 
@@ -126,24 +126,24 @@ $$
 
 Intuitively, given a set of women-gendered words ($$\mathcal{G_w}$$), and a set of men-gendered words ($$\mathcal{G_m}$$), the confusion of a description word is the difference of probability that the word is in a specific group, conditioned on the previous sequence and a mask of the original image which only contains the direct gender evidence. On the other hand, the Confident Loss encourages the model to be confident when gender information is observed. The Confident loss is defined as the average confidence of the predicted gendered words in the description of one image, which is,
 
-$$ 
+$$
 \mathcal{L}^{Con} = \frac{1}{N} \sum_{n=0}^{N}  \sum_{t=0}^{T} (\mathbb{1}(w_t \in \mathcal{G_w}) \mathcal{F}^W(\tilde{W_t},I) + \mathbb{1}(w_t \in \mathcal{G_m})\mathcal{F}^W(\tilde{W_t},I) )
-$$ 
+$$
 
-, where the confidence ($$\mathcal{F}$$) of a predicted gender word is measured by the quotient between predicted probabilities of the word belonging to each gender group, conditioned on the previous sequence and the input image. For instance, the confidence in the women group is, 
+, where the confidence ($$\mathcal{F}$$) of a predicted gender word is measured by the quotient between predicted probabilities of the word belonging to each gender group, conditioned on the previous sequence and the input image. For instance, the confidence in the women group is,
 
 $$
 \mathcal{F}^W (\tilde{w_t},I) = \frac{\sum_{g_m \in \mathcal{G_m} } p( \tilde{w_t} = g_m | w_{0:t-1}, I) }{\sum_{g_w \in \mathcal{G_w} } p( \tilde{w_t} = g_w | w_{0:t-1}, I) + \epsilon}
 $$
 
-The final Equalizer is a linear combination of the the Appearance Confusion Loss($$\mathcal{L}^{AC}$$), the Confident Loss($$\mathcal{L}^{Con}$$), and the standard cross-entropy loss($$\mathcal{L}^{CE}$$). The two complementary loss terms work together to force the description model to focus on the appearance of gender information, other than the unrelated or stereotyped context when producing a gendered description word. 
+The final Equalizer is a linear combination of the the Appearance Confusion Loss($$\mathcal{L}^{AC}$$), the Confident Loss($$\mathcal{L}^{Con}$$), and the standard cross-entropy loss($$\mathcal{L}^{CE}$$). The two complementary loss terms work together to force the description model to focus on the appearance of gender information, other than the unrelated or stereotyped context when producing a gendered description word.
 
 After training and testing on the MS-COCO dataset, the experiment result illustrated the ability of the Equalizer model to reduce outcome divergence between the majority and the minority groups, mitigating the bias amplification issue. Moreover, applying explanation methods to the caption results, it is proved that the equalizer model is able to focus on the gender clue of the individuals from the target image other than the unrelated context when describing their gender. However, this method also comes with drawbacks. Firstly, the authors also mentioned a small drop in performance on standard description metrics, possibly because the regularized model is more conservative, so it uses gender-neutral terms to describe appearance with little gender evidence. Also, proper gender evidence needs to be provided for training images, making applying this method to abstract features harder.
 
 
 ### AI De-biasing practices and policies from the Industry
 
-As the importance of AI de-biasing has been brought to the attention of the industry, a group of leaders from the academic disciplines and industry sectors has gathered together to draw upon the insight of identifying and mitigating AI-bias in real-world applications. First of all, it is never enough to emphasize how much harm a biased decision system could do to the minority group. AI decisions must be trustworthy and ethical to ensure that the users of the application could enjoy equal benefits from the system. Different notions of fairness (e.g., equality of odds,  demographic parity) have been proposed as metrics to define and measure the fairness of a decision system. However, it is still hard to come up with a comprehensive standard to define an ethical and trustworthy automated decision system. After all, fairness is not merely a mathematical notion or metric. It is more of a shared value and an ethical belief of human beings. Therefore, the authors of [7] proposed a discipline that the developers should consider before they could publish their work for public usage. 
+As the importance of AI de-biasing has been brought to the attention of the industry, a group of leaders from the academic disciplines and industry sectors has gathered together to draw upon the insight of identifying and mitigating AI-bias in real-world applications. First of all, it is never enough to emphasize how much harm a biased decision system could do to the minority group. AI decisions must be trustworthy and ethical to ensure that the users of the application could enjoy equal benefits from the system. Different notions of fairness (e.g., equality of odds,  demographic parity) have been proposed as metrics to define and measure the fairness of a decision system. However, it is still hard to come up with a comprehensive standard to define an ethical and trustworthy automated decision system. After all, fairness is not merely a mathematical notion or metric. It is more of a shared value and an ethical belief of human beings. Therefore, the authors of [7] proposed a discipline that the developers should consider before they could publish their work for public usage.
 
 
 ![Illustration of Equalizer]({{ '/assets/images/team03/industrial_attempts.png' | relative_url }})

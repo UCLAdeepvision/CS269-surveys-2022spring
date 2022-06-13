@@ -3,7 +3,7 @@ layout: post
 comments: true
 title: Module 7 - A Survey on Intervention-based Learning
 author: Andrew Choi, Srinath Naik Ajmeera, and Pranay Shirodkar
-date: 2022-06-10
+date: 2022-06-07
 #tags: foundation tutorial
 #image: "data_size_vs_model_performance.png"
 ---
@@ -60,7 +60,7 @@ The following sections about DAgger and intervention-based learning methods will
 
 ### DAgger
 
-The policy learned using imitation learning methods perform better when close to the distribution of states present in the training dataset. However, errors in such a policy might add up eventually to drive the agent to states which are far apart from what has been seen during training and are hard to recover from. DAgger (Dataset Aggregation) [2] overcomes this problem by collecting data at each iteration under the current policy by querying the expert to label every learner-visited state. In other words, we obtain a dataset of learner state and expert actions pairs $$(s, a^*)$$. After every iteration, the policy is updated by training on the total aggregate of all collected data. 
+The policy learned using imitation learning methods perform better when close to the distribution of states present in the training dataset. However, errors in such a policy might add up eventually to drive the agent to states which are far apart from what has been seen during training and are hard to recover from. DAgger (Dataset Aggregation) [2] overcomes this problem by collecting data at each iteration under the current policy by querying the expert to label every learner-visited state. In other words, we obtain a dataset of learner state and expert actions pairs $$(s, a^*)$$. After every iteration, the policy is updated by training on the total aggregate of all collected data.
 
 Essentially, DAgger has made the learning process online and overcome the distribution shift problem as shown below in Figure 2, but require expert annotations for all the new trajectories explored.
 
@@ -70,9 +70,9 @@ Essentially, DAgger has made the learning process online and overcome the distri
 
 ## Intervention-based Learning
 
-As shown in the previous section, both imitation learning and DAgger style approaches are quite expensive in terms of annotation cost as they require a human expert to label every state and/or action. This annotation cost is not only burdensome on the human expert, but may also become infeasible for complex tasks. To address these issues, *intervention-based learning* has started to become a popular research direction in the human-in-the-loop learning community. As the name suggests, these algorithms let the learner maintain control during the training process and allows the human expert to *intervene* and takeover control whenever deemed necessary (e.g. when a self-driving car starts to veer off the road). 
+As shown in the previous section, both imitation learning and DAgger style approaches are quite expensive in terms of annotation cost as they require a human expert to label every state and/or action. This annotation cost is not only burdensome on the human expert, but may also become infeasible for complex tasks. To address these issues, *intervention-based learning* has started to become a popular research direction in the human-in-the-loop learning community. As the name suggests, these algorithms let the learner maintain control during the training process and allows the human expert to *intervene* and takeover control whenever deemed necessary (e.g. when a self-driving car starts to veer off the road).
 
-As we will show in the upcoming sections, intervention-based learning has several key benefits over imitation learning and DAgger. First, a significant reduction in annotation cost is achieved as the vast majority of state-action pairs are provided by the learner. With the reduction in labeled data, the key to these approaches is to maintain learning convergence. 
+As we will show in the upcoming sections, intervention-based learning has several key benefits over imitation learning and DAgger. First, a significant reduction in annotation cost is achieved as the vast majority of state-action pairs are provided by the learner. With the reduction in labeled data, the key to these approaches is to maintain learning convergence.
 
 Second, intervention-based learning approaches allow for much more intuitive (and arguably more correct) annotating by the human expert as they can now control the induced state distribution. Before, DAgger forced a human expert to provide the proper action for the *learner*-induced state distribution. This asychrony between state and control is difficult for humans to deal with for extended periods of time and can result in degradation in the quality of the annotations.
 
@@ -80,7 +80,7 @@ We go over three key approaches in the intervention-based learning literature th
 
 ### HG-DAgger
 
-One of the pioneering works in intervention-based learning, HG-DAgger, applies a simple modification to the original DAgger algorithm and is therefore quite intuitive to understand. In contrast to DAgger, HG-DAgger allows for the human expert to intervene and obtain stretches of uninterrupted control. Whereas DAgger requires the expert to label every learner-visited state $$s$$ with an action $$a^*$$ and trains over this entire set, HG-DAgger has the learner fully in control until the human expert intervenes. During intervention, only these expert state-action labels $$(s^*, a^*)$$ are recorded and added to a training data set $$\mathcal D$$. 
+One of the pioneering works in intervention-based learning, HG-DAgger, applies a simple modification to the original DAgger algorithm and is therefore quite intuitive to understand. In contrast to DAgger, HG-DAgger allows for the human expert to intervene and obtain stretches of uninterrupted control. Whereas DAgger requires the expert to label every learner-visited state $$s$$ with an action $$a^*$$ and trains over this entire set, HG-DAgger has the learner fully in control until the human expert intervenes. During intervention, only these expert state-action labels $$(s^*, a^*)$$ are recorded and added to a training data set $$\mathcal D$$.
 
 Although HG-DAgger obtains significantly less human annotations than DAgger, HG-DAgger collects data from the human expert only while they have uninterrupted control. Therefore, such state-action pairs can be expected to be of high quality. This learning efficiency can be seen below in Figure 3 where HG-DAgger outperforms both behavioral cloning and DAgger with significantly less expert labels.
 
@@ -101,7 +101,7 @@ Expert intervention learning is a direct improvement over HG-DAgger that attempt
 We define good enough state-action pairs as belonging to the set $$\mathcal G$$. With this, we define
 
 Three key assumptions for the EIL framework are now stated:
-1. The expert deems a region of the state-action space to be "good enough": $$(s, a) \in \mathcal G$$. 
+1. The expert deems a region of the state-action space to be "good enough": $$(s, a) \in \mathcal G$$.
 2. When a robot is in $$\mathcal G$$, the human does not intervene. The robot remains in control even though it may select actions different from what the expert would have chosen. Therefore, $$\mathcal G$$ must be defined in a manner so that all state-actions are tolerable even if they may be inefficient.
 3. As soon as a robot departs $$\mathcal G$$, the expert intervenes and controls the system back to $$\mathcal G$$.
 
@@ -146,7 +146,7 @@ HACO is an online learning technique which operates similar to EIL where the exp
 1. **Exploring the actions in the human-allowed action subspace.**
 2. **Explicit cost(implicit negative reward) for human interventions.**
 
-The first point helps the agent to consider a wide range of allowed actions at a particular state, thereby opening more possibilities whereas the second point helps in reducing human interventions over time to make the agent self-sufficient. Next, we briefly go over the learning objectives that are considered and how they help achieve the above notions. 
+The first point helps the agent to consider a wide range of allowed actions at a particular state, thereby opening more possibilities whereas the second point helps in reducing human interventions over time to make the agent self-sufficient. Next, we briefly go over the learning objectives that are considered and how they help achieve the above notions.
 
 Majority of learning data in HACO comes from **partial demonstrations** when the human expert takes over control to drive the agent to a safe state. We record the state action sequence $$\{(s_t, a_{n,t}, a_{h,t}, I(s_t, a_{n,t}), s_{t+1}),...\}$$ in a takeover trajectory and add it to our buffer $$B$$. Here $$a_{n,t}$$ is the action by the agent, $$a_{h,t}$$ is the action taken by the human and $$I(s_t, a_{n,t})$$ is a boolean which is true if an expert intervention has taken place.
 

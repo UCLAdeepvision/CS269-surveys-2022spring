@@ -2,8 +2,8 @@
 layout: post
 comments: true
 title: "Module 5, Topic: Data collection for Autonomous Driving"
-author: Keli Huang, & Yunbo Wang
-date: 2021-05-02
+author: Keli Huang & Yunbo Wang
+date: 2022-06-05
 ---
 
 
@@ -33,7 +33,7 @@ year, volume of the raw data, sensor layout (LiDARs and cameras) and the annotat
 | NuScenes [5]      | 2019    | 5.5   |  1 Spinning 32-beams LiDAR      | 6 RGB cameras | 40k                   | 1.4M      |
 | KITTI [6]      | 2012    | 1.5    |  1 Velodyne HDL-64E    |  2 color, 2 grayscale cameras  | 15k                   | 80k      |
 
-### ApolloScape 
+### ApolloScape
 
 ApolloScape is the dataset proposed by Baidu for their Apollo project for autonomous driving. The dataset consists of varying conditions and traffic densities, including many challenging scenarios where vehicles, bicycles, and pedestrians move among one another. The trajectory dataset is collected through multiple integrated sensors on the experimenting vehicle. The sensors include 2 LiDar Scanners, 6 Video cameras, and 1 IMU/GNSS position system with an accuracy of 20 ∼ 50mm, roll & pitch accuracy of 0.005°, and heading accuracy of 0.015°. These types of equipment enable the object Detection and Tracking dataset, including about 100K image frames, 80k lidar point cloud, and 1000km trajectories for urban traffic. The demo data and the experimenting vehicle with sensors are shown in Fig. 1.
 
@@ -41,7 +41,7 @@ ApolloScape is the dataset proposed by Baidu for their Apollo project for autono
 {: style="width: 100%;"}
 [*Figure 1. Data sample and the testing vehicle for ApolloScape dataset.* [4]]
 
-For the data annotation, the whole pipeline is shown in Fig. 2. There are two primary labeling processes in the entire pipeline. The 3D labeling is to analyze the static objects, such as the buildings, trees, and traffic facilities. Moving objects distort in the 3D Point Cloud, so this sub-point cloud data is cleared. The 2D labeling, on the other hand, is to handle the moving object, such as measuring the distance. 
+For the data annotation, the whole pipeline is shown in Fig. 2. There are two primary labeling processes in the entire pipeline. The 3D labeling is to analyze the static objects, such as the buildings, trees, and traffic facilities. Moving objects distort in the 3D Point Cloud, so this sub-point cloud data is cleared. The 2D labeling, on the other hand, is to handle the moving object, such as measuring the distance.
 
 ![defgrid]({{ '/assets/images/module05/data-collection/app1.png' | relative_url }})
 {: style="width: 100%;"}
@@ -50,9 +50,9 @@ For the data annotation, the whole pipeline is shown in Fig. 2. There are two pr
 One drawback of this dataset is the depth information for the moving objects, which is still missing in the current release. For this dataset, more weather conditions will be integrated in the future.
 
 
-### HUAWEI ONCE 
+### HUAWEI ONCE
 
-Huawei proposed their dataset ONCE (One millioN sCenEs) together with Huawei Noah’s Ark Lab, Sun Yat-Sen University, and The Chinese University of Hong Kong for 3D object detection in the autonomous driving scenario in 2021. Compared to other benchmarks in the autonomous driving scenarios, ONCE is 20x longer than the current 3D autonomous driving dataset available. The ONCE dataset consists of 1 million LiDAR scenes and 7 million corresponding camera images, varying in different areas, periods, and weather conditions. 
+Huawei proposed their dataset ONCE (One millioN sCenEs) together with Huawei Noah’s Ark Lab, Sun Yat-Sen University, and The Chinese University of Hong Kong for 3D object detection in the autonomous driving scenario in 2021. Compared to other benchmarks in the autonomous driving scenarios, ONCE is 20x longer than the current 3D autonomous driving dataset available. The ONCE dataset consists of 1 million LiDAR scenes and 7 million corresponding camera images, varying in different areas, periods, and weather conditions.
 
 ![defgrid]({{ '/assets/images/module05/data-collection/ONCE.png' | relative_url }})
 {: style="width: 100%;"}
@@ -62,7 +62,7 @@ ONCE dataset is recorded with 144 driving hours. Fig. 3 shows various scenes in 
 
 For annotations, ONCE exhaustively annotated 417k 3D ground truth boxes of 5 categories (car, bus, truck, pedestrian, and cyclist). 3D ground truth boxes were manually labeled from point clouds by annotators using a commercial annotation system. The labeled boxes then went through a double-check process for validness and refinement, which guarantees high-quality bounding boxes for 3D object detection. 769k 2D bounding boxes are also provided for camera images by projecting 3D boxes into image planes.
 
-### A*3D 
+### A*3D
 
 A*3D dataset was proposed in 2020 which consists of RGB images and LiDAR data with a significant diversity of the scene, time, and weather. Compared to other benchmarks of the autonomous driving dataset, A*3D consists of high-density images, heavy occlusions, and a large number of night-time frames, which tries to narrow the gap between academy research and real-world applications. An illustration of A*3D dataset is in Fig 4.
 
@@ -90,11 +90,11 @@ KITTI is one of the most important test sets mainly for image processing technol
 
 Here are the some of vital benchmarks in the KITTI:
 
-Stereo. Based on image stereovision and 3D reconstruction, restoring structure from one image is fuzzy in nature, and 3d structure is generally recovered from multiple images at different angles.  This is very helpful in autonomous driving scenarios, such as getting the shape of the car, the shape, the surrounding environment, etc. 
+Stereo. Based on image stereovision and 3D reconstruction, restoring structure from one image is fuzzy in nature, and 3d structure is generally recovered from multiple images at different angles.  This is very helpful in autonomous driving scenarios, such as getting the shape of the car, the shape, the surrounding environment, etc.
 
-Flow. Optical flow is the concept of object motion detection in the field of view.  A term used to describe the motion of an observed object, surface, or edge resulting from motion with respect to the observer.  Application areas include motion detection, object segmentation, contact time information, extended computational focus, luminance, motion compensation coding, and stereo parallax measurement. 
+Flow. Optical flow is the concept of object motion detection in the field of view.  A term used to describe the motion of an observed object, surface, or edge resulting from motion with respect to the observer.  Application areas include motion detection, object segmentation, contact time information, extended computational focus, luminance, motion compensation coding, and stereo parallax measurement.
 
-Sceneflow. A scene flow is a dense or semi-dense 3D playground of a scene that moves completely and partially relative to the camera.  There are many potential applications for scenario flows.  In robotics, it can be used for autonomous navigation and/or manipulation in dynamic environments where prediction of the movement of surrounding objects is required.  In addition, it can complement and improve state-of-the-art visual ranging and SLAM algorithms, which are often assumed to work in rigid or quasi-rigid environments.  On the other hand, it can be used for robot or human-computer interaction, as well as virtual and augmented reality. 
+Sceneflow. A scene flow is a dense or semi-dense 3D playground of a scene that moves completely and partially relative to the camera.  There are many potential applications for scenario flows.  In robotics, it can be used for autonomous navigation and/or manipulation in dynamic environments where prediction of the movement of surrounding objects is required.  In addition, it can complement and improve state-of-the-art visual ranging and SLAM algorithms, which are often assumed to work in rigid or quasi-rigid environments.  On the other hand, it can be used for robot or human-computer interaction, as well as virtual and augmented reality.
 
 In the future, the researchers plan to include visual SLAM with loop-closure capabilities, object tracking, segmentation, structure-from-motion, and 3D scene understanding into the evaluation framework. This plan will boost the performance of the sensing and localization of the angstrom.
 
@@ -106,7 +106,7 @@ In the field of 3D target detection, there are several datasets that are widely 
 {: style="width: 100%;"}
 [*Figure 5. FrameWork of nuScenes.* [5]]
 
-The nuScenes dataset samples well-synchronized keyframes (images, LIDAR, RADAR) at 2Hz and is annotated by Scale.  All objects in the nuScenes dataset carry a semantic category, along with 3D bounding boxes and attributes for each frame in which they appear.  Compared with 2D bounding boxes, the position and orientation of objects in space can be accurately inferred. 
+The nuScenes dataset samples well-synchronized keyframes (images, LIDAR, RADAR) at 2Hz and is annotated by Scale.  All objects in the nuScenes dataset carry a semantic category, along with 3D bounding boxes and attributes for each frame in which they appear.  Compared with 2D bounding boxes, the position and orientation of objects in space can be accurately inferred.
 
 From left to right are Vehicle, Extraction, Annotation and Taxonomy.  
 
